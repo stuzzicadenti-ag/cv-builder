@@ -38,7 +38,7 @@ export default async function authRoutes(app) {
       return reply.view('auth/login.ejs', { error: 'Invalid email or password', title: 'Login' });
     }
     const token = jwt.sign({ userId: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
-    reply.setCookie('token', token, { path: '/', httpOnly: true, secure: IS_PROD, maxAge: COOKIE_MAX_AGE, sameSite: 'lax' });
+    reply.setCookie('token', token, { path: '/', httpOnly: true, secure: false, maxAge: COOKIE_MAX_AGE, sameSite: 'lax' }); // behind Caddy on HTTP/Tailscale
     return reply.redirect('/');
   });
 
