@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://stuzzicadenti-ag.github.io/cv-builder/sitemap.xml

@@ -21,6 +21,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="CV Builder - Free Professional CV/Resume Builder">
   <meta name="twitter:description" content="Build professional CVs for free. Supports Europass, LaTeX, and Typst formats. ATS-optimized, privacy-first, no ads.">
+  <meta name="theme-color" content="#4a90d9">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://cloud.umami.is; frame-ancestors 'none';">
 
   <!-- Schema.org Organization -->
   <script type="application/ld+json">
@@ -35,6 +37,9 @@
   </script>
 
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Analytics (Umami Cloud - replace data-website-id when ready) -->
+  <!-- <script defer src="https://cloud.umami.is/script.js" data-website-id="YOUR_WEBSITE_ID"></script> -->
 </head>
 <body>
 
@@ -55,8 +60,8 @@
         <li><a href="#pricing">Pricing</a></li>
       </ul>
       <div class="nav-actions">
-        <a href="#login-modal" class="btn btn-ghost" onclick="document.getElementById('login-modal').classList.add('active')">Login</a>
-        <a href="#login-modal" class="btn btn-primary btn-sm" onclick="document.getElementById('login-modal').classList.add('active'); document.getElementById('modal-tab-register').checked = true;">Register</a>
+        <button type="button" class="btn btn-ghost" id="loginBtn">Login</button>
+        <button type="button" class="btn btn-primary btn-sm" id="registerBtn">Register</button>
       </div>
     </div>
   </nav>
@@ -502,9 +507,9 @@
   </footer>
 
   <!-- Login/Register Modal -->
-  <div class="modal-overlay" id="login-modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal-overlay" id="login-modal">
     <div class="modal">
-      <button class="modal-close" onclick="document.getElementById('login-modal').classList.remove('active')" aria-label="Close">&times;</button>
+      <button type="button" class="modal-close" id="modalClose" aria-label="Close">&times;</button>
       <div class="modal-header">
         <input type="radio" name="modal-tab" id="modal-tab-login" checked class="modal-tab-input">
         <label for="modal-tab-login" class="modal-tab">Login</label>
@@ -553,6 +558,40 @@
       </div>
     </div>
   </div>
+
+  <script>
+    (function() {
+      var modal = document.getElementById('login-modal');
+      var loginTab = document.getElementById('modal-tab-login');
+      var registerTab = document.getElementById('modal-tab-register');
+
+      function openModal(tab) {
+        modal.classList.add('active');
+        if (tab === 'register') {
+          registerTab.checked = true;
+        } else {
+          loginTab.checked = true;
+        }
+      }
+
+      function closeModal() {
+        modal.classList.remove('active');
+      }
+
+      document.getElementById('loginBtn').addEventListener('click', function() { openModal('login'); });
+      document.getElementById('registerBtn').addEventListener('click', function() { openModal('register'); });
+      document.getElementById('modalClose').addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      // Navbar scroll
+      window.addEventListener('scroll', function() {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+      });
+    })();
+  </script>
 
 </body>
 </html>
