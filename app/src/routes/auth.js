@@ -10,16 +10,14 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default async function authRoutes(app) {
-  // Auth middleware (decorates all requests)
+  // Auth middleware (decorates all requests) — uses JWT payload directly to avoid DB hit per request
   app.decorateRequest('user', null);
   app.addHook('preHandler', async (req) => {
     const token = req.cookies?.token;
     if (!token) return;
     try {
       const payload = jwt.verify(token, JWT_SECRET);
-      const [user] = await db.select({ id: users.id, email: users.email, name: users.name })
-        .from(users).where(eq(users.id, payload.userId)).limit(1);
-      req.user = user || null;
+      req.user = { id: payload.userId, email: payload.email, name: payload.name };
     } catch { req.user = null; }
   });
 
@@ -37,7 +35,7 @@ export default async function authRoutes(app) {
     if (!user || !await bcrypt.compare(password, user.passwordHash)) {
       return reply.view('auth/login.ejs', { error: 'Invalid email or password', title: 'Login' });
     }
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
     reply.setCookie('token', token, { path: '/', httpOnly: true, secure: IS_PROD, maxAge: COOKIE_MAX_AGE, sameSite: 'lax' });
     return reply.redirect('/');
   });
