@@ -10,32 +10,21 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default async function authRoutes(app) {
-  // Auth middleware (decorates all requests) — uses JWT payload directly to avoid DB hit per request
-  app.decorateRequest('user', null);
-  app.addHook('preHandler', async (req) => {
-    const token = req.cookies?.token;
-    if (!token) return;
-    try {
-      const payload = jwt.verify(token, JWT_SECRET);
-      req.user = { id: payload.userId, email: payload.email, name: payload.name, role: payload.role || 'user' };
-    } catch { req.user = null; }
-  });
-
   app.get('/login', async (req, reply) => {
     if (req.user) return reply.redirect('/');
     const registered = req.query.registered === '1';
-    return reply.view('auth/login.ejs', { error: null, title: 'Login', registered });
+    return reply.view('auth/login.ejs', { user: null, error: null, title: 'Login', registered });
   });
 
   app.post('/login', async (req, reply) => {
     if (app.checkAuthRateLimit && !app.checkAuthRateLimit(req, reply)) return;
     const { email, password } = req.body;
     if (!email || !password) {
-      return reply.view('auth/login.ejs', { error: 'Email and password are required', title: 'Login' });
+      return reply.view('auth/login.ejs', { user: null, error: 'Email and password are required', title: 'Login' });
     }
     const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (!user || !await bcrypt.compare(password, user.passwordHash)) {
-      return reply.view('auth/login.ejs', { error: 'Invalid email or password', title: 'Login' });
+      return reply.view('auth/login.ejs', { user: null, error: 'Invalid email or password', title: 'Login' });
     }
     // Check if user is banned
     if (user.banned) {
@@ -48,27 +37,27 @@ export default async function authRoutes(app) {
 
   app.get('/register', async (req, reply) => {
     if (req.user) return reply.redirect('/');
-    return reply.view('auth/register.ejs', { error: null, title: 'Register' });
+    return reply.view('auth/register.ejs', { user: null, error: null, title: 'Register' });
   });
 
   app.post('/register', async (req, reply) => {
     if (app.checkAuthRateLimit && !app.checkAuthRateLimit(req, reply)) return;
     const { email, password, name } = req.body;
     if (!email || !password || !name) {
-      return reply.view('auth/register.ejs', { error: 'All fields are required', title: 'Register' });
+      return reply.view('auth/register.ejs', { user: null, error: 'All fields are required', title: 'Register' });
     }
     if (!EMAIL_RE.test(email)) {
-      return reply.view('auth/register.ejs', { error: 'Invalid email format', title: 'Register' });
+      return reply.view('auth/register.ejs', { user: null, error: 'Invalid email format', title: 'Register' });
     }
     if (password.length < 8 || password.length > 1000) {
-      return reply.view('auth/register.ejs', { error: 'Password must be 8-1000 characters', title: 'Register' });
+      return reply.view('auth/register.ejs', { user: null, error: 'Password must be 8-1000 characters', title: 'Register' });
     }
     if (name.length > 255 || email.length > 255) {
-      return reply.view('auth/register.ejs', { error: 'Input too long', title: 'Register' });
+      return reply.view('auth/register.ejs', { user: null, error: 'Input too long', title: 'Register' });
     }
     const existing = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
     if (existing.length > 0) {
-      return reply.view('auth/register.ejs', { error: 'Email already registered', title: 'Register' });
+      return reply.view('auth/register.ejs', { user: null, error: 'Email already registered', title: 'Register' });
     }
     const passwordHash = await bcrypt.hash(password, 12);
     await db.insert(users).values({ email, passwordHash, name });

@@ -7,10 +7,13 @@ import view from '@fastify/view';
 import fstatic from '@fastify/static';
 import ejs from 'ejs';
 import { db, pool } from './db/index.js';
+import jwt from 'jsonwebtoken';
 import authRoutes from './routes/auth.js';
 import cvRoutes from './routes/cv.js';
 import templateRoutes from './routes/templates.js';
 import adminRoutes from './routes/admin.js';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-jwt-secret-change-me';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -79,6 +82,17 @@ await app.register(fstatic, {
   root: path.join(__dirname, 'public'),
   prefix: '/public/',
   maxAge: process.env.NODE_ENV === 'production' ? 86400000 : 0,
+});
+
+// Auth decorator — decode JWT on every request (non-blocking)
+app.decorateRequest('user', null);
+app.addHook('preHandler', async (req) => {
+  const token = req.cookies?.token;
+  if (!token) return;
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.user = { id: payload.userId, email: payload.email, name: payload.name, role: payload.role || 'user' };
+  } catch { req.user = null; }
 });
 
 // Routes
