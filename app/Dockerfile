@@ -1,6 +1,5 @@
 FROM node:22-alpine
 
-# Install Typst for PDF generation
 RUN apk add --no-cache curl tar && \
     ARCH=$(uname -m) && \
     if [ "$ARCH" = "aarch64" ]; then TYPST_ARCH="aarch64-unknown-linux-musl"; \
@@ -9,13 +8,14 @@ RUN apk add --no-cache curl tar && \
     tar xJ --strip-components=1 -C /usr/local/bin/ && \
     apk del curl tar
 
+RUN addgroup -g 1001 appgroup && adduser -u 1001 -G appgroup -D appuser
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci --production
+RUN npm ci --production && npm cache clean --force
 COPY src/ src/
+RUN mkdir -p /app/data/pdfs && chown -R appuser:appgroup /app
+USER appuser
 
-ENV NODE_ENV=production
-ENV PORT=4001
+ENV NODE_ENV=production PORT=4001
 EXPOSE 4001
-
 CMD ["node", "src/server.js"]

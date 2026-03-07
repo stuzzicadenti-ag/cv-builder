@@ -11,6 +11,11 @@ const execFileAsync = promisify(execFile);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PDF_DIR = process.env.PDF_DIR || path.join(__dirname, '../../data/pdfs');
 
+function parseId(raw) {
+  const n = parseInt(raw, 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 export default async function cvRoutes(app) {
   // Require auth for all CV routes
   app.addHook('preHandler', async (req, reply) => {
@@ -32,16 +37,26 @@ export default async function cvRoutes(app) {
   // Save CV
   app.post('/save', async (req, reply) => {
     const { id, title, templateId, data } = req.body;
-    const cvData = typeof data === 'string' ? JSON.parse(data) : data;
+    let cvData;
+    try {
+      cvData = typeof data === 'string' ? JSON.parse(data) : data;
+    } catch {
+      return reply.code(400).send('Invalid CV data');
+    }
+
+    const parsedTemplateId = parseId(templateId);
+    if (!parsedTemplateId) return reply.code(400).send('Invalid template');
 
     if (id) {
+      const parsedId = parseId(id);
+      if (!parsedId) return reply.code(400).send('Invalid CV id');
       await db.update(cvs)
-        .set({ title, templateId: parseInt(templateId), data: cvData, updatedAt: new Date() })
-        .where(and(eq(cvs.id, parseInt(id)), eq(cvs.userId, req.user.id)));
-      return reply.redirect(`/cv/edit/${id}`);
+        .set({ title, templateId: parsedTemplateId, data: cvData, updatedAt: new Date() })
+        .where(and(eq(cvs.id, parsedId), eq(cvs.userId, req.user.id)));
+      return reply.redirect(`/cv/edit/${parsedId}`);
     } else {
       const [newCv] = await db.insert(cvs)
-        .values({ userId: req.user.id, title, templateId: parseInt(templateId), data: cvData })
+        .values({ userId: req.user.id, title, templateId: parsedTemplateId, data: cvData })
         .returning();
       return reply.redirect(`/cv/edit/${newCv.id}`);
     }
@@ -49,8 +64,10 @@ export default async function cvRoutes(app) {
 
   // Edit CV
   app.get('/edit/:id', async (req, reply) => {
+    const parsedId = parseId(req.params.id);
+    if (!parsedId) return reply.code(400).send('Invalid CV id');
     const [cv] = await db.select().from(cvs)
-      .where(and(eq(cvs.id, parseInt(req.params.id)), eq(cvs.userId, req.user.id))).limit(1);
+      .where(and(eq(cvs.id, parsedId), eq(cvs.userId, req.user.id))).limit(1);
     if (!cv) return reply.code(404).send('CV not found');
     const allTemplates = await db.select().from(templates);
     return reply.view('cv/editor.ejs', { user: req.user, cv, templates: allTemplates, title: `Edit: ${cv.title}` });

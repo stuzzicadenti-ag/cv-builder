@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Editor - CV Builder</title>
+  <meta name="description" content="Create your professional CV with our free editor. Live preview, multiple templates, PDF export.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+
+  <!-- Toolbar -->
+  <header class="toolbar">
+    <a href="./" class="toolbar__logo">&#128196; CV Builder</a>
+    <div class="toolbar__actions">
+      <select id="templateSelect" class="toolbar__select" aria-label="Template">
+        <option value="europass">Europass</option>
+        <option value="modern">Modern</option>
+        <option value="minimal">Minimal</option>
+        <option value="latex">LaTeX Classic</option>
+      </select>
+      <button type="button" id="exportPdf" class="toolbar__btn toolbar__btn--primary">&#128229; Export PDF</button>
+      <button type="button" id="clearAll" class="toolbar__btn toolbar__btn--danger">Clear</button>
+    </div>
+  </header>
+
+  <main class="editor">
+
+    <!-- Form Panel -->
+    <aside class="editor__form" id="formPanel">
+
+      <!-- Personal Info -->
+      <details class="form-section" open>
+        <summary class="form-section__title">Personal Information</summary>
+        <div class="form-section__body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="John" data-bind="firstName">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Doe" data-bind="lastName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" placeholder="Software Engineer" data-bind="jobTitle">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="john@example.com" data-bind="email">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" placeholder="+41 79 123 4567" data-bind="phone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" placeholder="Zurich, Switzerland" data-bind="location">
+          </div>
+          <div class="form-group">
+            <label for="summary">Professional Summary</label>
+            <textarea id="summary" rows="3" placeholder="Brief overview of your experience and goals..." data-bind="summary"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Experience -->
+      <details class="form-section" open>
+        <summary class="form-section__title">Experience</summary>
+        <div class="form-section__body" id="experienceList">
+          <!-- Dynamic entries -->
+        </div>
+        <button type="button" class="form-section__add" data-add="experience">+ Add Experience</button>
+      </details>
+
+      <!-- Education -->
+      <details class="form-section" open>
+        <summary class="form-section__title">Education</summary>
+        <div class="form-section__body" id="educationList">
+          <!-- Dynamic entries -->
+        </div>
+        <button type="button" class="form-section__add" data-add="education">+ Add Education</button>
+      </details>
+
+      <!-- Skills -->
+      <details class="form-section" open>
+        <summary class="form-section__title">Skills</summary>
+        <div class="form-section__body">
+          <div class="form-group">
+            <label for="skills">Skills (comma-separated)</label>
+            <textarea id="skills" rows="2" placeholder="JavaScript, Python, React, Docker, AWS..." data-bind="skills"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Languages -->
+      <details class="form-section">
+        <summary class="form-section__title">Languages</summary>
+        <div class="form-section__body" id="languagesList">
+          <!-- Dynamic entries -->
+        </div>
+        <button type="button" class="form-section__add" data-add="language">+ Add Language</button>
+      </details>
+
+    </aside>
+
+    <!-- Preview Panel -->
+    <section class="editor__preview" id="previewPanel">
+      <div class="preview" id="cvPreview">
+        <div class="cv cv--europass" id="cvDocument">
+
+          <header class="cv__header">
+            <div class="cv__name" id="pvName">John Doe</div>
+            <div class="cv__title" id="pvTitle">Software Engineer</div>
+            <div class="cv__contact" id="pvContact">
+              <span>john@example.com</span>
+              <span>+41 79 123 4567</span>
+              <span>Zurich, Switzerland</span>
+            </div>
+          </header>
+
+          <section class="cv__section" id="pvSummarySection">
+            <h2 class="cv__section-title">Profile</h2>
+            <p class="cv__text" id="pvSummary">Brief overview of your experience and goals...</p>
+          </section>
+
+          <section class="cv__section" id="pvExperienceSection">
+            <h2 class="cv__section-title">Experience</h2>
+            <div id="pvExperience"></div>
+          </section>
+
+          <section class="cv__section" id="pvEducationSection">
+            <h2 class="cv__section-title">Education</h2>
+            <div id="pvEducation"></div>
+          </section>
+
+          <section class="cv__section" id="pvSkillsSection">
+            <h2 class="cv__section-title">Skills</h2>
+            <div class="cv__skills" id="pvSkills"></div>
+          </section>
+
+          <section class="cv__section" id="pvLanguagesSection" hidden>
+            <h2 class="cv__section-title">Languages</h2>
+            <div class="cv__languages" id="pvLanguages"></div>
+          </section>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile toggle -->
+  <button type="button" class="editor__toggle" id="mobileToggle" aria-label="Toggle preview">
+    &#128065; Preview
+  </button>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // --- State ---
+    var state = loadState() || {
+      firstName: '', lastName: '', jobTitle: '', email: '', phone: '',
+      location: '', summary: '',
+      experience: [],
+      education: [],
+      skills: '',
+      languages: []
+    };
+
+    var saveTimer = null;
+
+    // --- LocalStorage ---
+    function loadState() {
+      try {
+        var raw = localStorage.getItem('cv-builder-data');
+        return raw ? JSON.parse(raw) : null;
+      } catch(e) { return null; }
+    }
+
+    function saveState() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function() {
+        try { localStorage.setItem('cv-builder-data', JSON.stringify(state)); } catch(e) {}
+      }, 300);
+    }
+
+    // --- Render Preview ---
+    function render() {
+      var fullName = (state.firstName + ' ' + state.lastName).trim() || 'Your Name';
+      document.getElementById('pvName').textContent = fullName;
+      document.getElementById('pvTitle').textContent = state.jobTitle || 'Job Title';
+
+      var contacts = [state.email, state.phone, state.location].filter(Boolean);
+      document.getElementById('pvContact').innerHTML = contacts.map(function(c) {
+        return '<span>' + esc(c) + '</span>';
+      }).join(' ');
+
+      // Summary
+      var sumEl = document.getElementById('pvSummarySection');
+      if (state.summary) {
+        sumEl.hidden = false;
+        document.getElementById('pvSummary').textContent = state.summary;
+      } else {
+        sumEl.hidden = true;
+      }
+
+      // Experience
+      var expEl = document.getElementById('pvExperience');
+      var expSection = document.getElementById('pvExperienceSection');
+      if (state.experience.length) {
+        expSection.hidden = false;
+        expEl.innerHTML = state.experience.map(function(e) {
+          return '<div class="cv__entry">' +
+            '<div class="cv__entry-header">' +
+              '<strong>' + esc(e.title || 'Position') + '</strong>' +
+              '<span class="cv__entry-date">' + esc(e.dates || '') + '</span>' +
+            '</div>' +
+            '<div class="cv__entry-sub">' + esc(e.company || '') + '</div>' +
+            (e.description ? '<p class="cv__entry-desc">' + esc(e.description) + '</p>' : '') +
+          '</div>';
+        }).join('');
+      } else {
+        expSection.hidden = true;
+      }
+
+      // Education
+      var eduEl = document.getElementById('pvEducation');
+      var eduSection = document.getElementById('pvEducationSection');
+      if (state.education.length) {
+        eduSection.hidden = false;
+        eduEl.innerHTML = state.education.map(function(e) {
+          return '<div class="cv__entry">' +
+            '<div class="cv__entry-header">' +
+              '<strong>' + esc(e.degree || 'Degree') + '</strong>' +
+              '<span class="cv__entry-date">' + esc(e.dates || '') + '</span>' +
+            '</div>' +
+            '<div class="cv__entry-sub">' + esc(e.school || '') + '</div>' +
+          '</div>';
+        }).join('');
+      } else {
+        eduSection.hidden = true;
+      }
+
+      // Skills
+      var skillsEl = document.getElementById('pvSkills');
+      var skillsSection = document.getElementById('pvSkillsSection');
+      var skillList = state.skills ? state.skills.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
+      if (skillList.length) {
+        skillsSection.hidden = false;
+        skillsEl.innerHTML = skillList.map(function(s) {
+          return '<span class="cv__skill">' + esc(s) + '</span>';
+        }).join('');
+      } else {
+        skillsSection.hidden = true;
+      }
+
+      // Languages
+      var langEl = document.getElementById('pvLanguages');
+      var langSection = document.getElementById('pvLanguagesSection');
+      if (state.languages.length) {
+        langSection.hidden = false;
+        langEl.innerHTML = state.languages.map(function(l) {
+          return '<div class="cv__lang"><strong>' + esc(l.name || '') + '</strong> - ' + esc(l.level || '') + '</div>';
+        }).join('');
+      } else {
+        langSection.hidden = true;
+      }
+
+      saveState();
+    }
+
+    function esc(s) {
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    // --- Bind simple fields ---
+    document.querySelectorAll('[data-bind]').forEach(function(el) {
+      var key = el.getAttribute('data-bind');
+      if (state[key]) el.value = state[key];
+      el.addEventListener('input', function() {
+        state[key] = el.value;
+        render();
+      });
+    });
+
+    // --- Dynamic entries ---
+    function createExperienceEntry(data) {
+      data = data || { title: '', company: '', dates: '', description: '' };
+      var div = document.createElement('div');
+      div.className = 'form-entry';
+      div.innerHTML =
+        '<div class="form-row"><div class="form-group"><label>Position</label><input type="text" placeholder="Software Engineer" value="' + esc(data.title) + '"></div>' +
+        '<div class="form-group"><label>Company</label><input type="text" placeholder="Acme Corp" value="' + esc(data.company) + '"></div></div>' +
+        '<div class="form-group"><label>Dates</label><input type="text" placeholder="Jan 2022 - Present" value="' + esc(data.dates) + '"></div>' +
+        '<div class="form-group"><label>Description</label><textarea rows="2" placeholder="Key achievements...">' + esc(data.description) + '</textarea></div>' +
+        '<button type="button" class="form-entry__remove">Remove</button>';
+
+      var inputs = div.querySelectorAll('input, textarea');
+      var fields = ['title', 'company', 'dates', 'description'];
+      inputs.forEach(function(inp, i) {
+        inp.addEventListener('input', function() {
+          var idx = Array.from(div.parentNode.children).indexOf(div);
+          if (state.experience[idx]) {
+            state.experience[idx][fields[i]] = inp.value;
+            render();
+          }
+        });
+      });
+
+      div.querySelector('.form-entry__remove').addEventListener('click', function() {
+        var idx = Array.from(div.parentNode.children).indexOf(div);
+        state.experience.splice(idx, 1);
+        div.remove();
+        render();
+      });
+
+      return div;
+    }
+
+    function createEducationEntry(data) {
+      data = data || { degree: '', school: '', dates: '' };
+      var div = document.createElement('div');
+      div.className = 'form-entry';
+      div.innerHTML =
+        '<div class="form-row"><div class="form-group"><label>Degree</label><input type="text" placeholder="BSc Computer Science" value="' + esc(data.degree) + '"></div>' +
+        '<div class="form-group"><label>School</label><input type="text" placeholder="ETH Zurich" value="' + esc(data.school) + '"></div></div>' +
+        '<div class="form-group"><label>Dates</label><input type="text" placeholder="2018 - 2022" value="' + esc(data.dates) + '"></div>' +
+        '<button type="button" class="form-entry__remove">Remove</button>';
+
+      var inputs = div.querySelectorAll('input');
+      var fields = ['degree', 'school', 'dates'];
+      inputs.forEach(function(inp, i) {
+        inp.addEventListener('input', function() {
+          var idx = Array.from(div.parentNode.children).indexOf(div);
+          if (state.education[idx]) {
+            state.education[idx][fields[i]] = inp.value;
+            render();
+          }
+        });
+      });
+
+      div.querySelector('.form-entry__remove').addEventListener('click', function() {
+        var idx = Array.from(div.parentNode.children).indexOf(div);
+        state.education.splice(idx, 1);
+        div.remove();
+        render();
+      });
+
+      return div;
+    }
+
+    function createLanguageEntry(data) {
+      data = data || { name: '', level: '' };
+      var div = document.createElement('div');
+      div.className = 'form-entry';
+      div.innerHTML =
+        '<div class="form-row"><div class="form-group"><label>Language</label><input type="text" placeholder="English" value="' + esc(data.name) + '"></div>' +
+        '<div class="form-group"><label>Level</label><select>' +
+          '<option value="Native"' + (data.level === 'Native' ? ' selected' : '') + '>Native</option>' +
+          '<option value="Fluent"' + (data.level === 'Fluent' ? ' selected' : '') + '>Fluent</option>' +
+          '<option value="Advanced"' + (data.level === 'Advanced' ? ' selected' : '') + '>Advanced</option>' +
+          '<option value="Intermediate"' + (data.level === 'Intermediate' ? ' selected' : '') + '>Intermediate</option>' +
+          '<option value="Beginner"' + (data.level === 'Beginner' ? ' selected' : '') + '>Beginner</option>' +
+        '</select></div></div>' +
+        '<button type="button" class="form-entry__remove">Remove</button>';
+
+      div.querySelector('input').addEventListener('input', function() {
+        var idx = Array.from(div.parentNode.children).indexOf(div);
+        if (state.languages[idx]) { state.languages[idx].name = this.value; render(); }
+      });
+      div.querySelector('select').addEventListener('change', function() {
+        var idx = Array.from(div.parentNode.children).indexOf(div);
+        if (state.languages[idx]) { state.languages[idx].level = this.value; render(); }
+      });
+      div.querySelector('.form-entry__remove').addEventListener('click', function() {
+        var idx = Array.from(div.parentNode.children).indexOf(div);
+        state.languages.splice(idx, 1);
+        div.remove();
+        render();
+      });
+
+      return div;
+    }
+
+    // Add buttons
+    document.querySelectorAll('[data-add]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var type = btn.getAttribute('data-add');
+        if (type === 'experience') {
+          var entry = { title: '', company: '', dates: '', description: '' };
+          state.experience.push(entry);
+          document.getElementById('experienceList').appendChild(createExperienceEntry(entry));
+        } else if (type === 'education') {
+          var entry2 = { degree: '', school: '', dates: '' };
+          state.education.push(entry2);
+          document.getElementById('educationList').appendChild(createEducationEntry(entry2));
+        } else if (type === 'language') {
+          var entry3 = { name: '', level: 'Native' };
+          state.languages.push(entry3);
+          document.getElementById('languagesList').appendChild(createLanguageEntry(entry3));
+        }
+        render();
+      });
+    });
+
+    // --- Restore saved entries ---
+    state.experience.forEach(function(e) {
+      document.getElementById('experienceList').appendChild(createExperienceEntry(e));
+    });
+    state.education.forEach(function(e) {
+      document.getElementById('educationList').appendChild(createEducationEntry(e));
+    });
+    state.languages.forEach(function(l) {
+      document.getElementById('languagesList').appendChild(createLanguageEntry(l));
+    });
+
+    // --- Template switching ---
+    var templateSelect = document.getElementById('templateSelect');
+    templateSelect.addEventListener('change', function() {
+      var cv = document.getElementById('cvDocument');
+      cv.className = 'cv cv--' + templateSelect.value;
+    });
+
+    // --- PDF Export (Print CSS) ---
+    document.getElementById('exportPdf').addEventListener('click', function() {
+      window.print();
+    });
+
+    // --- Clear All ---
+    document.getElementById('clearAll').addEventListener('click', function() {
+      if (!confirm('Clear all data? This cannot be undone.')) return;
+      localStorage.removeItem('cv-builder-data');
+      location.reload();
+    });
+
+    // --- Mobile toggle ---
+    document.getElementById('mobileToggle').addEventListener('click', function() {
+      var editor = document.querySelector('.editor');
+      editor.classList.toggle('editor--preview-mode');
+      this.textContent = editor.classList.contains('editor--preview-mode') ? '\u270F Edit' : '\uD83D\uDC41 Preview';
+    });
+
+    // Initial render
+    render();
+  })();
+  </script>
+
+</body>
+</html>

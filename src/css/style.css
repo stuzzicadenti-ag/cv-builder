@@ -154,6 +154,10 @@ a:hover { color: var(--accent-green); }
   border-bottom: 1px solid var(--border-color);
   padding: 16px 0;
 }
+.navbar.scrolled {
+  background: rgba(15, 18, 33, 0.95);
+  border-bottom-color: var(--border-color-light);
+}
 
 .nav-container {
   display: flex;

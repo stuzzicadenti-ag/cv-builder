@@ -144,6 +144,12 @@
 </form>
 
 <script>
+function escAttr(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML.replace(/"/g, '&quot;');
+}
+
 function createExpEntry(data = {}) {
   const div = document.createElement('div');
   div.className = 'exp-entry';
@@ -153,20 +159,20 @@ function createExpEntry(data = {}) {
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label>Job Title</label>
-        <input type="text" class="exp-title" value="${data.title || ''}" placeholder="Software Engineer">
+        <input type="text" class="exp-title" value="${escAttr(data.title)}" placeholder="Software Engineer">
       </div>
       <div class="form-group">
         <label>Company</label>
-        <input type="text" class="exp-company" value="${data.company || ''}" placeholder="Acme Corp">
+        <input type="text" class="exp-company" value="${escAttr(data.company)}" placeholder="Acme Corp">
       </div>
     </div>
     <div class="form-group">
       <label>Dates</label>
-      <input type="text" class="exp-dates" value="${data.dates || ''}" placeholder="Jan 2023 - Present">
+      <input type="text" class="exp-dates" value="${escAttr(data.dates)}" placeholder="Jan 2023 - Present">
     </div>
     <div class="form-group">
       <label>Description</label>
-      <textarea class="exp-description" rows="3" placeholder="Key responsibilities and achievements...">${data.description || ''}</textarea>
+      <textarea class="exp-description" rows="3" placeholder="Key responsibilities and achievements...">${escAttr(data.description)}</textarea>
     </div>
   `;
   return div;
