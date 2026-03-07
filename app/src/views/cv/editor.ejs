@@ -1,0 +1,250 @@
+<%- include('../partials/header') %>
+
+<%
+  const cvData = cv && cv.data ? (typeof cv.data === 'string' ? JSON.parse(cv.data) : cv.data) : {};
+  const name = cvData.name || '';
+  const email = cvData.email || '';
+  const phone = cvData.phone || '';
+  const location = cvData.location || '';
+  const summary = cvData.summary || '';
+  const experience = cvData.experience || [];
+  const education = cvData.education || [];
+  const skills = cvData.skills || [];
+%>
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+  <h1><%= cv ? 'Edit CV' : 'New CV' %></h1>
+  <a href="/cv" class="btn btn-outline btn-sm">Back to My CVs</a>
+</div>
+
+<form id="cv-form" method="POST" action="/cv/save">
+  <% if (cv) { %>
+    <input type="hidden" name="id" value="<%= cv.id %>">
+  <% } %>
+  <input type="hidden" name="data" id="cv-data-field" value="">
+
+  <div class="card" style="margin-bottom:20px;">
+    <h2 style="margin-bottom:16px;">Basic Info</h2>
+    <div class="form-group">
+      <label for="cv-title">CV Title</label>
+      <input type="text" id="cv-title" name="title" required value="<%= cv ? cv.title : 'My CV' %>" placeholder="e.g. Software Engineer CV">
+    </div>
+    <div class="form-group">
+      <label for="cv-template">Template</label>
+      <select id="cv-template" name="templateId" required>
+        <% for (const t of templates) { %>
+          <option value="<%= t.id %>" <%= (cv && cv.templateId === t.id) ? 'selected' : '' %>><%= t.name %> - <%= t.description %></option>
+        <% } %>
+      </select>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <h2 style="margin-bottom:16px;">Personal Details</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label for="cv-name">Full Name</label>
+        <input type="text" id="cv-name" data-field="name" required value="<%= name %>" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label for="cv-email">Email</label>
+        <input type="email" id="cv-email" data-field="email" required value="<%= email %>" placeholder="john@example.com">
+      </div>
+      <div class="form-group">
+        <label for="cv-phone">Phone</label>
+        <input type="text" id="cv-phone" data-field="phone" value="<%= phone %>" placeholder="+41 79 123 4567">
+      </div>
+      <div class="form-group">
+        <label for="cv-location">Location</label>
+        <input type="text" id="cv-location" data-field="location" value="<%= location %>" placeholder="Zurich, Switzerland">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cv-summary">Summary</label>
+      <textarea id="cv-summary" data-field="summary" rows="3" placeholder="Brief professional summary..."><%= summary %></textarea>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2>Experience</h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addExperience()">+ Add</button>
+    </div>
+    <div id="experience-list">
+      <% if (experience.length > 0) { %>
+        <% experience.forEach((job, i) => { %>
+          <div class="exp-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" class="exp-title" value="<%= job.title %>" placeholder="Software Engineer">
+              </div>
+              <div class="form-group">
+                <label>Company</label>
+                <input type="text" class="exp-company" value="<%= job.company %>" placeholder="Acme Corp">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Dates</label>
+              <input type="text" class="exp-dates" value="<%= job.dates %>" placeholder="Jan 2023 - Present">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="exp-description" rows="3" placeholder="Key responsibilities and achievements..."><%= job.description %></textarea>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2>Education</h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addEducation()">+ Add</button>
+    </div>
+    <div id="education-list">
+      <% if (education.length > 0) { %>
+        <% education.forEach((edu, i) => { %>
+          <div class="edu-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label>Degree</label>
+                <input type="text" class="edu-degree" value="<%= edu.degree %>" placeholder="BSc Computer Science">
+              </div>
+              <div class="form-group">
+                <label>School</label>
+                <input type="text" class="edu-school" value="<%= edu.school %>" placeholder="ETH Zurich">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Dates</label>
+              <input type="text" class="edu-dates" value="<%= edu.dates %>" placeholder="2018 - 2022">
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <h2 style="margin-bottom:16px;">Skills</h2>
+    <div class="form-group">
+      <label for="cv-skills">Skills (comma-separated)</label>
+      <input type="text" id="cv-skills" value="<%= skills.join(', ') %>" placeholder="JavaScript, Python, Docker, PostgreSQL, AWS">
+    </div>
+  </div>
+
+  <div style="display:flex; gap:12px; justify-content:flex-end;">
+    <a href="/cv" class="btn btn-outline">Cancel</a>
+    <button type="submit" class="btn btn-primary">Save CV</button>
+  </div>
+</form>
+
+<script>
+function createExpEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'exp-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label>Job Title</label>
+        <input type="text" class="exp-title" value="${data.title || ''}" placeholder="Software Engineer">
+      </div>
+      <div class="form-group">
+        <label>Company</label>
+        <input type="text" class="exp-company" value="${data.company || ''}" placeholder="Acme Corp">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dates</label>
+      <input type="text" class="exp-dates" value="${data.dates || ''}" placeholder="Jan 2023 - Present">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="exp-description" rows="3" placeholder="Key responsibilities and achievements...">${data.description || ''}</textarea>
+    </div>
+  `;
+  return div;
+}
+
+function createEduEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'edu-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label>Degree</label>
+        <input type="text" class="edu-degree" value="${data.degree || ''}" placeholder="BSc Computer Science">
+      </div>
+      <div class="form-group">
+        <label>School</label>
+        <input type="text" class="edu-school" value="${data.school || ''}" placeholder="ETH Zurich">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dates</label>
+      <input type="text" class="edu-dates" value="${data.dates || ''}" placeholder="2018 - 2022">
+    </div>
+  `;
+  return div;
+}
+
+function addExperience() {
+  document.getElementById('experience-list').appendChild(createExpEntry());
+}
+
+function addEducation() {
+  document.getElementById('education-list').appendChild(createEduEntry());
+}
+
+function collectFormData() {
+  const experience = [];
+  document.querySelectorAll('.exp-entry').forEach(entry => {
+    const title = entry.querySelector('.exp-title')?.value?.trim() || '';
+    const company = entry.querySelector('.exp-company')?.value?.trim() || '';
+    const dates = entry.querySelector('.exp-dates')?.value?.trim() || '';
+    const description = entry.querySelector('.exp-description')?.value?.trim() || '';
+    if (title || company) {
+      experience.push({ title, company, dates, description });
+    }
+  });
+
+  const education = [];
+  document.querySelectorAll('.edu-entry').forEach(entry => {
+    const degree = entry.querySelector('.edu-degree')?.value?.trim() || '';
+    const school = entry.querySelector('.edu-school')?.value?.trim() || '';
+    const dates = entry.querySelector('.edu-dates')?.value?.trim() || '';
+    if (degree || school) {
+      education.push({ degree, school, dates });
+    }
+  });
+
+  const skillsRaw = document.getElementById('cv-skills').value;
+  const skills = skillsRaw.split(',').map(s => s.trim()).filter(Boolean);
+
+  return {
+    name: document.getElementById('cv-name').value.trim(),
+    email: document.getElementById('cv-email').value.trim(),
+    phone: document.getElementById('cv-phone').value.trim(),
+    location: document.getElementById('cv-location').value.trim(),
+    summary: document.getElementById('cv-summary').value.trim(),
+    experience,
+    education,
+    skills,
+  };
+}
+
+document.getElementById('cv-form').addEventListener('submit', function(e) {
+  const data = collectFormData();
+  document.getElementById('cv-data-field').value = JSON.stringify(data);
+});
+</script>
+
+<%- include('../partials/footer') %>

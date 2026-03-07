@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: stz-cvbuilder-app
+    build: .
+    image: stz-cvbuilder:latest
+    ports:
+      - "0.0.0.0:4001:4001"
+    environment:
+      NODE_ENV: production
+      PORT: 4001
+      DATABASE_URL: postgresql://cvbuilder_app:cvbuilder_pass@stz-shared-db:5432/stz_cvbuilder
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      COOKIE_SECRET: ${COOKIE_SECRET:-change-me-in-production}
+      PDF_DIR: /app/data/pdfs
+    volumes:
+      - stz-cvbuilder-pdfs:/app/data/pdfs
+    networks:
+      - stz-net
+    restart: unless-stopped
+    depends_on:
+      stz-shared-db:
+        condition: service_healthy
+    labels:
+      stz.project: "stuzzicadenti-ag"
+      stz.service: "cvbuilder"
+      stz.component: "app"
+
+volumes:
+  stz-cvbuilder-pdfs:
+    name: stz-cvbuilder-pdfs
+
+networks:
+  stz-net:
+    external: true

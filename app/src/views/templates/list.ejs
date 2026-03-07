@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+
+<h1 style="margin-bottom:24px;">CV Templates</h1>
+<div class="grid grid-3">
+  <% for (const t of templates) { %>
+    <div class="card">
+      <h3 style="margin-bottom:8px;"><%= t.name %></h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;"><%= t.description %></p>
+      <a href="/cv/new?template=<%= t.id %>" class="btn btn-primary btn-sm">Use Template</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
