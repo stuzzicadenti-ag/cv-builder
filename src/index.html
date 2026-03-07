@@ -70,14 +70,19 @@
         <li><a href="#pricing">Pricing</a></li>
       </ul>
       <div class="nav-actions">
-        <div class="lang-switch">
-          <a href="./" class="active">EN</a>
-          <a href="de/">DE</a>
-          <a href="fr/">FR</a>
-          <a href="it/">IT</a>
-        </div>
         <button type="button" class="btn btn-ghost" id="loginBtn">Login</button>
         <button type="button" class="btn btn-primary btn-sm" id="registerBtn">Register</button>
+        <div class="lang-dropdown">
+          <button type="button" class="lang-dropdown__btn" aria-expanded="false" aria-haspopup="true">
+            &#127760; <span class="lang-dropdown__current">EN</span> &#9662;
+          </button>
+          <ul class="lang-dropdown__menu" role="menu">
+            <li><a href="./" role="menuitem" class="active">English</a></li>
+            <li><a href="de/" role="menuitem">Deutsch</a></li>
+            <li><a href="fr/" role="menuitem">Fran&ccedil;ais</a></li>
+            <li><a href="it/" role="menuitem">Italiano</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
@@ -90,7 +95,7 @@
       <div class="shape shape-3"></div>
     </div>
     <div class="container hero-content">
-      <span class="badge badge-free">&#10003; 100% Free &mdash; No Ads</span>
+      <span class="badge badge-free">&#10003; 100% Free. No Ads</span>
       <h1 class="hero-title">
         <span class="logo-icon-large">&#128196;</span> CV Builder
       </h1>
@@ -119,7 +124,7 @@
           <div class="step-number">1</div>
           <div class="step-icon">&#127912;</div>
           <h3>Choose a Template</h3>
-          <p>Pick from our curated collection of professional templates &mdash; Europass, academic, creative, and more.</p>
+          <p>Pick from our curated collection of professional templates, Europass, academic, creative, and more.</p>
         </div>
         <div class="step-card">
           <div class="step-number">2</div>
@@ -475,7 +480,7 @@
     <div class="container">
       <h2>Ready to Build Your CV?</h2>
       <p>Join thousands of professionals who trust CV Builder for their career documents.</p>
-      <a href="#templates" class="btn btn-primary btn-lg">Start Building &mdash; It's Free &#8594;</a>
+      <a href="#templates" class="btn btn-primary btn-lg">Start Building. It's Free &#8594;</a>
     </div>
   </section>
 

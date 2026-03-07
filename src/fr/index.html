@@ -70,11 +70,16 @@
         <li><a href="#pricing">Tarifs</a></li>
       </ul>
       <div class="nav-actions">
-        <div class="lang-switch">
-          <a href="../">EN</a>
-          <a href="../de/">DE</a>
-          <a href="../fr/" class="active">FR</a>
-          <a href="../it/">IT</a>
+        <div class="lang-dropdown">
+          <button type="button" class="lang-dropdown__btn" aria-expanded="false" aria-haspopup="true">
+            &#127760; <span class="lang-dropdown__current">FR</span> &#9662;
+          </button>
+          <ul class="lang-dropdown__menu" role="menu">
+            <li><a href="../" role="menuitem">English</a></li>
+            <li><a href="../de/" role="menuitem">Deutsch</a></li>
+            <li><a href="./" role="menuitem" class="active">Français</a></li>
+            <li><a href="../it/" role="menuitem">Italiano</a></li>
+          </ul>
         </div>
         <button type="button" class="btn btn-ghost" id="loginBtn">Connexion</button>
         <button type="button" class="btn btn-primary btn-sm" id="registerBtn">S'inscrire</button>
@@ -90,7 +95,7 @@
       <div class="shape shape-3"></div>
     </div>
     <div class="container hero-content">
-      <span class="badge badge-free">&#10003; 100% Gratuit &mdash; Sans publicité</span>
+      <span class="badge badge-free">&#10003; 100% Gratuit. Sans publicité</span>
       <h1 class="hero-title">
         <span class="logo-icon-large">&#128196;</span> CV Builder
       </h1>
@@ -119,7 +124,7 @@
           <div class="step-number">1</div>
           <div class="step-icon">&#127912;</div>
           <h3>Choisissez un modèle</h3>
-          <p>Choisissez parmi notre collection de modèles professionnels &mdash; Europass, académique, créatif, et plus encore.</p>
+          <p>Choisissez parmi notre collection de modèles professionnels, Europass, académique, créatif, et plus encore.</p>
         </div>
         <div class="step-card">
           <div class="step-number">2</div>
@@ -475,7 +480,7 @@
     <div class="container">
       <h2>Prêt à créer votre CV ?</h2>
       <p>Rejoignez des milliers de professionnels qui font confiance à CV Builder pour leurs documents de carrière.</p>
-      <a href="#templates" class="btn btn-primary btn-lg">Commencer &mdash; C'est gratuit &#8594;</a>
+      <a href="#templates" class="btn btn-primary btn-lg">Commencer. C'est gratuit &#8594;</a>
     </div>
   </section>
 
@@ -608,6 +613,27 @@
       });
     })();
   </script>
+
+<script>
+(function() {
+  var btn = document.querySelector('.lang-dropdown__btn');
+  var menu = document.querySelector('.lang-dropdown__menu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function() {
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  });
+})();
+(function() { sessionStorage.setItem('lang-chosen', '1'); })();
+</script>
 
 </body>
 </html>
