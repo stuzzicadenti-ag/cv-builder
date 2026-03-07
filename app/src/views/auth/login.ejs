@@ -4,6 +4,11 @@
   <div class="card">
     <h2 style="margin-bottom: 20px;">Login</h2>
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <% if (typeof registered !== 'undefined' && registered) { %>
+      <div class="alert alert-success" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0; padding:12px; border-radius:var(--radius, 6px); margin-bottom:16px;">
+        Account created successfully. Please log in.
+      </div>
+    <% } %>
     <form method="POST" action="/auth/login">
       <div class="form-group">
         <label for="email">Email</label>

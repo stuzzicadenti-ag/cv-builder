@@ -23,10 +23,12 @@ export default async function authRoutes(app) {
 
   app.get('/login', async (req, reply) => {
     if (req.user) return reply.redirect('/');
-    return reply.view('auth/login.ejs', { error: null, title: 'Login' });
+    const registered = req.query.registered === '1';
+    return reply.view('auth/login.ejs', { error: null, title: 'Login', registered });
   });
 
   app.post('/login', async (req, reply) => {
+    if (app.checkAuthRateLimit && !app.checkAuthRateLimit(req, reply)) return;
     const { email, password } = req.body;
     if (!email || !password) {
       return reply.view('auth/login.ejs', { error: 'Email and password are required', title: 'Login' });
@@ -46,6 +48,7 @@ export default async function authRoutes(app) {
   });
 
   app.post('/register', async (req, reply) => {
+    if (app.checkAuthRateLimit && !app.checkAuthRateLimit(req, reply)) return;
     const { email, password, name } = req.body;
     if (!email || !password || !name) {
       return reply.view('auth/register.ejs', { error: 'All fields are required', title: 'Register' });
@@ -53,8 +56,8 @@ export default async function authRoutes(app) {
     if (!EMAIL_RE.test(email)) {
       return reply.view('auth/register.ejs', { error: 'Invalid email format', title: 'Register' });
     }
-    if (password.length < 8) {
-      return reply.view('auth/register.ejs', { error: 'Password must be at least 8 characters', title: 'Register' });
+    if (password.length < 8 || password.length > 1000) {
+      return reply.view('auth/register.ejs', { error: 'Password must be 8-1000 characters', title: 'Register' });
     }
     if (name.length > 255 || email.length > 255) {
       return reply.view('auth/register.ejs', { error: 'Input too long', title: 'Register' });
@@ -65,7 +68,7 @@ export default async function authRoutes(app) {
     }
     const passwordHash = await bcrypt.hash(password, 12);
     await db.insert(users).values({ email, passwordHash, name });
-    return reply.redirect('/auth/login');
+    return reply.redirect('/auth/login?registered=1');
   });
 
   app.get('/logout', async (req, reply) => {

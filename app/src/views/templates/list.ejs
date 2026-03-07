@@ -1,14 +1,53 @@
 <%- include('../partials/header') %>
 
-<h1 style="margin-bottom:24px;">CV Templates</h1>
-<div class="grid grid-3">
-  <% for (const t of templates) { %>
-    <div class="card">
-      <h3 style="margin-bottom:8px;"><%= t.name %></h3>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;"><%= t.description %></p>
-      <a href="/cv/new?template=<%= t.id %>" class="btn btn-primary btn-sm">Use Template</a>
-    </div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+  <div>
+    <h1 style="margin-bottom:4px;">CV Templates</h1>
+    <p style="color:var(--text-muted); font-size:0.9rem;">Choose a template to get started. You can always change it later.</p>
+  </div>
+  <% if (typeof user !== 'undefined' && user) { %>
+    <a href="/cv" class="btn btn-outline btn-sm">My CVs</a>
   <% } %>
 </div>
+
+<% if (templates.length === 0) { %>
+  <div class="card" style="text-align:center; padding:48px;">
+    <p style="font-size:1.2rem; margin-bottom:8px;">No templates available yet.</p>
+    <p style="color:var(--text-muted);">Templates will appear here once added by an administrator.</p>
+  </div>
+<% } else { %>
+  <div class="grid grid-3">
+    <% const previewStyles = {
+      'Classic': { bg: '#f8fafc', accent: '#1e293b', icon: 'Aa' },
+      'Modern': { bg: '#eff6ff', accent: '#2563eb', icon: '||' },
+      'Minimal': { bg: '#f9fafb', accent: '#6b7280', icon: '--' }
+    }; %>
+    <% for (const t of templates) { %>
+      <% const style = previewStyles[t.name] || { bg: '#f1f5f9', accent: '#6366f1', icon: 'CV' }; %>
+      <div class="card" style="overflow:hidden;">
+        <!-- Template preview placeholder -->
+        <div style="background:<%= style.bg %>; padding:24px; text-align:center; border-bottom:1px solid var(--border);">
+          <div style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:80px; background:white; border:2px solid <%= style.accent %>; border-radius:4px; position:relative;">
+            <div style="position:absolute; top:8px; left:8px; right:8px; height:3px; background:<%= style.accent %>; border-radius:1px;"></div>
+            <div style="position:absolute; top:16px; left:8px; right:8px; height:2px; background:<%= style.accent %>20; border-radius:1px;"></div>
+            <div style="position:absolute; top:22px; left:8px; right:8px; height:2px; background:<%= style.accent %>20; border-radius:1px;"></div>
+            <div style="position:absolute; top:32px; left:8px; right:20px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
+            <div style="position:absolute; top:38px; left:8px; right:12px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
+            <div style="position:absolute; top:48px; left:8px; width:16px; height:2px; background:<%= style.accent %>; border-radius:1px;"></div>
+            <div style="position:absolute; top:54px; left:8px; right:8px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
+            <div style="position:absolute; top:60px; left:8px; right:16px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
+          </div>
+        </div>
+        <div style="padding:16px;">
+          <h3 style="margin-bottom:6px; font-size:1.05rem;"><%= t.name %></h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; min-height:40px;"><%= t.description %></p>
+          <div style="display:flex; gap:8px;">
+            <a href="/cv/new?template=<%= t.id %>" class="btn btn-primary btn-sm" style="flex:1; text-align:center;">Use Template</a>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+<% } %>
 
 <%- include('../partials/footer') %>

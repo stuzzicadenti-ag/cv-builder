@@ -31,12 +31,19 @@ export default async function cvRoutes(app) {
   // New CV form
   app.get('/new', async (req, reply) => {
     const allTemplates = await db.select().from(templates);
-    return reply.view('cv/editor.ejs', { user: req.user, cv: null, templates: allTemplates, title: 'New CV' });
+    // Pre-select template if ?template= query param is provided
+    const preselectedTemplateId = req.query.template ? parseId(req.query.template) : null;
+    const cvStub = preselectedTemplateId ? { templateId: preselectedTemplateId, title: 'My CV', data: {} } : null;
+    return reply.view('cv/editor.ejs', { user: req.user, cv: cvStub, templates: allTemplates, title: 'New CV' });
   });
 
   // Save CV
   app.post('/save', async (req, reply) => {
     const { id, title, templateId, data } = req.body;
+
+    if (title && title.length > 255) return reply.code(400).send('Title too long');
+    if (typeof data === 'string' && data.length > 500000) return reply.code(400).send('CV data too large');
+
     let cvData;
     try {
       cvData = typeof data === 'string' ? JSON.parse(data) : data;
@@ -109,7 +116,8 @@ export default async function cvRoutes(app) {
     } catch (err) {
       await fs.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
       app.log.error(err);
-      return reply.code(500).send('PDF generation failed: ' + err.message);
+      const detail = process.env.NODE_ENV === 'production' ? '' : ': ' + err.message;
+      return reply.code(500).send('PDF generation failed' + detail);
     }
   });
 

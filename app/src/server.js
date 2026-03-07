@@ -15,7 +15,55 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = Fastify({
   logger: true,
-  trustProxy: true
+  trustProxy: true,
+  bodyLimit: 1048576, // 1 MB max body size
+});
+
+// Security headers
+app.addHook('onSend', async (request, reply) => {
+  reply.header('X-Content-Type-Options', 'nosniff');
+  reply.header('X-Frame-Options', 'DENY');
+  reply.header('X-XSS-Protection', '0');
+  reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+  reply.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+});
+
+// Rate limiting for auth routes (in-memory, per IP)
+const authAttempts = new Map();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX = 10;
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of authAttempts) {
+    if (now - entry.windowStart > RATE_LIMIT_WINDOW) authAttempts.delete(key);
+  }
+}, 60 * 1000);
+
+app.decorate('checkAuthRateLimit', (request, reply) => {
+  const ip = request.ip;
+  const now = Date.now();
+  let entry = authAttempts.get(ip);
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW) {
+    entry = { count: 0, windowStart: now };
+    authAttempts.set(ip, entry);
+  }
+  entry.count++;
+  if (entry.count > RATE_LIMIT_MAX) {
+    reply.code(429).send('Too many attempts. Please try again later.');
+    return false;
+  }
+  return true;
+});
+
+// Global error handler — don't leak internals in production
+app.setErrorHandler((error, request, reply) => {
+  app.log.error(error);
+  const statusCode = error.statusCode || 500;
+  const message = process.env.NODE_ENV === 'production'
+    ? 'An unexpected error occurred.'
+    : error.message;
+  reply.code(statusCode).send({ error: message });
 });
 
 // Plugins
