@@ -81,7 +81,9 @@ html {
   transition: all var(--transition-landing);
   text-decoration: none;
   white-space: nowrap;
+  line-height: 1.4;
 }
+.landing .l-btn:active { transform: scale(0.98); }
 
 .landing .l-btn-primary {
   background: var(--gradient-accent);
@@ -1003,4 +1005,20 @@ html {
   .landing .l-hero-title { font-size: 2rem; }
   .landing .l-hero-cta { flex-direction: column; align-items: center; }
   .landing .l-btn-lg { width: 100%; max-width: 280px; }
+  .landing .l-container { padding: 0 16px; }
+}
+
+@media (max-width: 320px) {
+  .landing .l-container { padding: 0 12px; }
+  .landing .l-hero { padding: 120px 0 60px; }
+  .landing .l-section { padding: 48px 0; }
+}
+
+/* Ultra-wide */
+@media (min-width: 1440px) {
+  :root { --max-width-landing: 1320px; }
+}
+@media (min-width: 2560px) {
+  :root { --max-width-landing: 1600px; }
+  .landing { font-size: 1.05rem; }
 }
