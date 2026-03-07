@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint HTML
+        uses: nicklegan/html-linter-action@v1
+        with:
+          path: ./src
+
+      - name: Check for .env files
+        run: |
+          if find . -name ".env*" -not -path "./.git/*" | grep -q .; then
+            echo "ERROR: .env files found in repository!"
+            find . -name ".env*" -not -path "./.git/*"
+            exit 1
+          fi
