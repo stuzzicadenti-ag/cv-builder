@@ -102,7 +102,7 @@
       <p class="hero-tagline">Professional CVs in minutes.<br>Europass, LaTeX, Typst.</p>
       <p class="hero-sub">Create ATS-optimized, beautifully typeset resumes with zero cost. Your data stays in your browser.</p>
       <div class="hero-cta">
-        <a href="#templates" class="btn btn-primary btn-lg">Build Your CV &#8594;</a>
+        <a href="editor.html" class="btn btn-primary btn-lg">Build Your CV &#8594;</a>
         <a href="#how-it-works" class="btn btn-outline btn-lg">How It Works</a>
       </div>
       <div class="hero-formats">
@@ -166,7 +166,7 @@
           <div class="template-info">
             <h3>Europass 2024</h3>
             <p>The EU standard format, recognized by employers and institutions across Europe.</p>
-            <a href="#" class="btn btn-primary btn-sm">Use Template</a>
+            <a href="editor.html" class="btn btn-primary btn-sm">Use Template</a>
           </div>
         </div>
 
@@ -184,7 +184,7 @@
           <div class="template-info">
             <h3>Modern Minimal</h3>
             <p>Clean, elegant design with plenty of whitespace. Perfect for tech and creative roles.</p>
-            <a href="#" class="btn btn-primary btn-sm">Use Template</a>
+            <a href="editor.html" class="btn btn-primary btn-sm">Use Template</a>
           </div>
         </div>
 
@@ -205,7 +205,7 @@
           <div class="template-info">
             <h3>Academic LaTeX</h3>
             <p>Publication-quality typesetting for researchers, professors, and PhD candidates.</p>
-            <a href="#" class="btn btn-primary btn-sm">Use Template</a>
+            <a href="editor.html" class="btn btn-primary btn-sm">Use Template</a>
           </div>
         </div>
 
@@ -229,7 +229,7 @@
           <div class="template-info">
             <h3>Creative Typst</h3>
             <p>Modern two-column layout with color accents. Stand out in design and marketing roles.</p>
-            <a href="#" class="btn btn-primary btn-sm">Use Template</a>
+            <a href="editor.html" class="btn btn-primary btn-sm">Use Template</a>
           </div>
         </div>
 
@@ -248,7 +248,7 @@
           <div class="template-info">
             <h3>Tech Professional</h3>
             <p>Skills-focused layout with technical proficiency bars. Ideal for engineers and developers.</p>
-            <a href="#" class="btn btn-primary btn-sm">Use Template</a>
+            <a href="editor.html" class="btn btn-primary btn-sm">Use Template</a>
           </div>
         </div>
 
@@ -267,7 +267,7 @@
           <div class="template-info">
             <h3>Executive</h3>
             <p>Sophisticated serif design for senior leadership, C-suite, and board-level positions.</p>
-            <a href="#" class="btn btn-primary btn-sm">Use Template</a>
+            <a href="editor.html" class="btn btn-primary btn-sm">Use Template</a>
           </div>
         </div>
 
@@ -613,6 +613,35 @@
       });
     })();
   </script>
+
+<script>
+// Language dropdown
+(function() {
+  var btn = document.querySelector('.lang-dropdown__btn');
+  var menu = document.querySelector('.lang-dropdown__menu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function() {
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  });
+})();
+// Auto-detect language (first visit only)
+(function() {
+  if (sessionStorage.getItem('lang-chosen')) return;
+  var lang = (navigator.language || '').substring(0, 2).toLowerCase();
+  var supported = {de: 'de/', fr: 'fr/', it: 'it/'};
+  if (supported[lang]) { sessionStorage.setItem('lang-chosen', '1'); window.location.href = supported[lang]; }
+  sessionStorage.setItem('lang-chosen', '1');
+})();
+</script>
 
 </body>
 </html>
