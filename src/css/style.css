@@ -1121,3 +1121,26 @@ a:hover { color: var(--accent-green); }
   .hero-cta { flex-direction: column; align-items: center; }
   .btn-lg { width: 100%; max-width: 280px; }
 }
+
+/* ========================================
+   Language Switcher
+   ======================================== */
+.lang-switch {
+  display: flex;
+  gap: 4px;
+  margin-left: 12px;
+}
+.lang-switch a {
+  color: var(--text-secondary, #9fa4c4);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.lang-switch a:hover,
+.lang-switch a.active {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+}
