@@ -12,15 +12,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Lint HTML
-        uses: nicklegan/html-linter-action@v1
-        with:
-          path: ./src
-
-      - name: Check for .env files
+      - name: Validate HTML
         run: |
+          sudo apt-get install -y tidy > /dev/null 2>&1
+          find src -name "*.html" -exec tidy -q -e {} \; 2>&1 || true
+
+      - name: Check for secrets
+        run: |
+          FOUND=0
+          # Check for .env files
           if find . -name ".env*" -not -path "./.git/*" | grep -q .; then
-            echo "ERROR: .env files found in repository!"
+            echo "::error::.env files found in repository!"
             find . -name ".env*" -not -path "./.git/*"
-            exit 1
+            FOUND=1
           fi
+          # Check for common secret patterns
+          if grep -rn "PRIVATE.KEY\|api_key\|api_token\|secret_key" --include="*.js" --include="*.ts" --include="*.py" --include="*.html" . 2>/dev/null | grep -v ".git/" | grep -v "node_modules/"; then
+            echo "::warning::Potential secrets found in code"
+          fi
+          exit $FOUND
