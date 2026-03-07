@@ -1,10 +1,13 @@
-import { pgTable, serial, text, varchar, timestamp, jsonb, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, timestamp, jsonb, integer, boolean } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   email: varchar('email', { length: 255 }).notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   name: varchar('name', { length: 255 }).notNull(),
+  role: varchar('role', { length: 20 }).default('user'),
+  banned: boolean('banned').default(false),
+  bannedReason: text('banned_reason'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

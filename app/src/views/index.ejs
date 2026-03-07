@@ -53,9 +53,13 @@
         <li><a href="#templates">Templates</a></li>
         <li><a href="#formats">Formats</a></li>
         <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/faq">FAQ</a></li>
       </ul>
       <div class="l-nav-actions">
         <% if (typeof user !== 'undefined' && user) { %>
+          <% if (user.role === 'admin' || user.role === 'owner') { %>
+            <a href="/admin" class="l-btn l-btn-ghost" style="color:#a78bfa;">Admin</a>
+          <% } %>
           <a href="/cv" class="l-btn l-btn-ghost">My CVs</a>
           <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Create New CV</a>
         <% } else { %>
@@ -513,7 +517,7 @@
             <li><a href="#templates">Templates</a></li>
             <li><a href="#formats">Formats</a></li>
             <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#">Documentation</a></li>
+            <li><a href="/faq">FAQ</a></li>
           </ul>
         </div>
         <div class="l-footer-links">

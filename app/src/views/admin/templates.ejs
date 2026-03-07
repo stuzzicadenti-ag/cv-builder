@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CV Builder</title>
+  <link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
+  <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+<div class="admin-layout">
+  <% const page = 'templates'; %>
+  <%- include('_sidebar') %>
+
+  <div class="admin-main">
+    <div class="admin-header">
+      <h1>Templates</h1>
+      <p>Manage CV templates</p>
+    </div>
+
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>CVs Using</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% templates.forEach(t => { %>
+          <tr>
+            <td><%= t.id %></td>
+            <td style="font-weight:600;"><%= t.name %></td>
+            <td style="max-width:300px;"><%= t.description || '--' %></td>
+            <td>
+              <span style="background:var(--surface-2);padding:2px 8px;border-radius:4px;font-size:0.8rem;">
+                <%= usageMap[t.id] || 0 %>
+              </span>
+            </td>
+            <td style="font-size:0.8rem;color:var(--text-muted);white-space:nowrap;"><%= new Date(t.created_at).toLocaleDateString() %></td>
+          </tr>
+          <% }) %>
+          <% if (templates.length === 0) { %>
+          <tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:24px;">No templates yet</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -14,8 +14,12 @@
     <a href="/" class="nav-brand">CV<span>Builder</span></a>
     <div class="nav-links">
       <a href="/templates">Templates</a>
+      <a href="/faq">FAQ</a>
       <% if (typeof user !== 'undefined' && user) { %>
         <a href="/cv">My CVs</a>
+        <% if (user.role === 'admin' || user.role === 'owner') { %>
+          <a href="/admin" style="color:#a78bfa;">Admin</a>
+        <% } %>
         <a href="/auth/logout">Logout</a>
       <% } else { %>
         <a href="/auth/login" class="btn btn-outline btn-sm">Login</a>

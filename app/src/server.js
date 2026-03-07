@@ -10,6 +10,7 @@ import { db, pool } from './db/index.js';
 import authRoutes from './routes/auth.js';
 import cvRoutes from './routes/cv.js';
 import templateRoutes from './routes/templates.js';
+import adminRoutes from './routes/admin.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -84,11 +85,18 @@ await app.register(fstatic, {
 await app.register(authRoutes, { prefix: '/auth' });
 await app.register(cvRoutes, { prefix: '/cv' });
 await app.register(templateRoutes, { prefix: '/templates' });
+await app.register(adminRoutes, { prefix: '/admin' });
 
 // Home page
 app.get('/', async (req, reply) => {
   const user = req.user || null;
   return reply.view('index.ejs', { user, title: 'CV Builder' });
+});
+
+// FAQ page
+app.get('/faq', async (req, reply) => {
+  const user = req.user || null;
+  return reply.view('faq.ejs', { user, title: 'FAQ' });
 });
 
 // Health check

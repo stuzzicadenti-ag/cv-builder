@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CV Builder</title>
+  <link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
+  <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+<div class="admin-layout">
+  <% const page = 'logs'; %>
+  <%- include('_sidebar') %>
+
+  <div class="admin-main">
+    <div class="admin-header">
+      <h1>Activity Log</h1>
+      <p>Recent admin actions (last 100)</p>
+    </div>
+
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Admin</th>
+            <th>Action</th>
+            <th>Target</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.forEach(log => { %>
+          <tr>
+            <td style="font-size:0.8rem;color:var(--text-muted);white-space:nowrap;"><%= new Date(log.created_at).toLocaleString() %></td>
+            <td><%= log.admin_email || '--' %></td>
+            <td>
+              <span class="log-action log-action-<%= log.action %>"><%= log.action.replace('_', ' ') %></span>
+            </td>
+            <td><%= log.target_email || '--' %></td>
+            <td style="max-width:300px;font-size:0.83rem;color:var(--text-muted);"><%= log.details || '--' %></td>
+          </tr>
+          <% }) %>
+          <% if (logs.length === 0) { %>
+          <tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:24px;">No activity logged yet</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

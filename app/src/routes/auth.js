@@ -17,7 +17,7 @@ export default async function authRoutes(app) {
     if (!token) return;
     try {
       const payload = jwt.verify(token, JWT_SECRET);
-      req.user = { id: payload.userId, email: payload.email, name: payload.name };
+      req.user = { id: payload.userId, email: payload.email, name: payload.name, role: payload.role || 'user' };
     } catch { req.user = null; }
   });
 
@@ -37,7 +37,11 @@ export default async function authRoutes(app) {
     if (!user || !await bcrypt.compare(password, user.passwordHash)) {
       return reply.view('auth/login.ejs', { error: 'Invalid email or password', title: 'Login' });
     }
-    const token = jwt.sign({ userId: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
+    // Check if user is banned
+    if (user.banned) {
+      return reply.view('auth/banned.ejs', { user: null, title: 'Account Suspended', reason: user.bannedReason || null });
+    }
+    const token = jwt.sign({ userId: user.id, email: user.email, name: user.name, role: user.role || 'user' }, JWT_SECRET, { expiresIn: '7d' });
     reply.setCookie('token', token, { path: '/', httpOnly: true, secure: false, maxAge: COOKIE_MAX_AGE, sameSite: 'lax' }); // behind Caddy on HTTP/Tailscale
     return reply.redirect('/');
   });

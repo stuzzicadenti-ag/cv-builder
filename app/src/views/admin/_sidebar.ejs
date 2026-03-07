@@ -1,0 +1,120 @@
+<style>
+  .admin-layout { display: flex; min-height: 100vh; }
+  .admin-sidebar {
+    width: 240px; background: #1e1b4b; border-right: 1px solid #312e81;
+    padding: 0; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
+    display: flex; flex-direction: column;
+  }
+  .admin-sidebar-brand {
+    padding: 20px 20px 16px; border-bottom: 1px solid #312e81;
+    font-size: 1.1rem; font-weight: 700; color: #e2e8f0;
+  }
+  .admin-sidebar-brand span { color: #a78bfa; }
+  .admin-sidebar-badge {
+    display: inline-block; font-size: 0.6rem; background: #7c3aed; color: #fff;
+    padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .admin-sidebar nav { padding: 12px 0; flex: 1; }
+  .admin-sidebar nav a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px; color: #c4b5fd; font-size: 0.88rem;
+    text-decoration: none; transition: all 0.15s;
+  }
+  .admin-sidebar nav a:hover { background: #312e81; color: #e2e8f0; text-decoration: none; }
+  .admin-sidebar nav a.active { background: #7c3aed; color: #fff; }
+  .admin-sidebar nav a .icon { font-size: 1rem; width: 20px; text-align: center; }
+  .admin-sidebar-footer {
+    padding: 16px 20px; border-top: 1px solid #312e81;
+    font-size: 0.75rem; color: #6d28d9;
+  }
+  .admin-sidebar-footer a { color: #a78bfa; text-decoration: none; font-size: 0.82rem; }
+  .admin-sidebar-footer a:hover { color: #e2e8f0; }
+  .admin-main { margin-left: 240px; flex: 1; padding: 32px; background: var(--bg); min-height: 100vh; }
+  .admin-header { margin-bottom: 28px; }
+  .admin-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+  .admin-header p { color: var(--text-muted); font-size: 0.88rem; margin-top: 4px; }
+
+  /* Stats cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  }
+  .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+  .stat-card .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* Admin tables */
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table th { text-align: left; padding: 10px 14px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  .admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.88rem; color: var(--text); }
+  .admin-table tr:hover td { background: rgba(124, 58, 237, 0.05); }
+
+  /* Badges */
+  .role-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .role-owner { background: #7c3aed; color: #fff; }
+  .role-admin { background: #2563eb; color: #fff; }
+  .role-user { background: var(--surface-2); color: var(--text-muted); }
+  .badge-banned { background: var(--danger); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; }
+
+  /* Admin forms */
+  .admin-search { display: flex; gap: 8px; margin-bottom: 20px; }
+  .admin-search input { flex: 1; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 0.88rem; }
+  .admin-search input:focus { outline: none; border-color: #7c3aed; }
+  .admin-search button { padding: 8px 16px; background: #7c3aed; color: #fff; border: none; border-radius: var(--radius); cursor: pointer; font-size: 0.85rem; }
+  .admin-search button:hover { background: #6d28d9; }
+
+  .admin-actions { display: flex; gap: 6px; }
+  .admin-actions form { display: inline; }
+  .btn-xs { padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; }
+  .btn-purple { background: #7c3aed; color: #fff; }
+  .btn-purple:hover { background: #6d28d9; }
+
+  /* Card sections */
+  .admin-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+  .admin-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+
+  /* Ban modal */
+  .ban-form-inline { display: flex; gap: 6px; align-items: center; }
+  .ban-form-inline input { padding: 4px 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 0.8rem; width: 160px; }
+
+  /* Log entries */
+  .log-action { font-weight: 600; }
+  .log-action-ban { color: var(--danger); }
+  .log-action-unban { color: var(--success); }
+  .log-action-role_change { color: #a78bfa; }
+
+  @media (max-width: 768px) {
+    .admin-sidebar { width: 60px; }
+    .admin-sidebar-brand span, .admin-sidebar nav a span, .admin-sidebar-badge, .admin-sidebar-footer { display: none; }
+    .admin-sidebar nav a { justify-content: center; padding: 12px; }
+    .admin-main { margin-left: 60px; padding: 16px; }
+  }
+</style>
+
+<div class="admin-sidebar">
+  <div class="admin-sidebar-brand">
+    CV<span>Builder</span> <span class="admin-sidebar-badge">Admin</span>
+  </div>
+  <nav>
+    <a href="/admin" class="<%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>">
+      <span class="icon">&#9632;</span> <span>Dashboard</span>
+    </a>
+    <a href="/admin/users" class="<%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>">
+      <span class="icon">&#128101;</span> <span>Users</span>
+    </a>
+    <a href="/admin/templates" class="<%= typeof page !== 'undefined' && page === 'templates' ? 'active' : '' %>">
+      <span class="icon">&#128196;</span> <span>Templates</span>
+    </a>
+    <a href="/admin/logs" class="<%= typeof page !== 'undefined' && page === 'logs' ? 'active' : '' %>">
+      <span class="icon">&#128203;</span> <span>Activity Log</span>
+    </a>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <a href="/">Back to site</a>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CV Builder</title>
+  <link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
+  <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+<div class="admin-layout">
+  <% const page = 'users'; %>
+  <%- include('_sidebar') %>
+
+  <div class="admin-main">
+    <div class="admin-header">
+      <h1>Users</h1>
+      <p>Manage user accounts and roles</p>
+    </div>
+
+    <form class="admin-search" method="GET" action="/admin/users">
+      <input type="text" name="search" placeholder="Search by email or name..." value="<%= search %>">
+      <button type="submit">Search</button>
+      <% if (search) { %>
+        <a href="/admin/users" class="btn btn-outline btn-sm" style="display:flex;align-items:center;">Clear</a>
+      <% } %>
+    </form>
+
+    <div class="admin-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td><%= u.name %></td>
+            <td><%= u.email %></td>
+            <td><span class="role-badge role-<%= u.role %>"><%= u.role %></span></td>
+            <td>
+              <% if (u.banned) { %>
+                <span class="badge-banned">Banned</span>
+                <% if (u.banned_reason) { %>
+                  <span style="font-size:0.75rem;color:var(--text-muted);display:block;margin-top:2px;" title="<%= u.banned_reason %>">
+                    <%= u.banned_reason.length > 30 ? u.banned_reason.substring(0, 30) + '...' : u.banned_reason %>
+                  </span>
+                <% } %>
+              <% } else { %>
+                <span style="color:var(--success);font-size:0.8rem;">Active</span>
+              <% } %>
+            </td>
+            <td style="font-size:0.8rem;color:var(--text-muted);white-space:nowrap;"><%= new Date(u.created_at).toLocaleDateString() %></td>
+            <td>
+              <% if (u.role !== 'owner') { %>
+                <div class="admin-actions">
+                  <% if (user.role === 'owner') { %>
+                    <% if (u.role === 'user') { %>
+                      <form method="POST" action="/admin/users/<%= u.id %>/role">
+                        <input type="hidden" name="role" value="admin">
+                        <button type="submit" class="btn-xs btn-purple" title="Promote to admin">Promote</button>
+                      </form>
+                    <% } else if (u.role === 'admin') { %>
+                      <form method="POST" action="/admin/users/<%= u.id %>/role">
+                        <input type="hidden" name="role" value="user">
+                        <button type="submit" class="btn-xs btn-outline" title="Demote to user" style="background:transparent;color:var(--text-muted);border:1px solid var(--border);">Demote</button>
+                      </form>
+                    <% } %>
+                  <% } %>
+
+                  <% if (u.banned) { %>
+                    <form method="POST" action="/admin/users/<%= u.id %>/unban">
+                      <button type="submit" class="btn-xs" style="background:var(--success);color:#fff;">Unban</button>
+                    </form>
+                  <% } else { %>
+                    <form method="POST" action="/admin/users/<%= u.id %>/ban" class="ban-form-inline">
+                      <input type="text" name="reason" placeholder="Reason..." maxlength="500">
+                      <button type="submit" class="btn-xs btn-danger">Ban</button>
+                    </form>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <span style="font-size:0.75rem;color:var(--text-muted);">--</span>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+          <% if (users.length === 0) { %>
+          <tr><td colspan="7" style="color:var(--text-muted);text-align:center;padding:24px;">No users found</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

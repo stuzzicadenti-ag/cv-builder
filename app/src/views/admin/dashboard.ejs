@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CV Builder</title>
+  <link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
+  <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+<div class="admin-layout">
+  <% const page = 'dashboard'; %>
+  <%- include('_sidebar') %>
+
+  <div class="admin-main">
+    <div class="admin-header">
+      <h1>Dashboard</h1>
+      <p>Overview of CV Builder activity</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.users %></div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.templates %></div>
+        <div class="stat-label">Templates</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value"><%= stats.cvs %></div>
+        <div class="stat-label">CVs Created</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="admin-card">
+        <h3>Recent Users</h3>
+        <table class="admin-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr>
+          </thead>
+          <tbody>
+            <% recentUsers.forEach(u => { %>
+            <tr>
+              <td><%= u.name %></td>
+              <td><%= u.email %></td>
+              <td>
+                <span class="role-badge role-<%= u.role %>"><%= u.role %></span>
+                <% if (u.banned) { %><span class="badge-banned">Banned</span><% } %>
+              </td>
+              <td style="font-size:0.8rem;color:var(--text-muted);"><%= new Date(u.created_at).toLocaleDateString() %></td>
+            </tr>
+            <% }) %>
+            <% if (recentUsers.length === 0) { %>
+            <tr><td colspan="4" style="color:var(--text-muted);">No users yet</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="admin-card">
+        <h3>Recent CVs</h3>
+        <table class="admin-table">
+          <thead>
+            <tr><th>Title</th><th>User</th><th>Created</th></tr>
+          </thead>
+          <tbody>
+            <% recentCvs.forEach(cv => { %>
+            <tr>
+              <td><%= cv.title %></td>
+              <td><%= cv.user_email %></td>
+              <td style="font-size:0.8rem;color:var(--text-muted);"><%= new Date(cv.created_at).toLocaleDateString() %></td>
+            </tr>
+            <% }) %>
+            <% if (recentCvs.length === 0) { %>
+            <tr><td colspan="3" style="color:var(--text-muted);">No CVs yet</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
