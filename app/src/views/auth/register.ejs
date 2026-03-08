@@ -2,25 +2,25 @@
 
 <div style="max-width: 400px; margin: 40px auto;">
   <div class="card">
-    <h2 style="margin-bottom: 20px;">Register</h2>
+    <h2 style="margin-bottom: 20px;"><%= t('auth.register') %></h2>
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
     <form method="POST" action="/auth/register">
       <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" required placeholder="John Doe">
+        <label for="name"><%= t('auth.fullName') %></label>
+        <input type="text" id="name" name="name" required placeholder="<%= t('auth.namePlaceholder') %>">
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required placeholder="your@email.com">
+        <label for="email"><%= t('auth.email') %></label>
+        <input type="email" id="email" name="email" required placeholder="<%= t('auth.emailPlaceholder') %>">
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required minlength="8" placeholder="Min. 8 characters">
+        <label for="password"><%= t('auth.password') %></label>
+        <input type="password" id="password" name="password" required minlength="8" placeholder="<%= t('auth.passwordMin') %>">
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('auth.createAccount') %></button>
     </form>
     <p style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--text-muted);">
-      Already have an account? <a href="/auth/login">Login</a>
+      <%= t('auth.haveAccount') %> <a href="/auth/login"><%= t('auth.loginHere') %></a>
     </p>
   </div>
 </div>

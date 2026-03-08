@@ -2,26 +2,26 @@
 
 <div style="max-width: 400px; margin: 40px auto;">
   <div class="card">
-    <h2 style="margin-bottom: 20px;">Login</h2>
+    <h2 style="margin-bottom: 20px;"><%= t('auth.login') %></h2>
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
     <% if (typeof registered !== 'undefined' && registered) { %>
       <div class="alert alert-success" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0; padding:12px; border-radius:var(--radius, 6px); margin-bottom:16px;">
-        Account created successfully. Please log in.
+        <%= t('auth.registered') %>
       </div>
     <% } %>
     <form method="POST" action="/auth/login">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required placeholder="your@email.com">
+        <label for="email"><%= t('auth.email') %></label>
+        <input type="email" id="email" name="email" required placeholder="<%= t('auth.emailPlaceholder') %>">
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Your password">
+        <label for="password"><%= t('auth.password') %></label>
+        <input type="password" id="password" name="password" required placeholder="<%= t('auth.passwordPlaceholder') %>">
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Login</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('auth.loginBtn') %></button>
     </form>
     <p style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--text-muted);">
-      No account? <a href="/auth/register">Register here</a>
+      <%= t('auth.noAccount') %> <a href="/auth/register"><%= t('auth.registerHere') %></a>
     </p>
   </div>
 </div>

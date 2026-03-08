@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import formbody from '@fastify/formbody';
 import cookie from '@fastify/cookie';
@@ -84,6 +85,26 @@ await app.register(fstatic, {
   maxAge: process.env.NODE_ENV === 'production' ? 86400000 : 0,
 });
 
+// i18n — load locale files once at startup
+const SUPPORTED_LANGS = ['en', 'it', 'de', 'fr'];
+const locales = {};
+for (const lang of SUPPORTED_LANGS) {
+  const filePath = path.join(__dirname, 'locales', `${lang}.json`);
+  locales[lang] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+// i18n preHandler — reads lang cookie, provides t() helper
+app.decorateRequest('lang', 'en');
+app.decorateRequest('t', null);
+app.addHook('preHandler', async (req) => {
+  const cookieLang = req.cookies?.lang;
+  const lang = SUPPORTED_LANGS.includes(cookieLang) ? cookieLang : 'en';
+  req.lang = lang;
+  const strings = locales[lang];
+  const fallback = locales['en'];
+  req.t = (key) => strings[key] || fallback[key] || key;
+});
+
 // Auth decorator — decode JWT on every request (non-blocking)
 app.decorateRequest('user', null);
 app.addHook('preHandler', async (req) => {
@@ -101,16 +122,26 @@ await app.register(cvRoutes, { prefix: '/cv' });
 await app.register(templateRoutes, { prefix: '/templates' });
 await app.register(adminRoutes, { prefix: '/admin' });
 
+// Language switch route
+app.get('/lang/:code', async (req, reply) => {
+  const code = req.params.code;
+  if (SUPPORTED_LANGS.includes(code)) {
+    reply.setCookie('lang', code, { path: '/', httpOnly: false, maxAge: 365 * 24 * 60 * 60, sameSite: 'lax' });
+  }
+  const referer = req.headers.referer || '/';
+  return reply.redirect(referer);
+});
+
 // Home page
 app.get('/', async (req, reply) => {
   const user = req.user || null;
-  return reply.view('index.ejs', { user, title: 'CV Builder' });
+  return reply.view('index.ejs', { user, title: 'CV Builder', t: req.t, lang: req.lang });
 });
 
 // FAQ page
 app.get('/faq', async (req, reply) => {
   const user = req.user || null;
-  return reply.view('faq.ejs', { user, title: 'FAQ' });
+  return reply.view('faq.ejs', { user, title: 'FAQ', t: req.t, lang: req.lang });
 });
 
 // Health check

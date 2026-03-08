@@ -2,18 +2,18 @@
 
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
   <div>
-    <h1 style="margin-bottom:4px;">CV Templates</h1>
-    <p style="color:var(--text-muted); font-size:0.9rem;">Choose a template to get started. You can always change it later.</p>
+    <h1 style="margin-bottom:4px;"><%= t('templates.title') %></h1>
+    <p style="color:var(--text-muted); font-size:0.9rem;"><%= t('templates.subtitle') %></p>
   </div>
   <% if (typeof user !== 'undefined' && user) { %>
-    <a href="/cv" class="btn btn-outline btn-sm">My CVs</a>
+    <a href="/cv" class="btn btn-outline btn-sm"><%= t('nav.myCvs') %></a>
   <% } %>
 </div>
 
 <% if (templates.length === 0) { %>
   <div class="card" style="text-align:center; padding:48px;">
-    <p style="font-size:1.2rem; margin-bottom:8px;">No templates available yet.</p>
-    <p style="color:var(--text-muted);">Templates will appear here once added by an administrator.</p>
+    <p style="font-size:1.2rem; margin-bottom:8px;"><%= t('templates.noTemplates') %></p>
+    <p style="color:var(--text-muted);"><%= t('templates.noTemplatesDesc') %></p>
   </div>
 <% } else { %>
   <div class="grid grid-3">
@@ -22,8 +22,8 @@
       'Modern': { bg: '#eff6ff', accent: '#2563eb', icon: '||' },
       'Minimal': { bg: '#f9fafb', accent: '#6b7280', icon: '--' }
     }; %>
-    <% for (const t of templates) { %>
-      <% const style = previewStyles[t.name] || { bg: '#f1f5f9', accent: '#6366f1', icon: 'CV' }; %>
+    <% for (const tpl of templates) { %>
+      <% const style = previewStyles[tpl.name] || { bg: '#f1f5f9', accent: '#6366f1', icon: 'CV' }; %>
       <div class="card" style="overflow:hidden;">
         <!-- Template preview placeholder -->
         <div style="background:<%= style.bg %>; padding:24px; text-align:center; border-bottom:1px solid var(--border);">
@@ -39,10 +39,10 @@
           </div>
         </div>
         <div style="padding:16px;">
-          <h3 style="margin-bottom:6px; font-size:1.05rem;"><%= t.name %></h3>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; min-height:40px;"><%= t.description %></p>
+          <h3 style="margin-bottom:6px; font-size:1.05rem;"><%= tpl.name %></h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; min-height:40px;"><%= tpl.description %></p>
           <div style="display:flex; gap:8px;">
-            <a href="/cv/new?template=<%= t.id %>" class="btn btn-primary btn-sm" style="flex:1; text-align:center;">Use Template</a>
+            <a href="/cv/new?template=<%= tpl.id %>" class="btn btn-primary btn-sm" style="flex:1; text-align:center;"><%= t('templates.useTemplate') %></a>
           </div>
         </div>
       </div>

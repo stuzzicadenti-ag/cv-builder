@@ -1,14 +1,14 @@
 <%- include('../partials/header') %>
 
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-  <h1>My CVs</h1>
-  <a href="/cv/new" class="btn btn-primary">+ New CV</a>
+  <h1><%= t('cv.myCvs') %></h1>
+  <a href="/cv/new" class="btn btn-primary">+ <%= t('cv.newCv') %></a>
 </div>
 
 <% if (cvs.length === 0) { %>
   <div class="card" style="text-align:center; padding:48px;">
-    <p style="color:var(--text-muted); margin-bottom:16px;">You haven't created any CVs yet.</p>
-    <a href="/cv/new" class="btn btn-primary">Create Your First CV</a>
+    <p style="color:var(--text-muted); margin-bottom:16px;"><%= t('cv.noCvs') %></p>
+    <a href="/cv/new" class="btn btn-primary"><%= t('cv.createFirst') %></a>
   </div>
 <% } else { %>
   <div class="grid grid-3">
@@ -16,13 +16,13 @@
       <div class="card">
         <h3 style="margin-bottom:8px;"><%= cv.title %></h3>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">
-          Updated: <%= new Date(cv.updatedAt).toLocaleDateString() %>
+          <%= t('cv.updated') %> <%= new Date(cv.updatedAt).toLocaleDateString() %>
         </p>
         <div style="display:flex; gap:8px;">
-          <a href="/cv/edit/<%= cv.id %>" class="btn btn-outline btn-sm">Edit</a>
-          <a href="/cv/pdf/<%= cv.id %>" class="btn btn-primary btn-sm">Download PDF</a>
-          <form method="POST" action="/cv/delete/<%= cv.id %>" style="display:inline;" onsubmit="return confirm('Delete this CV?')">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          <a href="/cv/edit/<%= cv.id %>" class="btn btn-outline btn-sm"><%= t('cv.edit') %></a>
+          <a href="/cv/pdf/<%= cv.id %>" class="btn btn-primary btn-sm"><%= t('cv.downloadPdf') %></a>
+          <form method="POST" action="/cv/delete/<%= cv.id %>" style="display:inline;" onsubmit="return confirm('<%= t('cv.deleteConfirm') %>')">
+            <button type="submit" class="btn btn-danger btn-sm"><%= t('cv.delete') %></button>
           </form>
         </div>
       </div>

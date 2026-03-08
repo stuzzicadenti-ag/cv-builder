@@ -4,6 +4,6 @@ import { templates } from '../db/schema.js';
 export default async function templateRoutes(app) {
   app.get('/', async (req, reply) => {
     const allTemplates = await db.select().from(templates);
-    return reply.view('templates/list.ejs', { user: req.user, templates: allTemplates, title: 'Templates' });
+    return reply.view('templates/list.ejs', { user: req.user, templates: allTemplates, title: 'Templates', t: req.t, lang: req.lang });
   });
 }

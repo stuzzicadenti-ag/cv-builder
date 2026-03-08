@@ -3,23 +3,23 @@
 <div style="max-width: 480px; margin: 60px auto; text-align: center;">
   <div class="card" style="padding: 40px 32px;">
     <div style="font-size: 3rem; margin-bottom: 16px;">&#128683;</div>
-    <h2 style="margin-bottom: 12px; color: var(--danger);">Account Suspended</h2>
+    <h2 style="margin-bottom: 12px; color: var(--danger);"><%= t('auth.banned.title') %></h2>
     <p style="color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
-      Your account has been suspended by an administrator.
+      <%= t('auth.banned.msg') %>
     </p>
     <% if (typeof reason !== 'undefined' && reason) { %>
       <div style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius); padding: 14px; margin-bottom: 20px; text-align: left;">
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Reason:</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;"><%= t('auth.banned.reason') %></div>
         <div style="font-size: 0.9rem; color: var(--text);"><%= reason %></div>
       </div>
     <% } %>
     <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 24px;">
-      If you believe this is a mistake, please contact our support team. Include your registered email address in your message.
+      <%= t('auth.banned.appeal') %>
     </p>
     <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-      <a href="mailto:support@cvbuilder.ch" class="btn btn-primary" style="width: 100%;">Contact Support</a>
-      <a href="/faq" class="btn btn-outline" style="width: 100%;">Read FAQ</a>
-      <a href="/" style="font-size: 0.83rem; color: var(--text-muted); margin-top: 8px;">Back to Home</a>
+      <a href="mailto:support@cvbuilder.ch" class="btn btn-primary" style="width: 100%;"><%= t('auth.banned.contactSupport') %></a>
+      <a href="/faq" class="btn btn-outline" style="width: 100%;"><%= t('auth.banned.readFaq') %></a>
+      <a href="/" style="font-size: 0.83rem; color: var(--text-muted); margin-top: 8px;"><%= t('auth.banned.backHome') %></a>
     </div>
     <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 24px;">
       support@cvbuilder.ch

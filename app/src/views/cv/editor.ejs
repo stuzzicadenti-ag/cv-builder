@@ -13,8 +13,8 @@
 %>
 
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-  <h1><%= cv ? 'Edit CV' : 'New CV' %></h1>
-  <a href="/cv" class="btn btn-outline btn-sm">Back to My CVs</a>
+  <h1><%= cv ? t('cv.editCv') : t('cv.newCv') %></h1>
+  <a href="/cv" class="btn btn-outline btn-sm"><%= t('cv.backToMyCvs') %></a>
 </div>
 
 <form id="cv-form" method="POST" action="/cv/save">
@@ -24,51 +24,51 @@
   <input type="hidden" name="data" id="cv-data-field" value="">
 
   <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-bottom:16px;">Basic Info</h2>
+    <h2 style="margin-bottom:16px;"><%= t('cv.basicInfo') %></h2>
     <div class="form-group">
-      <label for="cv-title">CV Title</label>
-      <input type="text" id="cv-title" name="title" required value="<%= cv ? cv.title : 'My CV' %>" placeholder="e.g. Software Engineer CV">
+      <label for="cv-title"><%= t('cv.cvTitle') %></label>
+      <input type="text" id="cv-title" name="title" required value="<%= cv ? cv.title : 'My CV' %>" placeholder="<%= t('cv.cvTitlePlaceholder') %>">
     </div>
     <div class="form-group">
-      <label for="cv-template">Template</label>
+      <label for="cv-template"><%= t('cv.template') %></label>
       <select id="cv-template" name="templateId" required>
-        <% for (const t of templates) { %>
-          <option value="<%= t.id %>" <%= (cv && cv.templateId === t.id) ? 'selected' : '' %>><%= t.name %> - <%= t.description %></option>
+        <% for (const tpl of templates) { %>
+          <option value="<%= tpl.id %>" <%= (cv && cv.templateId === tpl.id) ? 'selected' : '' %>><%= tpl.name %> - <%= tpl.description %></option>
         <% } %>
       </select>
     </div>
   </div>
 
   <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-bottom:16px;">Personal Details</h2>
+    <h2 style="margin-bottom:16px;"><%= t('cv.personalDetails') %></h2>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
       <div class="form-group">
-        <label for="cv-name">Full Name</label>
-        <input type="text" id="cv-name" data-field="name" required value="<%= name %>" placeholder="John Doe">
+        <label for="cv-name"><%= t('cv.fullName') %></label>
+        <input type="text" id="cv-name" data-field="name" required value="<%= name %>">
       </div>
       <div class="form-group">
-        <label for="cv-email">Email</label>
-        <input type="email" id="cv-email" data-field="email" required value="<%= email %>" placeholder="john@example.com">
+        <label for="cv-email"><%= t('cv.email') %></label>
+        <input type="email" id="cv-email" data-field="email" required value="<%= email %>">
       </div>
       <div class="form-group">
-        <label for="cv-phone">Phone</label>
-        <input type="text" id="cv-phone" data-field="phone" value="<%= phone %>" placeholder="+41 79 123 4567">
+        <label for="cv-phone"><%= t('cv.phone') %></label>
+        <input type="text" id="cv-phone" data-field="phone" value="<%= phone %>">
       </div>
       <div class="form-group">
-        <label for="cv-location">Location</label>
-        <input type="text" id="cv-location" data-field="location" value="<%= location %>" placeholder="Zurich, Switzerland">
+        <label for="cv-location"><%= t('cv.location') %></label>
+        <input type="text" id="cv-location" data-field="location" value="<%= location %>">
       </div>
     </div>
     <div class="form-group">
-      <label for="cv-summary">Summary</label>
-      <textarea id="cv-summary" data-field="summary" rows="3" placeholder="Brief professional summary..."><%= summary %></textarea>
+      <label for="cv-summary"><%= t('cv.summary') %></label>
+      <textarea id="cv-summary" data-field="summary" rows="3" placeholder="<%= t('cv.summaryPlaceholder') %>"><%= summary %></textarea>
     </div>
   </div>
 
   <div class="card" style="margin-bottom:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2>Experience</h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addExperience()">+ Add</button>
+      <h2><%= t('cv.experience') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addExperience()"><%= t('cv.add') %></button>
     </div>
     <div id="experience-list">
       <% if (experience.length > 0) { %>
@@ -77,21 +77,21 @@
             <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
-                <label>Job Title</label>
-                <input type="text" class="exp-title" value="<%= job.title %>" placeholder="Software Engineer">
+                <label><%= t('cv.jobTitle') %></label>
+                <input type="text" class="exp-title" value="<%= job.title %>">
               </div>
               <div class="form-group">
-                <label>Company</label>
-                <input type="text" class="exp-company" value="<%= job.company %>" placeholder="Acme Corp">
+                <label><%= t('cv.company') %></label>
+                <input type="text" class="exp-company" value="<%= job.company %>">
               </div>
             </div>
             <div class="form-group">
-              <label>Dates</label>
-              <input type="text" class="exp-dates" value="<%= job.dates %>" placeholder="Jan 2023 - Present">
+              <label><%= t('cv.dates') %></label>
+              <input type="text" class="exp-dates" value="<%= job.dates %>">
             </div>
             <div class="form-group">
-              <label>Description</label>
-              <textarea class="exp-description" rows="3" placeholder="Key responsibilities and achievements..."><%= job.description %></textarea>
+              <label><%= t('cv.description') %></label>
+              <textarea class="exp-description" rows="3" placeholder="<%= t('cv.descriptionPlaceholder') %>"><%= job.description %></textarea>
             </div>
           </div>
         <% }) %>
@@ -101,8 +101,8 @@
 
   <div class="card" style="margin-bottom:20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2>Education</h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addEducation()">+ Add</button>
+      <h2><%= t('cv.education') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addEducation()"><%= t('cv.add') %></button>
     </div>
     <div id="education-list">
       <% if (education.length > 0) { %>
@@ -111,17 +111,17 @@
             <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
-                <label>Degree</label>
-                <input type="text" class="edu-degree" value="<%= edu.degree %>" placeholder="BSc Computer Science">
+                <label><%= t('cv.degree') %></label>
+                <input type="text" class="edu-degree" value="<%= edu.degree %>">
               </div>
               <div class="form-group">
-                <label>School</label>
-                <input type="text" class="edu-school" value="<%= edu.school %>" placeholder="ETH Zurich">
+                <label><%= t('cv.school') %></label>
+                <input type="text" class="edu-school" value="<%= edu.school %>">
               </div>
             </div>
             <div class="form-group">
-              <label>Dates</label>
-              <input type="text" class="edu-dates" value="<%= edu.dates %>" placeholder="2018 - 2022">
+              <label><%= t('cv.dates') %></label>
+              <input type="text" class="edu-dates" value="<%= edu.dates %>">
             </div>
           </div>
         <% }) %>
@@ -130,16 +130,16 @@
   </div>
 
   <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-bottom:16px;">Skills</h2>
+    <h2 style="margin-bottom:16px;"><%= t('cv.skills') %></h2>
     <div class="form-group">
-      <label for="cv-skills">Skills (comma-separated)</label>
-      <input type="text" id="cv-skills" value="<%= skills.join(', ') %>" placeholder="JavaScript, Python, Docker, PostgreSQL, AWS">
+      <label for="cv-skills"><%= t('cv.skillsLabel') %></label>
+      <input type="text" id="cv-skills" value="<%= skills.join(', ') %>">
     </div>
   </div>
 
   <div style="display:flex; gap:12px; justify-content:flex-end;">
-    <a href="/cv" class="btn btn-outline">Cancel</a>
-    <button type="submit" class="btn btn-primary">Save CV</button>
+    <a href="/cv" class="btn btn-outline"><%= t('cv.cancel') %></a>
+    <button type="submit" class="btn btn-primary"><%= t('cv.save') %></button>
   </div>
 </form>
 
@@ -158,21 +158,21 @@ function createExpEntry(data = {}) {
     <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
-        <label>Job Title</label>
-        <input type="text" class="exp-title" value="${escAttr(data.title)}" placeholder="Software Engineer">
+        <label><%= t('cv.jobTitle') %></label>
+        <input type="text" class="exp-title" value="${escAttr(data.title)}">
       </div>
       <div class="form-group">
-        <label>Company</label>
-        <input type="text" class="exp-company" value="${escAttr(data.company)}" placeholder="Acme Corp">
+        <label><%= t('cv.company') %></label>
+        <input type="text" class="exp-company" value="${escAttr(data.company)}">
       </div>
     </div>
     <div class="form-group">
-      <label>Dates</label>
-      <input type="text" class="exp-dates" value="${escAttr(data.dates)}" placeholder="Jan 2023 - Present">
+      <label><%= t('cv.dates') %></label>
+      <input type="text" class="exp-dates" value="${escAttr(data.dates)}">
     </div>
     <div class="form-group">
-      <label>Description</label>
-      <textarea class="exp-description" rows="3" placeholder="Key responsibilities and achievements...">${escAttr(data.description)}</textarea>
+      <label><%= t('cv.description') %></label>
+      <textarea class="exp-description" rows="3" placeholder="<%= t('cv.descriptionPlaceholder') %>">${escAttr(data.description)}</textarea>
     </div>
   `;
   return div;
@@ -186,17 +186,17 @@ function createEduEntry(data = {}) {
     <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
-        <label>Degree</label>
-        <input type="text" class="edu-degree" value="${data.degree || ''}" placeholder="BSc Computer Science">
+        <label><%= t('cv.degree') %></label>
+        <input type="text" class="edu-degree" value="${data.degree || ''}">
       </div>
       <div class="form-group">
-        <label>School</label>
-        <input type="text" class="edu-school" value="${data.school || ''}" placeholder="ETH Zurich">
+        <label><%= t('cv.school') %></label>
+        <input type="text" class="edu-school" value="${data.school || ''}">
       </div>
     </div>
     <div class="form-group">
-      <label>Dates</label>
-      <input type="text" class="edu-dates" value="${data.dates || ''}" placeholder="2018 - 2022">
+      <label><%= t('cv.dates') %></label>
+      <input type="text" class="edu-dates" value="${data.dates || ''}">
     </div>
   `;
   return div;

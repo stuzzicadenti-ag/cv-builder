@@ -25,7 +25,7 @@ export default async function cvRoutes(app) {
   // List user's CVs
   app.get('/', async (req, reply) => {
     const userCvs = await db.select().from(cvs).where(eq(cvs.userId, req.user.id)).orderBy(cvs.updatedAt);
-    return reply.view('cv/list.ejs', { user: req.user, cvs: userCvs, title: 'My CVs' });
+    return reply.view('cv/list.ejs', { user: req.user, cvs: userCvs, title: 'My CVs', t: req.t, lang: req.lang });
   });
 
   // New CV form
@@ -34,7 +34,7 @@ export default async function cvRoutes(app) {
     // Pre-select template if ?template= query param is provided
     const preselectedTemplateId = req.query.template ? parseId(req.query.template) : null;
     const cvStub = preselectedTemplateId ? { templateId: preselectedTemplateId, title: 'My CV', data: {} } : null;
-    return reply.view('cv/editor.ejs', { user: req.user, cv: cvStub, templates: allTemplates, title: 'New CV' });
+    return reply.view('cv/editor.ejs', { user: req.user, cv: cvStub, templates: allTemplates, title: 'New CV', t: req.t, lang: req.lang });
   });
 
   // Save CV
@@ -77,7 +77,7 @@ export default async function cvRoutes(app) {
       .where(and(eq(cvs.id, parsedId), eq(cvs.userId, req.user.id))).limit(1);
     if (!cv) return reply.code(404).send('CV not found');
     const allTemplates = await db.select().from(templates);
-    return reply.view('cv/editor.ejs', { user: req.user, cv, templates: allTemplates, title: `Edit: ${cv.title}` });
+    return reply.view('cv/editor.ejs', { user: req.user, cv, templates: allTemplates, title: `Edit: ${cv.title}`, t: req.t, lang: req.lang });
   });
 
   // Generate PDF
