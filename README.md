@@ -29,6 +29,18 @@ npm start
 
 See [DOCS.md](DOCS.md) for full technical documentation, architecture, database schema, API routes, legal compliance, and deployment details.
 
+## Features
+
+- **Template gallery**: Browse and preview professional CV templates
+- **Browser-based editor**: Structured form for personal info, experience, education, skills, languages
+- **Instant PDF export**: Typst compilation to ATS-optimized PDF
+- **Multiple CVs**: Create and manage several CVs per account
+- **JSONB data storage**: Flexible CV structure adapts to any template
+- **Admin template management**: Create/edit Typst templates with preview
+- **User management**: Ban system, role management
+- **i18n**: English, Italian, German, French with language dropdown
+- **Responsive nav**: Profile dropdown, language dropdown, logged-in vs logged-out states
+
 ## Tech Stack
 
 - **Runtime**: Node.js (ESM)
@@ -38,6 +50,8 @@ See [DOCS.md](DOCS.md) for full technical documentation, architecture, database 
 - **Auth**: JWT cookies + bcryptjs (12 rounds)
 - **PDF Engine**: Typst CLI
 - **ORM**: Drizzle ORM 0.36
+- **CSS**: External stylesheets (style.css + landing.css)
+- **i18n**: Flat JSON locale files (en, it, de, fr)
 
 ## License
 

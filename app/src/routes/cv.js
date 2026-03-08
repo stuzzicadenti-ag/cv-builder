@@ -12,6 +12,30 @@ const execFileAsync = promisify(execFile);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PDF_DIR = process.env.PDF_DIR || path.join(__dirname, '../../data/pdfs');
 
+// In-memory rate limiter for PDF generation (max 5 per user per minute)
+const PDF_RATE_LIMIT = 5;
+const PDF_RATE_WINDOW = 60 * 1000; // 1 minute
+const pdfRateLimits = new Map();
+
+// Cleanup stale entries every 2 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [userId, entry] of pdfRateLimits) {
+    if (now - entry.windowStart > PDF_RATE_WINDOW) pdfRateLimits.delete(userId);
+  }
+}, 2 * 60 * 1000);
+
+function checkPdfRateLimit(userId) {
+  const now = Date.now();
+  let entry = pdfRateLimits.get(userId);
+  if (!entry || now - entry.windowStart > PDF_RATE_WINDOW) {
+    entry = { count: 0, windowStart: now };
+    pdfRateLimits.set(userId, entry);
+  }
+  entry.count++;
+  return entry.count <= PDF_RATE_LIMIT;
+}
+
 function parseId(raw) {
   const n = parseInt(raw, 10);
   return Number.isFinite(n) && n > 0 ? n : null;
@@ -81,8 +105,11 @@ export default async function cvRoutes(app) {
     return reply.view('cv/editor.ejs', { user: req.user, cv, templates: allTemplates, title: `Edit: ${cv.title}`, t: req.t, lang: req.lang });
   });
 
-  // Generate PDF
+  // Generate PDF (rate limited: max 5 per user per minute to protect typst child process)
   app.get('/pdf/:id', async (req, reply) => {
+    if (!checkPdfRateLimit(req.user.id)) {
+      return reply.code(429).send('Too many PDF requests. Please wait a minute before trying again.');
+    }
     const pdfId = parseId(req.params.id);
     if (!pdfId) return reply.code(400).send('Invalid CV id');
     const [cv] = await db.select().from(cvs)
@@ -111,6 +138,11 @@ export default async function cvRoutes(app) {
     const typstPath = path.join(tmpDir, 'cv.typ');
     const pdfPath = path.join(tmpDir, 'cv.pdf');
 
+    // SAFETY: CV data is written as JSON and read by Typst via json("data.json").
+    // Typst code injection through user fields (e.g. name="#panic()") is not possible because:
+    //   1. JSON.stringify escapes all special characters into a JSON string
+    //   2. Typst's json() function parses it as data, not as Typst source code
+    //   3. The str() wrapper in get() converts values to plain strings, never evaluated as markup
     await fs.writeFile(dataPath, JSON.stringify(cv.data));
     await fs.writeFile(typstPath, typstSource);
 

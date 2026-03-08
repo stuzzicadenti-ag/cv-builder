@@ -1,8 +1,8 @@
-import { pgTable, serial, text, varchar, timestamp, jsonb, integer, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, timestamp, jsonb, integer, boolean, index } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
+  email: varchar('email', { length: 255 }).notNull().unique(), // unique() creates an index for login lookups
   passwordHash: text('password_hash').notNull(),
   name: varchar('name', { length: 255 }).notNull(),
   role: varchar('role', { length: 20 }).default('user'),
@@ -29,4 +29,7 @@ export const cvs = pgTable('cvs', {
   pdfPath: varchar('pdf_path', { length: 500 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+}, (table) => [
+  index('cvs_user_id_idx').on(table.userId),
+  index('cvs_template_id_idx').on(table.templateId),
+]);
