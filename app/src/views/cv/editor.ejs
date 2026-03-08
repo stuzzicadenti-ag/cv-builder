@@ -6,10 +6,20 @@
   const email = cvData.email || '';
   const phone = cvData.phone || '';
   const location = cvData.location || '';
+  const linkedin = cvData.linkedin || '';
+  const website = cvData.website || '';
+  const nationality = cvData.nationality || '';
+  const dateOfBirth = cvData.dateOfBirth || '';
+  const drivingLicense = cvData.drivingLicense || '';
   const summary = cvData.summary || '';
   const experience = cvData.experience || [];
   const education = cvData.education || [];
   const skills = cvData.skills || [];
+  const languages = cvData.languages || [];
+  const certifications = cvData.certifications || [];
+  const projects = cvData.projects || [];
+  const volunteer = cvData.volunteer || [];
+  const references = cvData.references || [];
 %>
 
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -58,8 +68,33 @@
         <label for="cv-location"><%= t('cv.location') %></label>
         <input type="text" id="cv-location" data-field="location" value="<%= location %>">
       </div>
+      <div class="form-group">
+        <label for="cv-linkedin"><%= t('cv.linkedin') %></label>
+        <input type="text" id="cv-linkedin" data-field="linkedin" value="<%= linkedin %>" placeholder="<%= t('cv.linkedinPlaceholder') %>">
+      </div>
+      <div class="form-group">
+        <label for="cv-website"><%= t('cv.website') %></label>
+        <input type="text" id="cv-website" data-field="website" value="<%= website %>" placeholder="<%= t('cv.websitePlaceholder') %>">
+      </div>
     </div>
-    <div class="form-group">
+    <details style="margin-top:12px;">
+      <summary style="cursor:pointer; font-weight:500; color:var(--primary);"><%= t('cv.additionalPersonal') %></summary>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:12px;">
+        <div class="form-group">
+          <label for="cv-nationality"><%= t('cv.nationality') %></label>
+          <input type="text" id="cv-nationality" data-field="nationality" value="<%= nationality %>" placeholder="<%= t('cv.nationalityPlaceholder') %>">
+        </div>
+        <div class="form-group">
+          <label for="cv-dob"><%= t('cv.dateOfBirth') %></label>
+          <input type="text" id="cv-dob" data-field="dateOfBirth" value="<%= dateOfBirth %>" placeholder="<%= t('cv.dateOfBirthPlaceholder') %>">
+        </div>
+        <div class="form-group">
+          <label for="cv-driving"><%= t('cv.drivingLicense') %></label>
+          <input type="text" id="cv-driving" data-field="drivingLicense" value="<%= drivingLicense %>" placeholder="<%= t('cv.drivingLicensePlaceholder') %>">
+        </div>
+      </div>
+    </details>
+    <div class="form-group" style="margin-top:16px;">
       <label for="cv-summary"><%= t('cv.summary') %></label>
       <textarea id="cv-summary" data-field="summary" rows="3" placeholder="<%= t('cv.summaryPlaceholder') %>"><%= summary %></textarea>
     </div>
@@ -137,6 +172,175 @@
     </div>
   </div>
 
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2><%= t('cv.languages') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addLanguage()"><%= t('cv.add') %></button>
+    </div>
+    <div id="language-list">
+      <% if (languages.length > 0) { %>
+        <% languages.forEach((lang, i) => { %>
+          <div class="lang-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label><%= t('cv.languageName') %></label>
+                <input type="text" class="lang-name" value="<%= lang.name %>">
+              </div>
+              <div class="form-group">
+                <label><%= t('cv.languageLevel') %></label>
+                <select class="lang-level">
+                  <option value="" <%= !lang.level ? 'selected' : '' %>>—</option>
+                  <option value="Native" <%= lang.level === 'Native' ? 'selected' : '' %>><%= t('cv.langNative') %></option>
+                  <option value="C2" <%= lang.level === 'C2' ? 'selected' : '' %>>C2 — <%= t('cv.langC2') %></option>
+                  <option value="C1" <%= lang.level === 'C1' ? 'selected' : '' %>>C1 — <%= t('cv.langC1') %></option>
+                  <option value="B2" <%= lang.level === 'B2' ? 'selected' : '' %>>B2 — <%= t('cv.langB2') %></option>
+                  <option value="B1" <%= lang.level === 'B1' ? 'selected' : '' %>>B1 — <%= t('cv.langB1') %></option>
+                  <option value="A2" <%= lang.level === 'A2' ? 'selected' : '' %>>A2 — <%= t('cv.langA2') %></option>
+                  <option value="A1" <%= lang.level === 'A1' ? 'selected' : '' %>>A1 — <%= t('cv.langA1') %></option>
+                </select>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2><%= t('cv.certifications') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addCertification()"><%= t('cv.add') %></button>
+    </div>
+    <div id="certification-list">
+      <% if (certifications.length > 0) { %>
+        <% certifications.forEach((cert, i) => { %>
+          <div class="cert-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label><%= t('cv.certName') %></label>
+                <input type="text" class="cert-name" value="<%= cert.name %>">
+              </div>
+              <div class="form-group">
+                <label><%= t('cv.certIssuer') %></label>
+                <input type="text" class="cert-issuer" value="<%= cert.issuer %>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= t('cv.certDate') %></label>
+              <input type="text" class="cert-date" value="<%= cert.date %>">
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2><%= t('cv.projects') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addProject()"><%= t('cv.add') %></button>
+    </div>
+    <div id="project-list">
+      <% if (projects.length > 0) { %>
+        <% projects.forEach((proj, i) => { %>
+          <div class="proj-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label><%= t('cv.projectName') %></label>
+                <input type="text" class="proj-name" value="<%= proj.name %>">
+              </div>
+              <div class="form-group">
+                <label><%= t('cv.projectUrl') %></label>
+                <input type="text" class="proj-url" value="<%= proj.url %>" placeholder="<%= t('cv.projectUrlPlaceholder') %>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= t('cv.projectTech') %></label>
+              <input type="text" class="proj-tech" value="<%= proj.tech %>" placeholder="<%= t('cv.projectTechPlaceholder') %>">
+            </div>
+            <div class="form-group">
+              <label><%= t('cv.description') %></label>
+              <textarea class="proj-description" rows="2" placeholder="<%= t('cv.projectDescPlaceholder') %>"><%= proj.description %></textarea>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2><%= t('cv.volunteer') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addVolunteer()"><%= t('cv.add') %></button>
+    </div>
+    <div id="volunteer-list">
+      <% if (volunteer.length > 0) { %>
+        <% volunteer.forEach((vol, i) => { %>
+          <div class="vol-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label><%= t('cv.volunteerRole') %></label>
+                <input type="text" class="vol-role" value="<%= vol.role %>">
+              </div>
+              <div class="form-group">
+                <label><%= t('cv.volunteerOrg') %></label>
+                <input type="text" class="vol-organization" value="<%= vol.organization %>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= t('cv.dates') %></label>
+              <input type="text" class="vol-dates" value="<%= vol.dates %>">
+            </div>
+            <div class="form-group">
+              <label><%= t('cv.description') %></label>
+              <textarea class="vol-description" rows="2"><%= vol.description %></textarea>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2><%= t('cv.references') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addReference()"><%= t('cv.add') %></button>
+    </div>
+    <div id="reference-list">
+      <% if (references.length > 0) { %>
+        <% references.forEach((ref, i) => { %>
+          <div class="ref-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
+            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label><%= t('cv.refName') %></label>
+                <input type="text" class="ref-name" value="<%= ref.name %>">
+              </div>
+              <div class="form-group">
+                <label><%= t('cv.refPosition') %></label>
+                <input type="text" class="ref-position" value="<%= ref.position %>">
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label><%= t('cv.refCompany') %></label>
+                <input type="text" class="ref-company" value="<%= ref.company %>">
+              </div>
+              <div class="form-group">
+                <label><%= t('cv.refContact') %></label>
+                <input type="text" class="ref-contact" value="<%= ref.contact %>" placeholder="<%= t('cv.refContactPlaceholder') %>">
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
   <div style="display:flex; gap:12px; justify-content:flex-end;">
     <a href="/cv" class="btn btn-outline"><%= t('cv.cancel') %></a>
     <button type="submit" class="btn btn-primary"><%= t('cv.save') %></button>
@@ -187,28 +391,167 @@ function createEduEntry(data = {}) {
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.degree') %></label>
-        <input type="text" class="edu-degree" value="${data.degree || ''}">
+        <input type="text" class="edu-degree" value="${escAttr(data.degree)}">
       </div>
       <div class="form-group">
         <label><%= t('cv.school') %></label>
-        <input type="text" class="edu-school" value="${data.school || ''}">
+        <input type="text" class="edu-school" value="${escAttr(data.school)}">
       </div>
     </div>
     <div class="form-group">
       <label><%= t('cv.dates') %></label>
-      <input type="text" class="edu-dates" value="${data.dates || ''}">
+      <input type="text" class="edu-dates" value="${escAttr(data.dates)}">
     </div>
   `;
   return div;
 }
 
-function addExperience() {
-  document.getElementById('experience-list').appendChild(createExpEntry());
+function createLangEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'lang-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label><%= t('cv.languageName') %></label>
+        <input type="text" class="lang-name" value="${escAttr(data.name)}">
+      </div>
+      <div class="form-group">
+        <label><%= t('cv.languageLevel') %></label>
+        <select class="lang-level">
+          <option value="">—</option>
+          <option value="Native" ${data.level === 'Native' ? 'selected' : ''}><%= t('cv.langNative') %></option>
+          <option value="C2" ${data.level === 'C2' ? 'selected' : ''}>C2 — <%= t('cv.langC2') %></option>
+          <option value="C1" ${data.level === 'C1' ? 'selected' : ''}>C1 — <%= t('cv.langC1') %></option>
+          <option value="B2" ${data.level === 'B2' ? 'selected' : ''}>B2 — <%= t('cv.langB2') %></option>
+          <option value="B1" ${data.level === 'B1' ? 'selected' : ''}>B1 — <%= t('cv.langB1') %></option>
+          <option value="A2" ${data.level === 'A2' ? 'selected' : ''}>A2 — <%= t('cv.langA2') %></option>
+          <option value="A1" ${data.level === 'A1' ? 'selected' : ''}>A1 — <%= t('cv.langA1') %></option>
+        </select>
+      </div>
+    </div>
+  `;
+  return div;
 }
 
-function addEducation() {
-  document.getElementById('education-list').appendChild(createEduEntry());
+function createCertEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'cert-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label><%= t('cv.certName') %></label>
+        <input type="text" class="cert-name" value="${escAttr(data.name)}">
+      </div>
+      <div class="form-group">
+        <label><%= t('cv.certIssuer') %></label>
+        <input type="text" class="cert-issuer" value="${escAttr(data.issuer)}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label><%= t('cv.certDate') %></label>
+      <input type="text" class="cert-date" value="${escAttr(data.date)}">
+    </div>
+  `;
+  return div;
 }
+
+function createProjEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'proj-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label><%= t('cv.projectName') %></label>
+        <input type="text" class="proj-name" value="${escAttr(data.name)}">
+      </div>
+      <div class="form-group">
+        <label><%= t('cv.projectUrl') %></label>
+        <input type="text" class="proj-url" value="${escAttr(data.url)}" placeholder="<%= t('cv.projectUrlPlaceholder') %>">
+      </div>
+    </div>
+    <div class="form-group">
+      <label><%= t('cv.projectTech') %></label>
+      <input type="text" class="proj-tech" value="${escAttr(data.tech)}" placeholder="<%= t('cv.projectTechPlaceholder') %>">
+    </div>
+    <div class="form-group">
+      <label><%= t('cv.description') %></label>
+      <textarea class="proj-description" rows="2" placeholder="<%= t('cv.projectDescPlaceholder') %>">${escAttr(data.description)}</textarea>
+    </div>
+  `;
+  return div;
+}
+
+function createVolEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'vol-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label><%= t('cv.volunteerRole') %></label>
+        <input type="text" class="vol-role" value="${escAttr(data.role)}">
+      </div>
+      <div class="form-group">
+        <label><%= t('cv.volunteerOrg') %></label>
+        <input type="text" class="vol-organization" value="${escAttr(data.organization)}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label><%= t('cv.dates') %></label>
+      <input type="text" class="vol-dates" value="${escAttr(data.dates)}">
+    </div>
+    <div class="form-group">
+      <label><%= t('cv.description') %></label>
+      <textarea class="vol-description" rows="2">${escAttr(data.description)}</textarea>
+    </div>
+  `;
+  return div;
+}
+
+function createRefEntry(data = {}) {
+  const div = document.createElement('div');
+  div.className = 'ref-entry';
+  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.innerHTML = `
+    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label><%= t('cv.refName') %></label>
+        <input type="text" class="ref-name" value="${escAttr(data.name)}">
+      </div>
+      <div class="form-group">
+        <label><%= t('cv.refPosition') %></label>
+        <input type="text" class="ref-position" value="${escAttr(data.position)}">
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="form-group">
+        <label><%= t('cv.refCompany') %></label>
+        <input type="text" class="ref-company" value="${escAttr(data.company)}">
+      </div>
+      <div class="form-group">
+        <label><%= t('cv.refContact') %></label>
+        <input type="text" class="ref-contact" value="${escAttr(data.contact)}" placeholder="<%= t('cv.refContactPlaceholder') %>">
+      </div>
+    </div>
+  `;
+  return div;
+}
+
+function addExperience() { document.getElementById('experience-list').appendChild(createExpEntry()); }
+function addEducation() { document.getElementById('education-list').appendChild(createEduEntry()); }
+function addLanguage() { document.getElementById('language-list').appendChild(createLangEntry()); }
+function addCertification() { document.getElementById('certification-list').appendChild(createCertEntry()); }
+function addProject() { document.getElementById('project-list').appendChild(createProjEntry()); }
+function addVolunteer() { document.getElementById('volunteer-list').appendChild(createVolEntry()); }
+function addReference() { document.getElementById('reference-list').appendChild(createRefEntry()); }
 
 function collectFormData() {
   const experience = [];
@@ -217,9 +560,7 @@ function collectFormData() {
     const company = entry.querySelector('.exp-company')?.value?.trim() || '';
     const dates = entry.querySelector('.exp-dates')?.value?.trim() || '';
     const description = entry.querySelector('.exp-description')?.value?.trim() || '';
-    if (title || company) {
-      experience.push({ title, company, dates, description });
-    }
+    if (title || company) experience.push({ title, company, dates, description });
   });
 
   const education = [];
@@ -227,9 +568,49 @@ function collectFormData() {
     const degree = entry.querySelector('.edu-degree')?.value?.trim() || '';
     const school = entry.querySelector('.edu-school')?.value?.trim() || '';
     const dates = entry.querySelector('.edu-dates')?.value?.trim() || '';
-    if (degree || school) {
-      education.push({ degree, school, dates });
-    }
+    if (degree || school) education.push({ degree, school, dates });
+  });
+
+  const languages = [];
+  document.querySelectorAll('.lang-entry').forEach(entry => {
+    const name = entry.querySelector('.lang-name')?.value?.trim() || '';
+    const level = entry.querySelector('.lang-level')?.value || '';
+    if (name) languages.push({ name, level });
+  });
+
+  const certifications = [];
+  document.querySelectorAll('.cert-entry').forEach(entry => {
+    const name = entry.querySelector('.cert-name')?.value?.trim() || '';
+    const issuer = entry.querySelector('.cert-issuer')?.value?.trim() || '';
+    const date = entry.querySelector('.cert-date')?.value?.trim() || '';
+    if (name) certifications.push({ name, issuer, date });
+  });
+
+  const projects = [];
+  document.querySelectorAll('.proj-entry').forEach(entry => {
+    const name = entry.querySelector('.proj-name')?.value?.trim() || '';
+    const url = entry.querySelector('.proj-url')?.value?.trim() || '';
+    const tech = entry.querySelector('.proj-tech')?.value?.trim() || '';
+    const description = entry.querySelector('.proj-description')?.value?.trim() || '';
+    if (name) projects.push({ name, url, tech, description });
+  });
+
+  const volunteer = [];
+  document.querySelectorAll('.vol-entry').forEach(entry => {
+    const role = entry.querySelector('.vol-role')?.value?.trim() || '';
+    const organization = entry.querySelector('.vol-organization')?.value?.trim() || '';
+    const dates = entry.querySelector('.vol-dates')?.value?.trim() || '';
+    const description = entry.querySelector('.vol-description')?.value?.trim() || '';
+    if (role || organization) volunteer.push({ role, organization, dates, description });
+  });
+
+  const references = [];
+  document.querySelectorAll('.ref-entry').forEach(entry => {
+    const name = entry.querySelector('.ref-name')?.value?.trim() || '';
+    const position = entry.querySelector('.ref-position')?.value?.trim() || '';
+    const company = entry.querySelector('.ref-company')?.value?.trim() || '';
+    const contact = entry.querySelector('.ref-contact')?.value?.trim() || '';
+    if (name) references.push({ name, position, company, contact });
   });
 
   const skillsRaw = document.getElementById('cv-skills').value;
@@ -240,10 +621,20 @@ function collectFormData() {
     email: document.getElementById('cv-email').value.trim(),
     phone: document.getElementById('cv-phone').value.trim(),
     location: document.getElementById('cv-location').value.trim(),
+    linkedin: document.getElementById('cv-linkedin').value.trim(),
+    website: document.getElementById('cv-website').value.trim(),
+    nationality: document.getElementById('cv-nationality').value.trim(),
+    dateOfBirth: document.getElementById('cv-dob').value.trim(),
+    drivingLicense: document.getElementById('cv-driving').value.trim(),
     summary: document.getElementById('cv-summary').value.trim(),
     experience,
     education,
     skills,
+    languages,
+    certifications,
+    projects,
+    volunteer,
+    references,
   };
 }
 
