@@ -88,6 +88,7 @@ export default async function adminRoutes(app) {
       },
       recentUsers: recentUsers.rows,
       recentCvs: recentCvs.rows,
+      t: req.t, lang: req.lang,
     });
   });
 
@@ -110,6 +111,7 @@ export default async function adminRoutes(app) {
       title: 'Manage Users',
       users: rows,
       search,
+      t: req.t, lang: req.lang,
     });
   });
 
@@ -185,6 +187,7 @@ export default async function adminRoutes(app) {
       title: 'Manage Templates',
       templates: rows,
       usageMap,
+      t: req.t, lang: req.lang,
     });
   });
 
@@ -203,6 +206,7 @@ export default async function adminRoutes(app) {
       user: req.adminUser,
       title: 'Activity Log',
       logs: rows,
+      t: req.t, lang: req.lang,
     });
   });
 }

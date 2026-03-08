@@ -10,26 +10,57 @@
 </head>
 <body>
 <nav>
-  <div class="container">
+  <div class="container nav-inner">
     <a href="/" class="nav-brand">CV<span>Builder</span></a>
-    <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" aria-label="Toggle navigation">
-    <label for="nav-toggle" class="nav-toggle-label" aria-label="Menu">
+
+    <button type="button" class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false" id="nav-hamburger">
       <span></span><span></span><span></span>
-    </label>
-    <div class="nav-links">
-      <a href="/templates"><%= typeof t !== 'undefined' ? t('nav.templates') : 'Templates' %></a>
-      <a href="/faq"><%= typeof t !== 'undefined' ? t('nav.faq') : 'FAQ' %></a>
-      <% if (typeof user !== 'undefined' && user) { %>
-        <a href="/cv"><%= typeof t !== 'undefined' ? t('nav.myCvs') : 'My CVs' %></a>
-        <% if (user.role === 'admin' || user.role === 'owner') { %>
-          <a href="/admin" style="color:#a78bfa;"><%= typeof t !== 'undefined' ? t('nav.admin') : 'Admin' %></a>
+    </button>
+
+    <div class="nav-menu" id="nav-menu">
+      <div class="nav-links">
+        <a href="/templates"><%= typeof t !== 'undefined' ? t('nav.templates') : 'Templates' %></a>
+        <a href="/faq"><%= typeof t !== 'undefined' ? t('nav.faq') : 'FAQ' %></a>
+      </div>
+
+      <div class="nav-right">
+        <% if (typeof user !== 'undefined' && user) { %>
+          <!-- Profile dropdown -->
+          <div class="dropdown" id="profile-dropdown">
+            <button type="button" class="dropdown-trigger nav-profile-btn" aria-haspopup="true" aria-expanded="false">
+              <span class="nav-avatar"><%= user.name ? user.name.charAt(0).toUpperCase() : 'U' %></span>
+              <span class="nav-profile-name"><%= user.name || 'User' %></span>
+              <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <div class="dropdown-header"><%= user.name || 'User' %></div>
+              <a href="/cv" class="dropdown-item"><%= typeof t !== 'undefined' ? t('nav.myCvs') : 'My CVs' %></a>
+              <% if (user.role === 'admin' || user.role === 'owner') { %>
+                <a href="/admin" class="dropdown-item dropdown-item-admin"><%= typeof t !== 'undefined' ? t('nav.admin') : 'Admin' %></a>
+              <% } %>
+              <div class="dropdown-divider"></div>
+              <a href="/auth/logout" class="dropdown-item dropdown-item-logout"><%= typeof t !== 'undefined' ? t('nav.logout') : 'Logout' %></a>
+            </div>
+          </div>
+        <% } else { %>
+          <a href="/auth/login" class="btn btn-outline btn-sm"><%= typeof t !== 'undefined' ? t('nav.login') : 'Login' %></a>
+          <a href="/auth/register" class="btn btn-primary btn-sm"><%= typeof t !== 'undefined' ? t('nav.register') : 'Register' %></a>
         <% } %>
-        <a href="/auth/logout"><%= typeof t !== 'undefined' ? t('nav.logout') : 'Logout' %></a>
-      <% } else { %>
-        <a href="/auth/login" class="btn btn-outline btn-sm"><%= typeof t !== 'undefined' ? t('nav.login') : 'Login' %></a>
-        <a href="/auth/register" class="btn btn-primary btn-sm"><%= typeof t !== 'undefined' ? t('nav.register') : 'Register' %></a>
-      <% } %>
-      <span style="font-size:0.75rem; margin-left:8px;"><a href="/lang/en" style="opacity:<%= (typeof lang !== 'undefined' && lang === 'en') ? '1' : '0.5' %>">EN</a> | <a href="/lang/it" style="opacity:<%= (typeof lang !== 'undefined' && lang === 'it') ? '1' : '0.5' %>">IT</a> | <a href="/lang/de" style="opacity:<%= (typeof lang !== 'undefined' && lang === 'de') ? '1' : '0.5' %>">DE</a> | <a href="/lang/fr" style="opacity:<%= (typeof lang !== 'undefined' && lang === 'fr') ? '1' : '0.5' %>">FR</a></span>
+
+        <!-- Language dropdown -->
+        <% var currentLang = (typeof lang !== 'undefined' ? lang : 'en').toUpperCase(); %>
+        <div class="dropdown" id="lang-dropdown">
+          <button type="button" class="dropdown-trigger lang-btn" aria-haspopup="true" aria-expanded="false">
+            <%= currentLang %>&nbsp;&#9662;
+          </button>
+          <div class="dropdown-menu dropdown-menu-right dropdown-menu-compact">
+            <a href="/lang/en" class="dropdown-item <%= (typeof lang !== 'undefined' && lang === 'en') ? 'active' : '' %>">EN</a>
+            <a href="/lang/it" class="dropdown-item <%= (typeof lang !== 'undefined' && lang === 'it') ? 'active' : '' %>">IT</a>
+            <a href="/lang/de" class="dropdown-item <%= (typeof lang !== 'undefined' && lang === 'de') ? 'active' : '' %>">DE</a>
+            <a href="/lang/fr" class="dropdown-item <%= (typeof lang !== 'undefined' && lang === 'fr') ? 'active' : '' %>">FR</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nav>

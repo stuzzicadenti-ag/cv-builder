@@ -1,2 +1,63 @@
 </div></main>
+<footer>
+  <div class="container">
+    <p>&copy; 2026 CV Builder &mdash; Stuzzicadenti AG</p>
+  </div>
+</footer>
+<script>
+(function() {
+  // Hamburger toggle
+  var hamburger = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('nav-menu');
+  if (hamburger && menu) {
+    hamburger.addEventListener('click', function() {
+      var expanded = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', String(!expanded));
+      hamburger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
+  }
+
+  // Dropdown toggle (profile + language)
+  document.querySelectorAll('.dropdown').forEach(function(dd) {
+    var trigger = dd.querySelector('.dropdown-trigger');
+    if (!trigger) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var wasOpen = dd.classList.contains('open');
+      // Close all dropdowns first
+      document.querySelectorAll('.dropdown.open').forEach(function(d) {
+        d.classList.remove('open');
+        var t = d.querySelector('.dropdown-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen) {
+        dd.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.dropdown.open').forEach(function(d) {
+      d.classList.remove('open');
+      var t = d.querySelector('.dropdown-trigger');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close mobile menu when clicking a nav link
+  var navLinks = menu ? menu.querySelectorAll('a') : [];
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (hamburger && menu) {
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.classList.remove('open');
+        menu.classList.remove('open');
+      }
+    });
+  });
+})();
+</script>
 </body></html>

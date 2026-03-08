@@ -15,97 +15,97 @@
 </style>
 
 <div class="faq-page">
-  <h1>Frequently Asked Questions</h1>
-  <p class="faq-subtitle">Everything you need to know about CV Builder</p>
+  <h1><%= t('faq.title') %></h1>
+  <p class="faq-subtitle"><%= t('faq.subtitle') %></p>
 
   <div class="faq-section">
-    <h2>How CVBuilder Works</h2>
+    <h2><%= t('faq.howItWorks') %></h2>
     <div class="faq-item">
-      <h3>What is CV Builder?</h3>
-      <p>CV Builder is a free, privacy-first tool for creating professional CVs. Choose a template, fill in your details, and export a beautifully typeset PDF. We support Europass, LaTeX, and Typst formats.</p>
+      <h3><%= t('faq.whatIs.q') %></h3>
+      <p><%= t('faq.whatIs.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>Do I need an account?</h3>
-      <p>You need a free account to save and manage your CVs online. Alternatively, you can self-host the application and use it without any account at all.</p>
+      <h3><%= t('faq.needAccount.q') %></h3>
+      <p><%= t('faq.needAccount.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>Is it really free?</h3>
-      <p>Yes. The core features (templates, PDF export, unlimited edits) are completely free. We offer optional premium services like AI suggestions and professional CV reviews for users who want them.</p>
+      <h3><%= t('faq.isFree.q') %></h3>
+      <p><%= t('faq.isFree.a') %></p>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2>Templates &amp; Customization</h2>
+    <h2><%= t('faq.templatesCustom') %></h2>
     <div class="faq-item">
-      <h3>What templates are available?</h3>
-      <p>We offer a curated collection including Europass 2024, Modern Minimal, Academic LaTeX, Creative Typst, Tech Professional, and Executive. New templates are added regularly based on community feedback.</p>
+      <h3><%= t('faq.whatTemplates.q') %></h3>
+      <p><%= t('faq.whatTemplates.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>Can I customize the templates?</h3>
-      <p>Each template supports customization of colors, fonts, and section ordering. Pro users get access to additional customization options including custom color themes.</p>
-    </div>
-  </div>
-
-  <div class="faq-section">
-    <h2>PDF Generation</h2>
-    <div class="faq-item">
-      <h3>How is the PDF generated?</h3>
-      <p>We use Typst, a modern typesetting system, to compile your CV data into a pixel-perfect PDF. The output is ATS-optimized, meaning it can be parsed correctly by Applicant Tracking Systems used by employers.</p>
-    </div>
-    <div class="faq-item">
-      <h3>What formats can I export?</h3>
-      <p>Currently we support PDF export. The underlying Typst source is also available, so you can further customize your CV in any Typst-compatible editor.</p>
+      <h3><%= t('faq.canCustomize.q') %></h3>
+      <p><%= t('faq.canCustomize.a') %></p>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2>Account Rules</h2>
+    <h2><%= t('faq.pdfGen') %></h2>
     <div class="faq-item">
-      <h3>What can get my account suspended?</h3>
-      <p>Accounts may be suspended for abuse of the service, automated scraping, creating accounts for spam or fraudulent purposes, or any activity that disrupts the service for other users.</p>
+      <h3><%= t('faq.howPdf.q') %></h3>
+      <p><%= t('faq.howPdf.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>My account was suspended. What can I do?</h3>
-      <p>If you believe your account was suspended in error, contact us at <a href="mailto:support@cvbuilder.ch">support@cvbuilder.ch</a> with your registered email address. We review all appeals within 48 hours.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Can I delete my account?</h3>
-      <p>Yes. Contact us at <a href="mailto:support@cvbuilder.ch">support@cvbuilder.ch</a> and we will delete your account and all associated data within 30 days, in compliance with GDPR.</p>
+      <h3><%= t('faq.whatFormats.q') %></h3>
+      <p><%= t('faq.whatFormats.a') %></p>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2>Data Privacy</h2>
+    <h2><%= t('faq.accountRules') %></h2>
     <div class="faq-item">
-      <h3>Who can see my CV data?</h3>
-      <p>Your CV data is yours. Only you can access your CVs. Administrators cannot view the content of your CVs. We do not share, sell, or monetize your personal data in any way.</p>
+      <h3><%= t('faq.suspended.q') %></h3>
+      <p><%= t('faq.suspended.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>Where is my data stored?</h3>
-      <p>Your data is stored in a PostgreSQL database hosted in Switzerland. PDFs are generated on-demand and are not stored permanently on our servers. Temporary files are deleted immediately after generation.</p>
+      <h3><%= t('faq.suspendedAppeal.q') %></h3>
+      <p><%- t('faq.suspendedAppeal.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>Do you use cookies or tracking?</h3>
-      <p>We use a single HTTP-only cookie for authentication. We do not use analytics trackers, advertising cookies, or any third-party tracking. No data is sent to external services.</p>
+      <h3><%= t('faq.deleteAccount.q') %></h3>
+      <p><%- t('faq.deleteAccount.a') %></p>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2>Swiss Regulations</h2>
+    <h2><%= t('faq.dataPrivacy') %></h2>
     <div class="faq-item">
-      <h3>Is CV Builder GDPR and nDSG compliant?</h3>
-      <p>Yes. We comply with both the EU General Data Protection Regulation (GDPR) and the Swiss Federal Act on Data Protection (nDSG/revDSG). You have the right to access, correct, and delete your data at any time.</p>
+      <h3><%= t('faq.whoSees.q') %></h3>
+      <p><%= t('faq.whoSees.a') %></p>
     </div>
     <div class="faq-item">
-      <h3>Who operates CV Builder?</h3>
-      <p>CV Builder is operated by Stuzzicadenti AG, a company registered in Switzerland. Our legal address and full imprint are available on request.</p>
+      <h3><%= t('faq.whereStored.q') %></h3>
+      <p><%= t('faq.whereStored.a') %></p>
+    </div>
+    <div class="faq-item">
+      <h3><%= t('faq.cookies.q') %></h3>
+      <p><%= t('faq.cookies.a') %></p>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <h2><%= t('faq.swissReg') %></h2>
+    <div class="faq-item">
+      <h3><%= t('faq.gdpr.q') %></h3>
+      <p><%= t('faq.gdpr.a') %></p>
+    </div>
+    <div class="faq-item">
+      <h3><%= t('faq.operator.q') %></h3>
+      <p><%= t('faq.operator.a') %></p>
     </div>
   </div>
 
   <div class="faq-contact">
-    <h2>Still have questions?</h2>
-    <p>Our support team is here to help.</p>
-    <a href="mailto:support@cvbuilder.ch" class="btn btn-primary">Contact support@cvbuilder.ch</a>
+    <h2><%= t('faq.stillQuestions') %></h2>
+    <p><%= t('faq.supportTeam') %></p>
+    <a href="mailto:support@cvbuilder.ch" class="btn btn-primary"><%= t('faq.contactSupport') %></a>
   </div>
 </div>
 

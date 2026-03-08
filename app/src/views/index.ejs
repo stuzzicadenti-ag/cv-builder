@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,23 +49,24 @@
         <span></span><span></span><span></span>
       </label>
       <ul class="l-nav-links">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#templates">Templates</a></li>
-        <li><a href="#formats">Formats</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="/faq">FAQ</a></li>
+        <li><a href="#hero"><%= t('nav.templates') === 'Templates' ? 'Home' : (lang === 'it' ? 'Home' : (lang === 'de' ? 'Home' : (lang === 'fr' ? 'Accueil' : 'Home'))) %></a></li>
+        <li><a href="#templates"><%= t('nav.templates') %></a></li>
+        <li><a href="#formats"><%= t('home.formats') %></a></li>
+        <li><a href="#pricing"><%= t('home.pricing') %></a></li>
+        <li><a href="/faq"><%= t('nav.faq') %></a></li>
       </ul>
       <div class="l-nav-actions">
         <% if (typeof user !== 'undefined' && user) { %>
           <% if (user.role === 'admin' || user.role === 'owner') { %>
-            <a href="/admin" class="l-btn l-btn-ghost" style="color:#a78bfa;">Admin</a>
+            <a href="/admin" class="l-btn l-btn-ghost" style="color:#a78bfa;"><%= t('nav.admin') %></a>
           <% } %>
-          <a href="/cv" class="l-btn l-btn-ghost">My CVs</a>
-          <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Create New CV</a>
+          <a href="/cv" class="l-btn l-btn-ghost"><%= t('nav.myCvs') %></a>
+          <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.plan.createCv') %></a>
         <% } else { %>
-          <a href="/auth/login" class="l-btn l-btn-ghost">Login</a>
-          <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Register</a>
+          <a href="/auth/login" class="l-btn l-btn-ghost"><%= t('nav.login') %></a>
+          <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('nav.register') %></a>
         <% } %>
+        <span style="font-size:0.7rem; margin-left:6px;"><a href="/lang/en" style="opacity:<%= lang === 'en' ? '1' : '0.5' %>">EN</a> | <a href="/lang/it" style="opacity:<%= lang === 'it' ? '1' : '0.5' %>">IT</a> | <a href="/lang/de" style="opacity:<%= lang === 'de' ? '1' : '0.5' %>">DE</a> | <a href="/lang/fr" style="opacity:<%= lang === 'fr' ? '1' : '0.5' %>">FR</a></span>
       </div>
     </div>
   </nav>
@@ -78,19 +79,19 @@
       <div class="l-shape l-shape-3"></div>
     </div>
     <div class="l-container l-hero-content">
-      <span class="l-badge l-badge-free">&#10003; 100% Free. No Ads</span>
+      <span class="l-badge l-badge-free">&#10003; <%= t('home.badge') %></span>
       <h1 class="l-hero-title">
         <span class="l-logo-icon-large">&#128196;</span> CV Builder
       </h1>
-      <p class="l-hero-tagline">Professional CVs in minutes.<br>Europass, LaTeX, Typst.</p>
-      <p class="l-hero-sub">Create ATS-optimized, beautifully typeset resumes with zero cost. Your data stays in your browser.</p>
+      <p class="l-hero-tagline"><%- t('home.tagline') %></p>
+      <p class="l-hero-sub"><%= t('home.sub') %></p>
       <div class="l-hero-cta">
         <% if (typeof user !== 'undefined' && user) { %>
-          <a href="/cv/new" class="l-btn l-btn-primary l-btn-lg">Build Your CV &#8594;</a>
+          <a href="/cv/new" class="l-btn l-btn-primary l-btn-lg"><%= t('home.cta') %> &#8594;</a>
         <% } else { %>
-          <a href="/auth/register" class="l-btn l-btn-primary l-btn-lg">Build Your CV &#8594;</a>
+          <a href="/auth/register" class="l-btn l-btn-primary l-btn-lg"><%= t('home.cta') %> &#8594;</a>
         <% } %>
-        <a href="#how-it-works" class="l-btn l-btn-outline l-btn-lg">How It Works</a>
+        <a href="#how-it-works" class="l-btn l-btn-outline l-btn-lg"><%= t('home.howItWorks') %></a>
       </div>
       <div class="l-hero-formats">
         <span class="l-format-pill">Europass</span>
@@ -104,26 +105,26 @@
   <!-- How It Works -->
   <section class="l-section" id="how-it-works">
     <div class="l-container">
-      <h2 class="l-section-title">How It Works</h2>
-      <p class="l-section-subtitle">Three simple steps to your perfect CV</p>
+      <h2 class="l-section-title"><%= t('home.howItWorks') %></h2>
+      <p class="l-section-subtitle"><%= t('home.howItWorksSubtitle') %></p>
       <div class="l-steps-grid">
         <div class="l-step-card">
           <div class="l-step-number">1</div>
           <div class="l-step-icon">&#127912;</div>
-          <h3>Choose a Template</h3>
-          <p>Pick from our curated collection of professional templates, Europass, academic, creative, and more.</p>
+          <h3><%= t('home.step1.title') %></h3>
+          <p><%= t('home.step1.desc') %></p>
         </div>
         <div class="l-step-card">
           <div class="l-step-number">2</div>
           <div class="l-step-icon">&#9997;&#65039;</div>
-          <h3>Fill Your Info</h3>
-          <p>Enter your experience, education, and skills. Our smart editor guides you through each section.</p>
+          <h3><%= t('home.step2.title') %></h3>
+          <p><%= t('home.step2.desc') %></p>
         </div>
         <div class="l-step-card">
           <div class="l-step-number">3</div>
           <div class="l-step-icon">&#128229;</div>
-          <h3>Download PDF</h3>
-          <p>Export your polished CV as a pixel-perfect PDF, ready to send to employers worldwide.</p>
+          <h3><%= t('home.step3.title') %></h3>
+          <p><%= t('home.step3.desc') %></p>
         </div>
       </div>
     </div>
@@ -132,8 +133,8 @@
   <!-- Templates Gallery -->
   <section class="l-section l-section-dark" id="templates">
     <div class="l-container">
-      <h2 class="l-section-title">Templates</h2>
-      <p class="l-section-subtitle">Professional designs for every career stage</p>
+      <h2 class="l-section-title"><%= t('home.templates') %></h2>
+      <p class="l-section-subtitle"><%= t('home.templatesSubtitle') %></p>
       <div class="l-templates-grid">
 
         <div class="l-template-card">
@@ -148,15 +149,15 @@
                 <div class="l-preview-line short"></div>
               </div>
             </div>
-            <span class="l-template-badge">Popular</span>
+            <span class="l-template-badge"><%= t('home.popular') %></span>
           </div>
           <div class="l-template-info">
-            <h3>Europass 2024</h3>
-            <p>The EU standard format, recognized by employers and institutions across Europe.</p>
+            <h3><%= t('home.tpl.europass.title') %></h3>
+            <p><%= t('home.tpl.europass.desc') %></p>
             <% if (typeof user !== 'undefined' && user) { %>
-              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } else { %>
-              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } %>
           </div>
         </div>
@@ -173,12 +174,12 @@
             </div>
           </div>
           <div class="l-template-info">
-            <h3>Modern Minimal</h3>
-            <p>Clean, elegant design with plenty of whitespace. Perfect for tech and creative roles.</p>
+            <h3><%= t('home.tpl.modern.title') %></h3>
+            <p><%= t('home.tpl.modern.desc') %></p>
             <% if (typeof user !== 'undefined' && user) { %>
-              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } else { %>
-              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } %>
           </div>
         </div>
@@ -198,12 +199,12 @@
             <span class="l-template-badge l-badge-latex">LaTeX</span>
           </div>
           <div class="l-template-info">
-            <h3>Academic LaTeX</h3>
-            <p>Publication-quality typesetting for researchers, professors, and PhD candidates.</p>
+            <h3><%= t('home.tpl.latex.title') %></h3>
+            <p><%= t('home.tpl.latex.desc') %></p>
             <% if (typeof user !== 'undefined' && user) { %>
-              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } else { %>
-              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } %>
           </div>
         </div>
@@ -226,12 +227,12 @@
             <span class="l-template-badge l-badge-typst">Typst</span>
           </div>
           <div class="l-template-info">
-            <h3>Creative Typst</h3>
-            <p>Modern two-column layout with color accents. Stand out in design and marketing roles.</p>
+            <h3><%= t('home.tpl.typst.title') %></h3>
+            <p><%= t('home.tpl.typst.desc') %></p>
             <% if (typeof user !== 'undefined' && user) { %>
-              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } else { %>
-              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } %>
           </div>
         </div>
@@ -249,12 +250,12 @@
             </div>
           </div>
           <div class="l-template-info">
-            <h3>Tech Professional</h3>
-            <p>Skills-focused layout with technical proficiency bars. Ideal for engineers and developers.</p>
+            <h3><%= t('home.tpl.tech.title') %></h3>
+            <p><%= t('home.tpl.tech.desc') %></p>
             <% if (typeof user !== 'undefined' && user) { %>
-              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } else { %>
-              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } %>
           </div>
         </div>
@@ -269,15 +270,15 @@
                 <div class="l-preview-line"></div>
               </div>
             </div>
-            <span class="l-template-badge l-badge-new">New</span>
+            <span class="l-template-badge l-badge-new"><%= t('home.new') %></span>
           </div>
           <div class="l-template-info">
-            <h3>Executive</h3>
-            <p>Sophisticated serif design for senior leadership, C-suite, and board-level positions.</p>
+            <h3><%= t('home.tpl.exec.title') %></h3>
+            <p><%= t('home.tpl.exec.desc') %></p>
             <% if (typeof user !== 'undefined' && user) { %>
-              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } else { %>
-              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm">Use Template</a>
+              <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('home.useTemplate') %></a>
             <% } %>
           </div>
         </div>
@@ -289,38 +290,38 @@
   <!-- Supported Formats -->
   <section class="l-section" id="formats">
     <div class="l-container">
-      <h2 class="l-section-title">Supported Formats</h2>
-      <p class="l-section-subtitle">Every format you need, all in one place</p>
+      <h2 class="l-section-title"><%= t('home.formats') %></h2>
+      <p class="l-section-subtitle"><%= t('home.formatsSubtitle') %></p>
       <div class="l-formats-grid">
         <div class="l-format-card">
           <div class="l-format-icon">&#127466;&#127482;</div>
-          <h3>Europass</h3>
-          <p>The EU standard CV format, recognized by employers and institutions across all member states.</p>
+          <h3><%= t('home.fmt.europass') %></h3>
+          <p><%= t('home.fmt.europass.desc') %></p>
         </div>
         <div class="l-format-card">
           <div class="l-format-icon">&#128209;</div>
-          <h3>LaTeX</h3>
-          <p>Pixel-perfect academic CVs with professional typesetting. The gold standard for research and academia.</p>
+          <h3><%= t('home.fmt.latex') %></h3>
+          <p><%= t('home.fmt.latex.desc') %></p>
         </div>
         <div class="l-format-card">
           <div class="l-format-icon">&#9889;</div>
-          <h3>Typst</h3>
-          <p>Modern typesetting that compiles in milliseconds. Clean syntax, beautiful output, blazing fast.</p>
+          <h3><%= t('home.fmt.typst') %></h3>
+          <p><%= t('home.fmt.typst.desc') %></p>
         </div>
         <div class="l-format-card">
           <div class="l-format-icon">&#128196;</div>
-          <h3>PDF Export</h3>
-          <p>One-click download to PDF. Print-ready, perfectly formatted, universally compatible.</p>
+          <h3><%= t('home.fmt.pdf') %></h3>
+          <p><%= t('home.fmt.pdf.desc') %></p>
         </div>
         <div class="l-format-card">
           <div class="l-format-icon">&#9989;</div>
-          <h3>ATS-Optimized</h3>
-          <p>Every template passes Applicant Tracking Systems. Your CV reaches human reviewers, not the spam folder.</p>
+          <h3><%= t('home.fmt.ats') %></h3>
+          <p><%= t('home.fmt.ats.desc') %></p>
         </div>
         <div class="l-format-card">
           <div class="l-format-icon">&#127760;</div>
-          <h3>Multi-Language</h3>
-          <p>Full support for English, Italian, German, French, and Spanish. Build CVs for international opportunities.</p>
+          <h3><%= t('home.fmt.multilang') %></h3>
+          <p><%= t('home.fmt.multilang.desc') %></p>
         </div>
       </div>
     </div>
@@ -329,28 +330,28 @@
   <!-- Why Free -->
   <section class="l-section l-section-dark" id="why-free">
     <div class="l-container">
-      <h2 class="l-section-title">Why Free?</h2>
-      <p class="l-section-subtitle">We believe everyone deserves a great CV</p>
+      <h2 class="l-section-title"><%= t('home.whyFree') %></h2>
+      <p class="l-section-subtitle"><%= t('home.whyFreeSubtitle') %></p>
       <div class="l-why-grid">
         <div class="l-why-card">
           <div class="l-why-icon">&#128187;</div>
-          <h3>Open Source</h3>
-          <p>Our core engine is open source. Inspect the code, contribute features, or self-host the entire application.</p>
+          <h3><%= t('home.why.openSource') %></h3>
+          <p><%= t('home.why.openSource.desc') %></p>
         </div>
         <div class="l-why-card">
           <div class="l-why-icon">&#128683;</div>
-          <h3>No Ads, Ever</h3>
-          <p>We will never show you ads, sell your data, or gate essential features behind paywalls.</p>
+          <h3><%= t('home.why.noAds') %></h3>
+          <p><%= t('home.why.noAds.desc') %></p>
         </div>
         <div class="l-why-card">
           <div class="l-why-icon">&#128274;</div>
-          <h3>Privacy First</h3>
-          <p>Your data stays in your browser. We don't store your personal information on our servers unless you opt in.</p>
+          <h3><%= t('home.why.privacy') %></h3>
+          <p><%= t('home.why.privacy.desc') %></p>
         </div>
         <div class="l-why-card">
           <div class="l-why-icon">&#129309;</div>
-          <h3>Community Driven</h3>
-          <p>Built by a community of developers and career professionals. Templates and features shaped by real user needs.</p>
+          <h3><%= t('home.why.community') %></h3>
+          <p><%= t('home.why.community.desc') %></p>
         </div>
       </div>
     </div>
@@ -359,77 +360,77 @@
   <!-- Pricing -->
   <section class="l-section" id="pricing">
     <div class="l-container">
-      <h2 class="l-section-title">Plans &amp; Pricing</h2>
-      <p class="l-section-subtitle">Start free, upgrade when you need more</p>
+      <h2 class="l-section-title"><%= t('home.pricing') %></h2>
+      <p class="l-section-subtitle"><%= t('home.pricingSubtitle') %></p>
       <div class="l-pricing-grid">
 
         <div class="l-pricing-card">
           <div class="l-pricing-header">
-            <h3>Self-Hosted</h3>
-            <div class="l-pricing-price">Free <span>forever</span></div>
+            <h3><%= t('home.plan.selfHosted') %></h3>
+            <div class="l-pricing-price"><%= t('home.plan.free') %> <span><%= t('home.plan.forever') %></span></div>
           </div>
           <ul class="l-pricing-features">
-            <li>&#10003; Download the app</li>
-            <li>&#10003; Run locally on your machine</li>
-            <li>&#10003; Write your own Typst/LaTeX</li>
-            <li>&#10003; Full source code access</li>
-            <li>&#10003; No account required</li>
-            <li>&#10003; Complete privacy</li>
+            <li>&#10003; <%= t('home.plan.selfHosted.f1') %></li>
+            <li>&#10003; <%= t('home.plan.selfHosted.f2') %></li>
+            <li>&#10003; <%= t('home.plan.selfHosted.f3') %></li>
+            <li>&#10003; <%= t('home.plan.selfHosted.f4') %></li>
+            <li>&#10003; <%= t('home.plan.selfHosted.f5') %></li>
+            <li>&#10003; <%= t('home.plan.selfHosted.f6') %></li>
           </ul>
-          <a href="#" class="l-btn l-btn-outline">Download</a>
+          <a href="#" class="l-btn l-btn-outline"><%= t('home.plan.download') %></a>
         </div>
 
         <div class="l-pricing-card">
           <div class="l-pricing-header">
-            <h3>Managed Free</h3>
-            <div class="l-pricing-price">Free</div>
+            <h3><%= t('home.plan.managedFree') %></h3>
+            <div class="l-pricing-price"><%= t('home.plan.free') %></div>
           </div>
           <ul class="l-pricing-features">
-            <li>&#10003; 1 CV</li>
-            <li>&#10003; Basic templates</li>
-            <li>&#10003; PDF export</li>
-            <li>&#10003; ATS-optimized output</li>
-            <li>&#10003; Browser-based editor</li>
-            <li class="muted">&#10007; AI suggestions</li>
+            <li>&#10003; <%= t('home.plan.managedFree.f1') %></li>
+            <li>&#10003; <%= t('home.plan.managedFree.f2') %></li>
+            <li>&#10003; <%= t('home.plan.managedFree.f3') %></li>
+            <li>&#10003; <%= t('home.plan.managedFree.f4') %></li>
+            <li>&#10003; <%= t('home.plan.managedFree.f5') %></li>
+            <li class="muted">&#10007; <%= t('home.plan.managedFree.f6') %></li>
           </ul>
           <% if (typeof user !== 'undefined' && user) { %>
-            <a href="/cv/new" class="l-btn l-btn-primary">Create CV</a>
+            <a href="/cv/new" class="l-btn l-btn-primary"><%= t('home.plan.createCv') %></a>
           <% } else { %>
-            <a href="/auth/register" class="l-btn l-btn-primary">Get Started</a>
+            <a href="/auth/register" class="l-btn l-btn-primary"><%= t('home.plan.getStarted') %></a>
           <% } %>
         </div>
 
         <div class="l-pricing-card l-pricing-featured">
-          <span class="l-pricing-badge">Most Popular</span>
+          <span class="l-pricing-badge"><%= t('home.plan.mostPopular') %></span>
           <div class="l-pricing-header">
-            <h3>Pro</h3>
-            <div class="l-pricing-price">&euro;2.99<span>/month</span></div>
+            <h3><%= t('home.plan.pro') %></h3>
+            <div class="l-pricing-price">&euro;2.99<span><%= t('home.plan.pro.price') %></span></div>
           </div>
           <ul class="l-pricing-features">
-            <li>&#10003; Unlimited CVs</li>
-            <li>&#10003; All templates</li>
-            <li>&#10003; AI-powered suggestions</li>
-            <li>&#10003; Priority PDF export</li>
-            <li>&#10003; Custom color themes</li>
-            <li>&#10003; Version history</li>
+            <li>&#10003; <%= t('home.plan.pro.f1') %></li>
+            <li>&#10003; <%= t('home.plan.pro.f2') %></li>
+            <li>&#10003; <%= t('home.plan.pro.f3') %></li>
+            <li>&#10003; <%= t('home.plan.pro.f4') %></li>
+            <li>&#10003; <%= t('home.plan.pro.f5') %></li>
+            <li>&#10003; <%= t('home.plan.pro.f6') %></li>
           </ul>
-          <a href="#" class="l-btn l-btn-primary">Start Pro Trial</a>
+          <a href="#" class="l-btn l-btn-primary"><%= t('home.plan.startTrial') %></a>
         </div>
 
         <div class="l-pricing-card">
           <div class="l-pricing-header">
-            <h3>Enterprise</h3>
-            <div class="l-pricing-price">&euro;49<span>/month</span></div>
+            <h3><%= t('home.plan.enterprise') %></h3>
+            <div class="l-pricing-price">&euro;49<span><%= t('home.plan.enterprise.price') %></span></div>
           </div>
           <ul class="l-pricing-features">
-            <li>&#10003; Team management</li>
-            <li>&#10003; Bulk CV generation</li>
-            <li>&#10003; Custom branding</li>
-            <li>&#10003; REST API access</li>
-            <li>&#10003; Dedicated support</li>
-            <li>&#10003; SSO / SAML</li>
+            <li>&#10003; <%= t('home.plan.enterprise.f1') %></li>
+            <li>&#10003; <%= t('home.plan.enterprise.f2') %></li>
+            <li>&#10003; <%= t('home.plan.enterprise.f3') %></li>
+            <li>&#10003; <%= t('home.plan.enterprise.f4') %></li>
+            <li>&#10003; <%= t('home.plan.enterprise.f5') %></li>
+            <li>&#10003; <%= t('home.plan.enterprise.f6') %></li>
           </ul>
-          <a href="#" class="l-btn l-btn-outline">Contact Sales</a>
+          <a href="#" class="l-btn l-btn-outline"><%= t('home.plan.contactSales') %></a>
         </div>
 
       </div>
@@ -439,14 +440,14 @@
         <div class="l-one-time-content">
           <div class="l-one-time-icon">&#128269;</div>
           <div>
-            <h3>Professional CV Review</h3>
-            <p>Get your CV professionally reviewed by human experts. Detailed feedback on content, formatting, and ATS compatibility.</p>
+            <h3><%= t('home.review.title') %></h3>
+            <p><%= t('home.review.desc') %></p>
           </div>
           <div class="l-one-time-price">
             <span class="price">&euro;4.99</span>
-            <span class="price-label">per CV, one-time</span>
+            <span class="price-label"><%= t('home.review.price') %></span>
           </div>
-          <a href="#" class="l-btn l-btn-primary">Get Reviewed</a>
+          <a href="#" class="l-btn l-btn-primary"><%= t('home.review.cta') %></a>
         </div>
       </div>
     </div>
@@ -457,21 +458,21 @@
     <div class="l-container">
       <div class="l-writing-section">
         <div class="l-writing-content">
-          <span class="l-badge l-badge-premium">&#11088; Premium Service</span>
-          <h2>Expert CV Writing</h2>
-          <p class="l-writing-tagline">Let our team write your CV from scratch</p>
-          <p>Our professional CV writers have helped thousands of candidates land interviews at top companies. We craft compelling narratives that highlight your achievements and match your target roles.</p>
+          <span class="l-badge l-badge-premium">&#11088; <%= t('home.writing.badge') %></span>
+          <h2><%= t('home.writing.title') %></h2>
+          <p class="l-writing-tagline"><%= t('home.writing.tagline') %></p>
+          <p><%= t('home.writing.desc') %></p>
           <ul class="l-writing-features">
-            <li>&#10003; One-on-one consultation with a career expert</li>
-            <li>&#10003; Tailored to your target industry and role</li>
-            <li>&#10003; ATS-optimized and recruiter-approved</li>
-            <li>&#10003; Two rounds of revisions included</li>
-            <li>&#10003; Delivered in PDF, LaTeX, and Typst formats</li>
+            <li>&#10003; <%= t('home.writing.f1') %></li>
+            <li>&#10003; <%= t('home.writing.f2') %></li>
+            <li>&#10003; <%= t('home.writing.f3') %></li>
+            <li>&#10003; <%= t('home.writing.f4') %></li>
+            <li>&#10003; <%= t('home.writing.f5') %></li>
           </ul>
           <div class="l-writing-price">
-            Starting at <strong>&euro;29</strong>
+            <%= t('home.writing.startingAt') %> <strong>&euro;29</strong>
           </div>
-          <a href="#" class="l-btn l-btn-primary l-btn-lg">Get Your CV Written &#8594;</a>
+          <a href="#" class="l-btn l-btn-primary l-btn-lg"><%= t('home.writing.cta') %> &#8594;</a>
         </div>
         <div class="l-writing-visual">
           <div class="l-writing-card-stack">
@@ -482,7 +483,7 @@
               <div class="l-wc-line short"></div>
               <div class="l-wc-line"></div>
               <div class="l-wc-line short"></div>
-              <div class="l-wc-badge">&#10003; Expert Written</div>
+              <div class="l-wc-badge">&#10003; <%= t('home.writing.badge2') %></div>
             </div>
           </div>
         </div>
@@ -493,12 +494,12 @@
   <!-- CTA Section -->
   <section class="l-section l-section-cta">
     <div class="l-container">
-      <h2>Ready to Build Your CV?</h2>
-      <p>Join thousands of professionals who trust CV Builder for their career documents.</p>
+      <h2><%= t('home.cta.ready') %></h2>
+      <p><%= t('home.cta.join') %></p>
       <% if (typeof user !== 'undefined' && user) { %>
-        <a href="/cv/new" class="l-btn l-btn-primary l-btn-lg">Start Building. It's Free &#8594;</a>
+        <a href="/cv/new" class="l-btn l-btn-primary l-btn-lg"><%= t('home.cta.start') %> &#8594;</a>
       <% } else { %>
-        <a href="/auth/register" class="l-btn l-btn-primary l-btn-lg">Start Building. It's Free &#8594;</a>
+        <a href="/auth/register" class="l-btn l-btn-primary l-btn-lg"><%= t('home.cta.start') %> &#8594;</a>
       <% } %>
     </div>
   </section>
@@ -509,39 +510,39 @@
       <div class="l-footer-grid">
         <div class="l-footer-brand">
           <h3><span class="l-logo-icon">&#128196;</span> CV Builder</h3>
-          <p>Free professional CV builder supporting Europass, LaTeX, and Typst formats. Open source, privacy-first, community-driven.</p>
+          <p><%= t('footer.brand.desc') %></p>
         </div>
         <div class="l-footer-links">
-          <h4>Product</h4>
+          <h4><%= t('footer.product') %></h4>
           <ul>
-            <li><a href="#templates">Templates</a></li>
-            <li><a href="#formats">Formats</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="/faq">FAQ</a></li>
+            <li><a href="#templates"><%= t('nav.templates') %></a></li>
+            <li><a href="#formats"><%= t('home.formats') %></a></li>
+            <li><a href="#pricing"><%= t('home.pricing') %></a></li>
+            <li><a href="/faq"><%= t('nav.faq') %></a></li>
           </ul>
         </div>
         <div class="l-footer-links">
-          <h4>Company</h4>
+          <h4><%= t('footer.company') %></h4>
           <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#"><%= t('footer.about') %></a></li>
+            <li><a href="#"><%= t('footer.blog') %></a></li>
+            <li><a href="#"><%= t('footer.careers') %></a></li>
+            <li><a href="#"><%= t('footer.contact') %></a></li>
           </ul>
         </div>
         <div class="l-footer-links">
-          <h4>Legal</h4>
+          <h4><%= t('footer.legal') %></h4>
           <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Cookie Policy</a></li>
-            <li><a href="#">GDPR</a></li>
+            <li><a href="#"><%= t('footer.privacy') %></a></li>
+            <li><a href="#"><%= t('footer.terms') %></a></li>
+            <li><a href="#"><%= t('footer.cookies') %></a></li>
+            <li><a href="#"><%= t('footer.gdpr') %></a></li>
           </ul>
         </div>
       </div>
       <div class="l-footer-bottom">
-        <p>&copy; 2026 CV Builder by Stuzzicadenti AG. All rights reserved.</p>
-        <p class="l-footer-privacy">Your data stays in your browser. We respect your privacy.</p>
+        <p>&copy; 2026 <%= t('footer.copyright') %></p>
+        <p class="l-footer-privacy"><%= t('footer.privacyNote') %></p>
       </div>
     </div>
   </footer>
