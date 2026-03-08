@@ -3,6 +3,7 @@ import { cvs, templates } from '../db/schema.js';
 import { eq, and } from 'drizzle-orm';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
+import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -103,7 +104,7 @@ export default async function cvRoutes(app) {
     const typstSource = helpers + cleanTemplate;
 
     await fs.mkdir(PDF_DIR, { recursive: true });
-    const tmpDir = path.join(PDF_DIR, `tmp-${cv.id}-${Date.now()}`);
+    const tmpDir = path.join(PDF_DIR, `tmp-${cv.id}-${crypto.randomUUID()}`);
     await fs.mkdir(tmpDir, { recursive: true });
 
     const dataPath = path.join(tmpDir, 'data.json');
@@ -114,7 +115,7 @@ export default async function cvRoutes(app) {
     await fs.writeFile(typstPath, typstSource);
 
     try {
-      await execFileAsync('typst', ['compile', typstPath, pdfPath]);
+      await execFileAsync('typst', ['compile', typstPath, pdfPath], { timeout: 15000 });
       const pdf = await fs.readFile(pdfPath);
 
       // Cleanup temp files

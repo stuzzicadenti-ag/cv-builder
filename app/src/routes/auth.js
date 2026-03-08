@@ -22,7 +22,8 @@ export default async function authRoutes(app) {
     if (!email || !password) {
       return reply.view('auth/login.ejs', { user: null, error: 'Email and password are required', title: 'Login', t: req.t, lang: req.lang });
     }
-    const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    const normalizedEmail = email.trim().toLowerCase();
+    const [user] = await db.select().from(users).where(eq(users.email, normalizedEmail)).limit(1);
     if (!user || !await bcrypt.compare(password, user.passwordHash)) {
       return reply.view('auth/login.ejs', { user: null, error: 'Invalid email or password', title: 'Login', t: req.t, lang: req.lang });
     }
@@ -55,12 +56,13 @@ export default async function authRoutes(app) {
     if (name.length > 255 || email.length > 255) {
       return reply.view('auth/register.ejs', { user: null, error: 'Input too long', title: 'Register', t: req.t, lang: req.lang });
     }
-    const existing = await db.select({ id: users.id }).from(users).where(eq(users.email, email)).limit(1);
+    const normalizedEmail = email.trim().toLowerCase();
+    const existing = await db.select({ id: users.id }).from(users).where(eq(users.email, normalizedEmail)).limit(1);
     if (existing.length > 0) {
       return reply.view('auth/register.ejs', { user: null, error: 'Email already registered', title: 'Register', t: req.t, lang: req.lang });
     }
     const passwordHash = await bcrypt.hash(password, 12);
-    await db.insert(users).values({ email, passwordHash, name });
+    await db.insert(users).values({ email: normalizedEmail, passwordHash, name: name.trim() });
     return reply.redirect('/auth/login?registered=1');
   });
 

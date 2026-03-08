@@ -118,6 +118,7 @@ export default async function adminRoutes(app) {
   // Change role
   app.post('/users/:id/role', async (req, reply) => {
     const targetId = parseInt(req.params.id, 10);
+    if (!Number.isFinite(targetId) || targetId <= 0) return reply.code(400).send('Invalid user id');
     const { role } = req.body;
     const validRoles = ['user', 'admin'];
 
@@ -143,6 +144,7 @@ export default async function adminRoutes(app) {
   // Ban user
   app.post('/users/:id/ban', async (req, reply) => {
     const targetId = parseInt(req.params.id, 10);
+    if (!Number.isFinite(targetId) || targetId <= 0) return reply.code(400).send('Invalid user id');
     const { reason } = req.body;
 
     if (targetId === req.adminUser.id) return reply.code(400).send('Cannot ban yourself');
@@ -160,6 +162,7 @@ export default async function adminRoutes(app) {
   // Unban user
   app.post('/users/:id/unban', async (req, reply) => {
     const targetId = parseInt(req.params.id, 10);
+    if (!Number.isFinite(targetId) || targetId <= 0) return reply.code(400).send('Invalid user id');
 
     await pool.query('UPDATE users SET banned = false, banned_reason = NULL WHERE id = $1', [targetId]);
     await logAction(req.adminUser.id, 'unban', targetId, null);
