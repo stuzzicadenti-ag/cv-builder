@@ -82,8 +82,10 @@ export default async function cvRoutes(app) {
 
   // Generate PDF
   app.get('/pdf/:id', async (req, reply) => {
+    const pdfId = parseId(req.params.id);
+    if (!pdfId) return reply.code(400).send('Invalid CV id');
     const [cv] = await db.select().from(cvs)
-      .where(and(eq(cvs.id, parseInt(req.params.id)), eq(cvs.userId, req.user.id))).limit(1);
+      .where(and(eq(cvs.id, pdfId), eq(cvs.userId, req.user.id))).limit(1);
     if (!cv) return reply.code(404).send('CV not found');
 
     const [template] = await db.select().from(templates).where(eq(templates.id, cv.templateId)).limit(1);
@@ -123,7 +125,9 @@ export default async function cvRoutes(app) {
 
   // Delete CV
   app.post('/delete/:id', async (req, reply) => {
-    await db.delete(cvs).where(and(eq(cvs.id, parseInt(req.params.id)), eq(cvs.userId, req.user.id)));
+    const delId = parseId(req.params.id);
+    if (!delId) return reply.code(400).send('Invalid CV id');
+    await db.delete(cvs).where(and(eq(cvs.id, delId), eq(cvs.userId, req.user.id)));
     return reply.redirect('/cv');
   });
 }
