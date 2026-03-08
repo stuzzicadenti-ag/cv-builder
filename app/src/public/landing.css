@@ -1022,3 +1022,18 @@ html {
   :root { --max-width-landing: 1600px; }
   .landing { font-size: 1.05rem; }
 }
+
+/* Landing page dropdowns */
+.l-dd { position: relative; }
+.l-dd-menu {
+  display: none; position: absolute; top: calc(100% + 4px); right: 0; min-width: 160px;
+  background: rgba(30,30,40,0.98); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 4px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 1100;
+}
+.l-dd.open .l-dd-menu { display: block; }
+.l-dd-menu a {
+  display: block; padding: 8px 16px; color: rgba(255,255,255,0.7); font-size: 0.85rem;
+  font-weight: 500; text-decoration: none; transition: color 0.15s, background 0.15s;
+}
+.l-dd-menu a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.l-dd-menu a.active { color: #7c3aed; font-weight: 700; }

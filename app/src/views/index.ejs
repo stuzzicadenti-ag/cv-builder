@@ -57,16 +57,35 @@
       </ul>
       <div class="l-nav-actions">
         <% if (typeof user !== 'undefined' && user) { %>
-          <% if (user.role === 'admin' || user.role === 'owner') { %>
-            <a href="/admin" class="l-btn l-btn-ghost" style="color:#a78bfa;"><%= t('nav.admin') %></a>
-          <% } %>
-          <a href="/cv" class="l-btn l-btn-ghost"><%= t('nav.myCvs') %></a>
-          <a href="/cv/new" class="l-btn l-btn-primary l-btn-sm"><%= t('home.plan.createCv') %></a>
+          <div class="l-dd" style="position:relative;">
+            <button type="button" class="l-btn l-btn-ghost l-dd-btn" style="gap:5px;">
+              <%= user.name || user.email %> <span style="font-size:0.55rem;">&#9662;</span>
+            </button>
+            <div class="l-dd-menu">
+              <a href="/cv"><%= t('nav.myCvs') %></a>
+              <a href="/cv/new"><%= t('home.plan.createCv') %></a>
+              <% if (user.role === 'admin' || user.role === 'owner') { %>
+                <a href="/admin" style="color:#a78bfa;"><%= t('nav.admin') %></a>
+              <% } %>
+              <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
+              <a href="/auth/logout" style="color:#ef4444;"><%= t('nav.logout') || 'Logout' %></a>
+            </div>
+          </div>
         <% } else { %>
           <a href="/auth/login" class="l-btn l-btn-ghost"><%= t('nav.login') %></a>
           <a href="/auth/register" class="l-btn l-btn-primary l-btn-sm"><%= t('nav.register') %></a>
         <% } %>
-        <span style="font-size:0.7rem; margin-left:6px;"><a href="/lang/en" style="opacity:<%= lang === 'en' ? '1' : '0.5' %>">EN</a> | <a href="/lang/it" style="opacity:<%= lang === 'it' ? '1' : '0.5' %>">IT</a> | <a href="/lang/de" style="opacity:<%= lang === 'de' ? '1' : '0.5' %>">DE</a> | <a href="/lang/fr" style="opacity:<%= lang === 'fr' ? '1' : '0.5' %>">FR</a></span>
+        <div class="l-dd" style="position:relative;">
+          <button type="button" class="l-dd-btn" style="color:rgba(255,255,255,0.6);font-size:0.8rem;font-weight:700;letter-spacing:0.5px;padding:4px 8px;border:none;background:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:inherit;">
+            <%= (typeof lang !== 'undefined' ? lang : 'en').toUpperCase() %> <span style="font-size:0.55rem;">&#9662;</span>
+          </button>
+          <div class="l-dd-menu" style="min-width:100px;">
+            <a href="/lang/en" class="<%= lang === 'en' ? 'active' : '' %>">EN</a>
+            <a href="/lang/it" class="<%= lang === 'it' ? 'active' : '' %>">IT</a>
+            <a href="/lang/de" class="<%= lang === 'de' ? 'active' : '' %>">DE</a>
+            <a href="/lang/fr" class="<%= lang === 'fr' ? 'active' : '' %>">FR</a>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
@@ -556,5 +575,21 @@
     })();
   </script>
 
+<script>
+(function(){
+  document.querySelectorAll('.l-dd-btn').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var dd=btn.closest('.l-dd');
+      var open=dd.classList.contains('open');
+      document.querySelectorAll('.l-dd.open').forEach(function(d){d.classList.remove('open');});
+      if(!open)dd.classList.add('open');
+    });
+  });
+  document.addEventListener('click',function(){
+    document.querySelectorAll('.l-dd.open').forEach(function(d){d.classList.remove('open');});
+  });
+})();
+</script>
 </body>
 </html>
