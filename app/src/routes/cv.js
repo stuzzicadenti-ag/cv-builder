@@ -91,8 +91,16 @@ export default async function cvRoutes(app) {
     const [template] = await db.select().from(templates).where(eq(templates.id, cv.templateId)).limit(1);
     if (!template) return reply.code(400).send('No template selected');
 
-    // Build Typst source with data
-    const typstSource = `#let data = json("data.json")\n${template.typstTemplate}`;
+    // Build Typst source with data — always inject null-safe helpers
+    const helpers = `#let data = json("data.json")
+#let get(key, default: "") = if key in data { str(data.at(key)) } else { default }
+#let getArr(key) = if key in data and type(data.at(key)) == array { data.at(key) } else { () }
+#let has(key) = key in data and str(data.at(key)).len() > 0
+#let hasArr(key) = key in data and type(data.at(key)) == array and data.at(key).len() > 0
+`;
+    // Strip any existing #let data = json(...) from the template to avoid duplicates
+    const cleanTemplate = template.typstTemplate.replace(/^\s*#let data\s*=\s*json\([^)]+\)\s*\n?/m, '');
+    const typstSource = helpers + cleanTemplate;
 
     await fs.mkdir(PDF_DIR, { recursive: true });
     const tmpDir = path.join(PDF_DIR, `tmp-${cv.id}-${Date.now()}`);
