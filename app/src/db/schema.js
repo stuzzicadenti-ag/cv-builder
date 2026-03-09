@@ -27,9 +27,12 @@ export const cvs = pgTable('cvs', {
   title: varchar('title', { length: 255 }).notNull().default('My CV'),
   data: jsonb('data').notNull().default({}),
   pdfPath: varchar('pdf_path', { length: 500 }),
+  isPublic: boolean('is_public').default(false),
+  shareToken: varchar('share_token', { length: 64 }).unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => [
   index('cvs_user_id_idx').on(table.userId),
   index('cvs_template_id_idx').on(table.templateId),
+  index('cvs_share_token_idx').on(table.shareToken),
 ]);

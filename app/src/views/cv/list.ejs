@@ -1,8 +1,11 @@
 <%- include('../partials/header') %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
   <h1><%= t('cv.myCvs') %></h1>
-  <a href="/cv/new" class="btn btn-primary">+ <%= t('cv.newCv') %></a>
+  <div style="display:flex; gap:8px;">
+    <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('import-modal').showModal()"><%= t('cv.importJson') %></button>
+    <a href="/cv/new" class="btn btn-primary">+ <%= t('cv.newCv') %></a>
+  </div>
 </div>
 
 <% if (cvs.length === 0) { %>
@@ -15,12 +18,30 @@
     <% for (const cv of cvs) { %>
       <div class="card">
         <h3 style="margin-bottom:8px;"><%= cv.title %></h3>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
           <%= t('cv.updated') %> <%= new Date(cv.updatedAt).toLocaleDateString() %>
         </p>
-        <div style="display:flex; gap:8px;">
+
+        <% if (cv.isPublic && cv.shareToken) { %>
+          <div style="background:var(--bg-muted, #f3f4f6); border-radius:var(--radius); padding:8px 10px; margin-bottom:12px; font-size:0.78rem; word-break:break-all;">
+            <span style="color:var(--success, #16a34a); font-weight:500;"><%= t('cv.shareActive') %></span><br>
+            <a href="/cv/public/<%= cv.shareToken %>" style="color:var(--primary);"><%= t('cv.shareLink') %></a>
+          </div>
+        <% } %>
+
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
           <a href="/cv/edit/<%= cv.id %>" class="btn btn-outline btn-sm"><%= t('cv.edit') %></a>
+          <a href="/cv/preview/<%= cv.id %>" class="btn btn-outline btn-sm" target="_blank"><%= t('cv.preview') %></a>
           <a href="/cv/pdf/<%= cv.id %>" class="btn btn-primary btn-sm"><%= t('cv.downloadPdf') %></a>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+          <form method="POST" action="/cv/duplicate/<%= cv.id %>" style="display:inline;">
+            <button type="submit" class="btn btn-outline btn-sm"><%= t('cv.duplicate') %></button>
+          </form>
+          <a href="/cv/export/<%= cv.id %>" class="btn btn-outline btn-sm"><%= t('cv.exportJson') %></a>
+          <form method="POST" action="/cv/share/<%= cv.id %>" style="display:inline;">
+            <button type="submit" class="btn btn-outline btn-sm"><%= cv.isPublic ? t('cv.unshare') : t('cv.share') %></button>
+          </form>
           <form method="POST" action="/cv/delete/<%= cv.id %>" style="display:inline;" onsubmit="return confirm('<%= t('cv.deleteConfirm') %>')">
             <button type="submit" class="btn btn-danger btn-sm"><%= t('cv.delete') %></button>
           </form>
@@ -29,5 +50,39 @@
     <% } %>
   </div>
 <% } %>
+
+<!-- Import CV from JSON modal -->
+<dialog id="import-modal" style="border:none; border-radius:var(--radius); padding:0; max-width:540px; width:90%;">
+  <div style="padding:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin:0;"><%= t('cv.importCv') %></h2>
+      <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('import-modal').close()">X</button>
+    </div>
+    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;"><%= t('cv.importDesc') %></p>
+    <form method="POST" action="/cv/import">
+      <div class="form-group">
+        <label for="import-file"><%= t('cv.importFile') %></label>
+        <input type="file" id="import-file" accept=".json" onchange="handleImportFile(this)">
+        <textarea name="importData" id="import-data" rows="6" style="margin-top:8px; font-family:monospace; font-size:0.8rem;" placeholder='<%= t("cv.importPlaceholder") %>'></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('import-modal').close()"><%= t('cv.cancel') %></button>
+        <button type="submit" class="btn btn-primary"><%= t('cv.importBtn') %></button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<script>
+function handleImportFile(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('import-data').value = e.target.result;
+  };
+  reader.readAsText(file);
+}
+</script>
 
 <%- include('../partials/footer') %>

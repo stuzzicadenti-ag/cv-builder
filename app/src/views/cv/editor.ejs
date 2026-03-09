@@ -341,8 +341,12 @@
     </div>
   </div>
 
-  <div style="display:flex; gap:12px; justify-content:flex-end;">
+  <div style="display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap;">
     <a href="/cv" class="btn btn-outline"><%= t('cv.cancel') %></a>
+    <% if (cv && cv.id) { %>
+      <a href="/cv/preview/<%= cv.id %>" class="btn btn-outline" target="_blank"><%= t('cv.preview') %></a>
+      <a href="/cv/export/<%= cv.id %>" class="btn btn-outline"><%= t('cv.exportJson') %></a>
+    <% } %>
     <button type="submit" class="btn btn-primary"><%= t('cv.save') %></button>
   </div>
 </form>

@@ -41,6 +41,11 @@ async function migrate() {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_cvs_user_id ON cvs(user_id)`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_cvs_template_id ON cvs(template_id)`);
 
+  // Add sharing columns (idempotent)
+  await db.execute(sql`ALTER TABLE cvs ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT FALSE`);
+  await db.execute(sql`ALTER TABLE cvs ADD COLUMN IF NOT EXISTS share_token VARCHAR(64) UNIQUE`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_cvs_share_token ON cvs(share_token)`);
+
   console.log('Migrations complete.');
   await pool.end();
 }
