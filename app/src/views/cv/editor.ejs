@@ -22,9 +22,9 @@
   const references = cvData.references || [];
 %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
-  <div>
-    <h1 style="margin-bottom:2px;"><%= cv ? t('cv.editCv') : t('cv.newCv') %></h1>
+<div class="fade-in-up" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+  <div class="page-header">
+    <h1><%= cv ? t('cv.editCv') : t('cv.newCv') %></h1>
     <span class="autosave-indicator" id="save-indicator">
       <span class="autosave-dot"></span>
       <span class="autosave-text">Unsaved changes</span>
@@ -54,7 +54,7 @@
   <input type="hidden" name="data" id="cv-data-field" value="">
 
   <!-- Basic Info -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#128221;</div>
@@ -77,7 +77,7 @@
   </div>
 
   <!-- Personal Details -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#128100;</div>
@@ -137,7 +137,7 @@
   </div>
 
   <!-- Experience -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#128188;</div>
@@ -181,7 +181,7 @@
   </div>
 
   <!-- Education -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#127891;</div>
@@ -221,7 +221,7 @@
   </div>
 
   <!-- Skills -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#9889;</div>
@@ -243,7 +243,7 @@
   </div>
 
   <!-- Languages -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#127760;</div>
@@ -283,7 +283,7 @@
   </div>
 
   <!-- Certifications -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#127942;</div>
@@ -318,7 +318,7 @@
   </div>
 
   <!-- Projects -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#128187;</div>
@@ -357,7 +357,7 @@
   </div>
 
   <!-- Volunteer -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#129309;</div>
@@ -396,7 +396,7 @@
   </div>
 
   <!-- References -->
-  <div class="card" style="margin-bottom:20px;">
+  <div class="card editor-card fade-in-up" style="margin-bottom:20px;">
     <div class="editor-section-header">
       <div class="editor-section-title">
         <div class="editor-section-icon">&#128101;</div>
@@ -437,7 +437,7 @@
   </div>
 
   <!-- Action bar -->
-  <div class="card" style="position:sticky; bottom:16px; z-index:50; display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap; align-items:center; padding:16px 24px;">
+  <div class="card action-bar fade-in-up">
     <a href="/cv" class="btn btn-outline"><%= t('cv.cancel') %></a>
     <% if (cv && cv.id) { %>
       <a href="/cv/export/<%= cv.id %>" class="btn btn-outline btn-sm"><%= t('cv.exportJson') %></a>

@@ -1,9 +1,9 @@
 <%- include('../partials/header') %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
-  <div>
-    <h1 style="margin-bottom:4px;"><%= t('cv.myCvs') %></h1>
-    <p style="color:var(--text-muted); font-size:0.85rem;"><%= cvs.length %> <%= cvs.length === 1 ? 'CV' : 'CVs' %></p>
+<div class="fade-in-up" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+  <div class="page-header">
+    <h1><%= t('cv.myCvs') %></h1>
+    <p><%= cvs.length %> <%= cvs.length === 1 ? 'CV' : 'CVs' %></p>
   </div>
   <div style="display:flex; gap:8px;">
     <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('import-modal').showModal()"><%= t('cv.importJson') %></button>
@@ -12,8 +12,8 @@
 </div>
 
 <% if (cvs.length === 0) { %>
-  <div class="card" style="text-align:center; padding:64px 24px;">
-    <div style="font-size:3rem; margin-bottom:16px; opacity:0.4;">&#128196;</div>
+  <div class="card empty-state-card fade-in-up bg-glow">
+    <span class="icon">&#128196;</span>
     <h2 style="margin-bottom:8px; font-size:1.2rem;"><%= t('cv.noCvs') %></h2>
     <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.9rem;">Create your first CV to get started</p>
     <a href="/cv/new" class="btn btn-primary btn-lg"><%= t('cv.createFirst') %></a>
@@ -21,7 +21,7 @@
 <% } else { %>
   <div class="grid grid-3">
     <% for (const cv of cvs) { %>
-      <div class="card cv-card card-interactive" style="padding:0; overflow:hidden;">
+      <div class="card cv-card card-interactive fade-in-up" style="padding:0; overflow:hidden;">
         <div class="cv-card-preview">
           <div class="cv-card-mini"></div>
         </div>

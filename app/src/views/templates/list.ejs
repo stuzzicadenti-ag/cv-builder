@@ -1,9 +1,9 @@
 <%- include('../partials/header') %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
-  <div>
-    <h1 style="margin-bottom:4px;"><%= t('templates.title') %></h1>
-    <p style="color:var(--text-muted); font-size:0.9rem;"><%= t('templates.subtitle') %></p>
+<div class="fade-in-up" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+  <div class="page-header">
+    <h1><%= t('templates.title') %></h1>
+    <p style="font-size:0.9rem;"><%= t('templates.subtitle') %></p>
   </div>
   <% if (typeof user !== 'undefined' && user) { %>
     <a href="/cv" class="btn btn-outline btn-sm"><%= t('nav.myCvs') %></a>
@@ -11,8 +11,8 @@
 </div>
 
 <% if (templates.length === 0) { %>
-  <div class="card" style="text-align:center; padding:64px 24px;">
-    <div style="font-size:3rem; margin-bottom:16px; opacity:0.4;">&#127912;</div>
+  <div class="card empty-state-card fade-in-up">
+    <span class="icon">&#127912;</span>
     <h2 style="margin-bottom:8px; font-size:1.2rem;"><%= t('templates.noTemplates') %></h2>
     <p style="color:var(--text-muted);"><%= t('templates.noTemplatesDesc') %></p>
   </div>
@@ -25,7 +25,7 @@
     }; %>
     <% for (const tpl of templates) { %>
       <% const style = previewStyles[tpl.name] || { bg: '#f1f5f9', accent: '#6366f1', accentHex: '6366f1', badge: null }; %>
-      <div class="card card-interactive" style="overflow:hidden; padding:0;">
+      <div class="card card-interactive tpl-card fade-in-up" style="overflow:hidden; padding:0;">
         <!-- Template preview -->
         <div class="tpl-preview" style="background:<%= style.bg %>;">
           <% if (style.badge) { %>

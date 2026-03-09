@@ -1,12 +1,12 @@
 <%- include('../partials/header') %>
 
-<div style="max-width: 420px; margin: 48px auto;">
-  <div style="text-align:center; margin-bottom:24px;">
+<div class="bg-glow" style="max-width: 420px; margin: 48px auto;">
+  <div class="fade-in-up" style="text-align:center; margin-bottom:24px;">
     <div style="font-size:2.5rem; margin-bottom:8px;">&#128196;</div>
-    <h2 style="margin-bottom:4px;"><%= t('auth.login') %></h2>
+    <h2 style="margin-bottom:4px; background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"><%= t('auth.login') %></h2>
     <p style="color:var(--text-muted); font-size:0.88rem;">Welcome back to CV Builder</p>
   </div>
-  <div class="card">
+  <div class="card auth-card fade-in-up">
     <% if (error) { %><div class="alert alert-error">&#9888; <%= error %></div><% } %>
     <% if (typeof registered !== 'undefined' && registered) { %>
       <div class="alert alert-success">&#9989; <%= t('auth.registered') %></div>
