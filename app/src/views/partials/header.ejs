@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %> | CV Builder</title>
+  <meta name="description" content="Build professional CVs for free. Supports Europass, LaTeX, and Typst formats.">
+  <meta name="theme-color" content="#6366f1">
   <link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
   <link rel="stylesheet" href="/public/style.css">
   <link rel="stylesheet" href="/public/landing.css">
@@ -34,12 +36,12 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
               <div class="dropdown-header"><%= user.name || 'User' %></div>
-              <a href="/cv" class="dropdown-item"><%= typeof t !== 'undefined' ? t('nav.myCvs') : 'My CVs' %></a>
+              <a href="/cv" class="dropdown-item">&#128196; <%= typeof t !== 'undefined' ? t('nav.myCvs') : 'My CVs' %></a>
               <% if (user.role === 'admin' || user.role === 'owner') { %>
-                <a href="/admin" class="dropdown-item dropdown-item-admin"><%= typeof t !== 'undefined' ? t('nav.admin') : 'Admin' %></a>
+                <a href="/admin" class="dropdown-item dropdown-item-admin">&#9881; <%= typeof t !== 'undefined' ? t('nav.admin') : 'Admin' %></a>
               <% } %>
               <div class="dropdown-divider"></div>
-              <a href="/auth/logout" class="dropdown-item dropdown-item-logout"><%= typeof t !== 'undefined' ? t('nav.logout') : 'Logout' %></a>
+              <a href="/auth/logout" class="dropdown-item dropdown-item-logout">&#8617; <%= typeof t !== 'undefined' ? t('nav.logout') : 'Logout' %></a>
             </div>
           </div>
         <% } else { %>

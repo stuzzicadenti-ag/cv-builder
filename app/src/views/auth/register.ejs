@@ -1,28 +1,78 @@
 <%- include('../partials/header') %>
 
-<div style="max-width: 400px; margin: 40px auto;">
+<div style="max-width: 420px; margin: 48px auto;">
+  <div style="text-align:center; margin-bottom:24px;">
+    <div style="font-size:2.5rem; margin-bottom:8px;">&#9997;&#65039;</div>
+    <h2 style="margin-bottom:4px;"><%= t('auth.register') %></h2>
+    <p style="color:var(--text-muted); font-size:0.88rem;">Create your free account</p>
+  </div>
   <div class="card">
-    <h2 style="margin-bottom: 20px;"><%= t('auth.register') %></h2>
-    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
-    <form method="POST" action="/auth/register">
+    <% if (error) { %><div class="alert alert-error">&#9888; <%= error %></div><% } %>
+    <form method="POST" action="/auth/register" id="register-form">
       <div class="form-group">
         <label for="name"><%= t('auth.fullName') %></label>
-        <input type="text" id="name" name="name" required placeholder="<%= t('auth.namePlaceholder') %>">
+        <input type="text" id="name" name="name" required placeholder="<%= t('auth.namePlaceholder') %>" autocomplete="name" minlength="2">
       </div>
       <div class="form-group">
         <label for="email"><%= t('auth.email') %></label>
-        <input type="email" id="email" name="email" required placeholder="<%= t('auth.emailPlaceholder') %>">
+        <input type="email" id="email" name="email" required placeholder="<%= t('auth.emailPlaceholder') %>" autocomplete="email">
       </div>
       <div class="form-group">
         <label for="password"><%= t('auth.password') %></label>
-        <input type="password" id="password" name="password" required minlength="8" placeholder="<%= t('auth.passwordMin') %>">
+        <input type="password" id="password" name="password" required minlength="8" placeholder="<%= t('auth.passwordMin') %>" autocomplete="new-password">
+        <div class="password-strength">
+          <div class="password-strength-bar" id="pw-bar"></div>
+        </div>
+        <div class="password-strength-text" id="pw-text" style="color:var(--text-muted);">Minimum 8 characters</div>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('auth.createAccount') %></button>
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%;" id="register-btn"><%= t('auth.createAccount') %></button>
     </form>
     <p style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--text-muted);">
       <%= t('auth.haveAccount') %> <a href="/auth/login"><%= t('auth.loginHere') %></a>
     </p>
   </div>
 </div>
+
+<script>
+// Password strength indicator
+var pwInput = document.getElementById('password');
+var pwBar = document.getElementById('pw-bar');
+var pwText = document.getElementById('pw-text');
+
+pwInput.addEventListener('input', function() {
+  var pw = this.value;
+  var score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+
+  var levels = [
+    { width: '0%', color: 'var(--text-muted)', text: 'Minimum 8 characters' },
+    { width: '20%', color: 'var(--danger)', text: 'Weak' },
+    { width: '40%', color: 'var(--warning)', text: 'Fair' },
+    { width: '60%', color: 'var(--warning)', text: 'Good' },
+    { width: '80%', color: 'var(--success)', text: 'Strong' },
+    { width: '100%', color: 'var(--success)', text: 'Very strong' },
+  ];
+
+  var level = pw.length === 0 ? levels[0] : levels[Math.min(score, 5)];
+  pwBar.style.width = level.width;
+  pwBar.style.background = level.color;
+  pwText.style.color = level.color;
+  pwText.textContent = level.text;
+});
+
+document.getElementById('register-form').addEventListener('submit', function(e) {
+  var pw = pwInput.value;
+  if (pw.length < 8) {
+    e.preventDefault();
+    pwInput.focus();
+    return;
+  }
+  document.getElementById('register-btn').classList.add('btn-loading');
+});
+</script>
 
 <%- include('../partials/footer') %>

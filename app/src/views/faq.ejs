@@ -2,14 +2,78 @@
 
 <style>
   .faq-page { max-width: 720px; margin: 0 auto; padding: 40px 0; }
-  .faq-page h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+  .faq-page > h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
   .faq-page .faq-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px; }
-  .faq-section { margin-bottom: 32px; }
-  .faq-section h2 { font-size: 1.15rem; font-weight: 600; color: var(--primary); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  .faq-item { margin-bottom: 18px; }
-  .faq-item h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-  .faq-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
-  .faq-contact { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin-top: 40px; }
+  .faq-section { margin-bottom: 28px; }
+  .faq-section > h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .faq-item {
+    margin-bottom: 4px;
+  }
+  .faq-item details {
+    border: 1px solid var(--border-subtle, var(--border));
+    border-radius: var(--radius);
+    margin-top: 0;
+    background: var(--surface);
+  }
+  .faq-item details[open] {
+    border-color: var(--border);
+  }
+  .faq-item details summary {
+    padding: 12px 16px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s;
+  }
+  .faq-item details summary:hover {
+    background: rgba(255,255,255,0.02);
+  }
+  .faq-item details summary::-webkit-details-marker { display: none; }
+  .faq-item details summary::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 5px solid var(--primary);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .faq-item details[open] summary::before {
+    transform: rotate(90deg);
+  }
+  .faq-item details > div {
+    padding: 0 16px 14px;
+    border-top: none;
+  }
+  .faq-item details > div p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+  .faq-contact {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg, var(--radius));
+    padding: 28px;
+    text-align: center;
+    margin-top: 40px;
+  }
   .faq-contact h2 { font-size: 1.1rem; margin-bottom: 8px; border: none; padding: 0; }
   .faq-contact p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px; }
 </style>
@@ -19,90 +83,121 @@
   <p class="faq-subtitle"><%= t('faq.subtitle') %></p>
 
   <div class="faq-section">
-    <h2><%= t('faq.howItWorks') %></h2>
+    <h2>&#128161; <%= t('faq.howItWorks') %></h2>
     <div class="faq-item">
-      <h3><%= t('faq.whatIs.q') %></h3>
-      <p><%= t('faq.whatIs.a') %></p>
+      <details open>
+        <summary><%= t('faq.whatIs.q') %></summary>
+        <div><p><%= t('faq.whatIs.a') %></p></div>
+      </details>
     </div>
     <div class="faq-item">
-      <h3><%= t('faq.needAccount.q') %></h3>
-      <p><%= t('faq.needAccount.a') %></p>
+      <details>
+        <summary><%= t('faq.needAccount.q') %></summary>
+        <div><p><%= t('faq.needAccount.a') %></p></div>
+      </details>
     </div>
     <div class="faq-item">
-      <h3><%= t('faq.isFree.q') %></h3>
-      <p><%= t('faq.isFree.a') %></p>
-    </div>
-  </div>
-
-  <div class="faq-section">
-    <h2><%= t('faq.templatesCustom') %></h2>
-    <div class="faq-item">
-      <h3><%= t('faq.whatTemplates.q') %></h3>
-      <p><%= t('faq.whatTemplates.a') %></p>
-    </div>
-    <div class="faq-item">
-      <h3><%= t('faq.canCustomize.q') %></h3>
-      <p><%= t('faq.canCustomize.a') %></p>
+      <details>
+        <summary><%= t('faq.isFree.q') %></summary>
+        <div><p><%= t('faq.isFree.a') %></p></div>
+      </details>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2><%= t('faq.pdfGen') %></h2>
+    <h2>&#127912; <%= t('faq.templatesCustom') %></h2>
     <div class="faq-item">
-      <h3><%= t('faq.howPdf.q') %></h3>
-      <p><%= t('faq.howPdf.a') %></p>
+      <details>
+        <summary><%= t('faq.whatTemplates.q') %></summary>
+        <div><p><%= t('faq.whatTemplates.a') %></p></div>
+      </details>
     </div>
     <div class="faq-item">
-      <h3><%= t('faq.whatFormats.q') %></h3>
-      <p><%= t('faq.whatFormats.a') %></p>
-    </div>
-  </div>
-
-  <div class="faq-section">
-    <h2><%= t('faq.accountRules') %></h2>
-    <div class="faq-item">
-      <h3><%= t('faq.suspended.q') %></h3>
-      <p><%= t('faq.suspended.a') %></p>
-    </div>
-    <div class="faq-item">
-      <h3><%= t('faq.suspendedAppeal.q') %></h3>
-      <p><%- t('faq.suspendedAppeal.a') %></p>
-    </div>
-    <div class="faq-item">
-      <h3><%= t('faq.deleteAccount.q') %></h3>
-      <p><%- t('faq.deleteAccount.a') %></p>
+      <details>
+        <summary><%= t('faq.canCustomize.q') %></summary>
+        <div><p><%= t('faq.canCustomize.a') %></p></div>
+      </details>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2><%= t('faq.dataPrivacy') %></h2>
+    <h2>&#128196; <%= t('faq.pdfGen') %></h2>
     <div class="faq-item">
-      <h3><%= t('faq.whoSees.q') %></h3>
-      <p><%= t('faq.whoSees.a') %></p>
+      <details>
+        <summary><%= t('faq.howPdf.q') %></summary>
+        <div><p><%= t('faq.howPdf.a') %></p></div>
+      </details>
     </div>
     <div class="faq-item">
-      <h3><%= t('faq.whereStored.q') %></h3>
-      <p><%= t('faq.whereStored.a') %></p>
-    </div>
-    <div class="faq-item">
-      <h3><%= t('faq.cookies.q') %></h3>
-      <p><%= t('faq.cookies.a') %></p>
+      <details>
+        <summary><%= t('faq.whatFormats.q') %></summary>
+        <div><p><%= t('faq.whatFormats.a') %></p></div>
+      </details>
     </div>
   </div>
 
   <div class="faq-section">
-    <h2><%= t('faq.swissReg') %></h2>
+    <h2>&#128274; <%= t('faq.accountRules') %></h2>
     <div class="faq-item">
-      <h3><%= t('faq.gdpr.q') %></h3>
-      <p><%= t('faq.gdpr.a') %></p>
+      <details>
+        <summary><%= t('faq.suspended.q') %></summary>
+        <div><p><%= t('faq.suspended.a') %></p></div>
+      </details>
     </div>
     <div class="faq-item">
-      <h3><%= t('faq.operator.q') %></h3>
-      <p><%= t('faq.operator.a') %></p>
+      <details>
+        <summary><%= t('faq.suspendedAppeal.q') %></summary>
+        <div><p><%- t('faq.suspendedAppeal.a') %></p></div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary><%= t('faq.deleteAccount.q') %></summary>
+        <div><p><%- t('faq.deleteAccount.a') %></p></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <h2>&#128737; <%= t('faq.dataPrivacy') %></h2>
+    <div class="faq-item">
+      <details>
+        <summary><%= t('faq.whoSees.q') %></summary>
+        <div><p><%= t('faq.whoSees.a') %></p></div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary><%= t('faq.whereStored.q') %></summary>
+        <div><p><%= t('faq.whereStored.a') %></p></div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary><%= t('faq.cookies.q') %></summary>
+        <div><p><%= t('faq.cookies.a') %></p></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <h2>&#127464;&#127469; <%= t('faq.swissReg') %></h2>
+    <div class="faq-item">
+      <details>
+        <summary><%= t('faq.gdpr.q') %></summary>
+        <div><p><%= t('faq.gdpr.a') %></p></div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary><%= t('faq.operator.q') %></summary>
+        <div><p><%= t('faq.operator.a') %></p></div>
+      </details>
     </div>
   </div>
 
   <div class="faq-contact">
+    <div style="font-size:1.5rem; margin-bottom:8px;">&#128172;</div>
     <h2><%= t('faq.stillQuestions') %></h2>
     <p><%= t('faq.supportTeam') %></p>
     <a href="mailto:support@cvbuilder.ch" class="btn btn-primary"><%= t('faq.contactSupport') %></a>

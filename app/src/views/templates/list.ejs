@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
   <div>
     <h1 style="margin-bottom:4px;"><%= t('templates.title') %></h1>
     <p style="color:var(--text-muted); font-size:0.9rem;"><%= t('templates.subtitle') %></p>
@@ -11,36 +11,42 @@
 </div>
 
 <% if (templates.length === 0) { %>
-  <div class="card" style="text-align:center; padding:48px;">
-    <p style="font-size:1.2rem; margin-bottom:8px;"><%= t('templates.noTemplates') %></p>
+  <div class="card" style="text-align:center; padding:64px 24px;">
+    <div style="font-size:3rem; margin-bottom:16px; opacity:0.4;">&#127912;</div>
+    <h2 style="margin-bottom:8px; font-size:1.2rem;"><%= t('templates.noTemplates') %></h2>
     <p style="color:var(--text-muted);"><%= t('templates.noTemplatesDesc') %></p>
   </div>
 <% } else { %>
   <div class="grid grid-3">
     <% const previewStyles = {
-      'Classic': { bg: '#f8fafc', accent: '#1e293b', icon: 'Aa' },
-      'Modern': { bg: '#eff6ff', accent: '#2563eb', icon: '||' },
-      'Minimal': { bg: '#f9fafb', accent: '#6b7280', icon: '--' }
+      'Classic': { bg: '#f8fafc', accent: '#1e293b', accentHex: '1e293b', badge: null },
+      'Modern': { bg: '#eff6ff', accent: '#2563eb', accentHex: '2563eb', badge: 'Popular' },
+      'Minimal': { bg: '#f9fafb', accent: '#6b7280', accentHex: '6b7280', badge: null }
     }; %>
     <% for (const tpl of templates) { %>
-      <% const style = previewStyles[tpl.name] || { bg: '#f1f5f9', accent: '#6366f1', icon: 'CV' }; %>
-      <div class="card" style="overflow:hidden;">
-        <!-- Template preview placeholder -->
-        <div style="background:<%= style.bg %>; padding:24px; text-align:center; border-bottom:1px solid var(--border);">
-          <div style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:80px; background:white; border:2px solid <%= style.accent %>; border-radius:4px; position:relative;">
-            <div style="position:absolute; top:8px; left:8px; right:8px; height:3px; background:<%= style.accent %>; border-radius:1px;"></div>
-            <div style="position:absolute; top:16px; left:8px; right:8px; height:2px; background:<%= style.accent %>20; border-radius:1px;"></div>
-            <div style="position:absolute; top:22px; left:8px; right:8px; height:2px; background:<%= style.accent %>20; border-radius:1px;"></div>
-            <div style="position:absolute; top:32px; left:8px; right:20px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
-            <div style="position:absolute; top:38px; left:8px; right:12px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
-            <div style="position:absolute; top:48px; left:8px; width:16px; height:2px; background:<%= style.accent %>; border-radius:1px;"></div>
-            <div style="position:absolute; top:54px; left:8px; right:8px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
-            <div style="position:absolute; top:60px; left:8px; right:16px; height:2px; background:<%= style.accent %>15; border-radius:1px;"></div>
+      <% const style = previewStyles[tpl.name] || { bg: '#f1f5f9', accent: '#6366f1', accentHex: '6366f1', badge: null }; %>
+      <div class="card card-interactive" style="overflow:hidden; padding:0;">
+        <!-- Template preview -->
+        <div class="tpl-preview" style="background:<%= style.bg %>;">
+          <% if (style.badge) { %>
+            <span class="badge badge-primary" style="position:absolute; top:12px; right:12px;"><%= style.badge %></span>
+          <% } %>
+          <div class="tpl-preview-doc" style="border-color:<%= style.accent %>;">
+            <div class="tpl-preview-line" style="top:8px; height:3px; background:<%= style.accent %>;"></div>
+            <div class="tpl-preview-line" style="top:16px; right:12px; background:<%= style.accent %>20;"></div>
+            <div class="tpl-preview-line" style="top:22px; right:14px; background:<%= style.accent %>20;"></div>
+            <div class="tpl-preview-line" style="top:32px; height:2px; background:<%= style.accent %>;  right:24px;"></div>
+            <div class="tpl-preview-line" style="top:38px; right:10px; height:2px; background:<%= style.accent %>15;"></div>
+            <div class="tpl-preview-line" style="top:44px; right:16px; height:2px; background:<%= style.accent %>15;"></div>
+            <div class="tpl-preview-line" style="top:54px; height:2px; background:<%= style.accent %>; right:28px;"></div>
+            <div class="tpl-preview-line" style="top:60px; right:12px; height:2px; background:<%= style.accent %>15;"></div>
+            <div class="tpl-preview-line" style="top:66px; right:18px; height:2px; background:<%= style.accent %>15;"></div>
+            <div class="tpl-preview-line" style="top:76px; right:8px; height:2px; background:<%= style.accent %>10;"></div>
           </div>
         </div>
-        <div style="padding:16px;">
+        <div style="padding:20px;">
           <h3 style="margin-bottom:6px; font-size:1.05rem;"><%= tpl.name %></h3>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; min-height:40px;"><%= tpl.description %></p>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; min-height:40px; line-height:1.5;"><%= tpl.description %></p>
           <div style="display:flex; gap:8px;">
             <a href="/cv/new?template=<%= tpl.id %>" class="btn btn-primary btn-sm" style="flex:1; text-align:center;"><%= t('templates.useTemplate') %></a>
           </div>

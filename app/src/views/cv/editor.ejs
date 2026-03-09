@@ -22,9 +22,29 @@
   const references = cvData.references || [];
 %>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-  <h1><%= cv ? t('cv.editCv') : t('cv.newCv') %></h1>
-  <a href="/cv" class="btn btn-outline btn-sm"><%= t('cv.backToMyCvs') %></a>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+  <div>
+    <h1 style="margin-bottom:2px;"><%= cv ? t('cv.editCv') : t('cv.newCv') %></h1>
+    <span class="autosave-indicator" id="save-indicator">
+      <span class="autosave-dot"></span>
+      <span class="autosave-text">Unsaved changes</span>
+    </span>
+  </div>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <% if (cv && cv.id) { %>
+      <a href="/cv/preview/<%= cv.id %>" class="btn btn-outline btn-sm" target="_blank">&#128065; <%= t('cv.preview') %></a>
+    <% } %>
+    <a href="/cv" class="btn btn-outline btn-sm"><%= t('cv.backToMyCvs') %></a>
+  </div>
+</div>
+
+<!-- Progress indicator -->
+<div class="editor-progress" id="editor-progress">
+  <span>Completion:</span>
+  <div class="editor-progress-bar">
+    <div class="editor-progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <span class="editor-progress-text" id="progress-text">0%</span>
 </div>
 
 <form id="cv-form" method="POST" action="/cv/save">
@@ -33,11 +53,18 @@
   <% } %>
   <input type="hidden" name="data" id="cv-data-field" value="">
 
+  <!-- Basic Info -->
   <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-bottom:16px;"><%= t('cv.basicInfo') %></h2>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#128221;</div>
+        <h2><%= t('cv.basicInfo') %></h2>
+      </div>
+    </div>
     <div class="form-group">
       <label for="cv-title"><%= t('cv.cvTitle') %></label>
       <input type="text" id="cv-title" name="title" required value="<%= cv ? cv.title : 'My CV' %>" placeholder="<%= t('cv.cvTitlePlaceholder') %>">
+      <span class="form-hint">Give your CV a name to identify it easily</span>
     </div>
     <div class="form-group">
       <label for="cv-template"><%= t('cv.template') %></label>
@@ -49,68 +76,82 @@
     </div>
   </div>
 
+  <!-- Personal Details -->
   <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-bottom:16px;"><%= t('cv.personalDetails') %></h2>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#128100;</div>
+        <h2><%= t('cv.personalDetails') %></h2>
+      </div>
+    </div>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
       <div class="form-group">
         <label for="cv-name"><%= t('cv.fullName') %></label>
-        <input type="text" id="cv-name" data-field="name" value="<%= name %>">
+        <input type="text" id="cv-name" data-field="name" value="<%= name %>" placeholder="John Doe">
       </div>
       <div class="form-group">
         <label for="cv-email"><%= t('cv.email') %></label>
-        <input type="text" id="cv-email" data-field="email" value="<%= email %>">
+        <input type="email" id="cv-email" data-field="email" value="<%= email %>" placeholder="john@example.com">
       </div>
       <div class="form-group">
         <label for="cv-phone"><%= t('cv.phone') %></label>
-        <input type="text" id="cv-phone" data-field="phone" value="<%= phone %>">
+        <input type="tel" id="cv-phone" data-field="phone" value="<%= phone %>" placeholder="+41 79 123 45 67">
       </div>
       <div class="form-group">
         <label for="cv-location"><%= t('cv.location') %></label>
-        <input type="text" id="cv-location" data-field="location" value="<%= location %>">
+        <input type="text" id="cv-location" data-field="location" value="<%= location %>" placeholder="Zurich, Switzerland">
       </div>
       <div class="form-group">
         <label for="cv-linkedin"><%= t('cv.linkedin') %></label>
-        <input type="text" id="cv-linkedin" data-field="linkedin" value="<%= linkedin %>" placeholder="<%= t('cv.linkedinPlaceholder') %>">
+        <input type="url" id="cv-linkedin" data-field="linkedin" value="<%= linkedin %>" placeholder="<%= t('cv.linkedinPlaceholder') %>">
       </div>
       <div class="form-group">
         <label for="cv-website"><%= t('cv.website') %></label>
-        <input type="text" id="cv-website" data-field="website" value="<%= website %>" placeholder="<%= t('cv.websitePlaceholder') %>">
+        <input type="url" id="cv-website" data-field="website" value="<%= website %>" placeholder="<%= t('cv.websitePlaceholder') %>">
       </div>
     </div>
-    <details style="margin-top:12px;">
-      <summary style="cursor:pointer; font-weight:500; color:var(--primary);"><%= t('cv.additionalPersonal') %></summary>
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:12px;">
-        <div class="form-group">
-          <label for="cv-nationality"><%= t('cv.nationality') %></label>
-          <input type="text" id="cv-nationality" data-field="nationality" value="<%= nationality %>" placeholder="<%= t('cv.nationalityPlaceholder') %>">
-        </div>
-        <div class="form-group">
-          <label for="cv-dob"><%= t('cv.dateOfBirth') %></label>
-          <input type="text" id="cv-dob" data-field="dateOfBirth" value="<%= dateOfBirth %>" placeholder="<%= t('cv.dateOfBirthPlaceholder') %>">
-        </div>
-        <div class="form-group">
-          <label for="cv-driving"><%= t('cv.drivingLicense') %></label>
-          <input type="text" id="cv-driving" data-field="drivingLicense" value="<%= drivingLicense %>" placeholder="<%= t('cv.drivingLicensePlaceholder') %>">
+    <details>
+      <summary><%= t('cv.additionalPersonal') %></summary>
+      <div>
+        <div class="editor-grid-3" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="cv-nationality"><%= t('cv.nationality') %></label>
+            <input type="text" id="cv-nationality" data-field="nationality" value="<%= nationality %>" placeholder="<%= t('cv.nationalityPlaceholder') %>">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="cv-dob"><%= t('cv.dateOfBirth') %></label>
+            <input type="text" id="cv-dob" data-field="dateOfBirth" value="<%= dateOfBirth %>" placeholder="<%= t('cv.dateOfBirthPlaceholder') %>">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="cv-driving"><%= t('cv.drivingLicense') %></label>
+            <input type="text" id="cv-driving" data-field="drivingLicense" value="<%= drivingLicense %>" placeholder="<%= t('cv.drivingLicensePlaceholder') %>">
+          </div>
         </div>
       </div>
     </details>
     <div class="form-group" style="margin-top:16px;">
       <label for="cv-summary"><%= t('cv.summary') %></label>
       <textarea id="cv-summary" data-field="summary" rows="3" placeholder="<%= t('cv.summaryPlaceholder') %>"><%= summary %></textarea>
+      <span class="form-hint" id="summary-count"><%= summary.length %>/500 characters</span>
     </div>
   </div>
 
+  <!-- Experience -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.experience') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addExperience()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#128188;</div>
+        <h2><%= t('cv.experience') %></h2>
+        <span class="editor-section-count" id="exp-count"><%= experience.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addExperience()">+ <%= t('cv.add') %></button>
     </div>
     <div id="experience-list">
       <% if (experience.length > 0) { %>
         <% experience.forEach((job, i) => { %>
-          <div class="exp-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry exp-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.jobTitle') %></label>
                 <input type="text" class="exp-title" value="<%= job.title %>">
@@ -122,7 +163,7 @@
             </div>
             <div class="form-group">
               <label><%= t('cv.dates') %></label>
-              <input type="text" class="exp-dates" value="<%= job.dates %>">
+              <input type="text" class="exp-dates" value="<%= job.dates %>" placeholder="Jan 2023 - Present">
             </div>
             <div class="form-group">
               <label><%= t('cv.description') %></label>
@@ -132,19 +173,29 @@
         <% }) %>
       <% } %>
     </div>
+    <% if (experience.length === 0) { %>
+    <div class="empty-section" id="exp-empty" style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">
+      No experience added yet. Click "+ Add" to get started.
+    </div>
+    <% } %>
   </div>
 
+  <!-- Education -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.education') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addEducation()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#127891;</div>
+        <h2><%= t('cv.education') %></h2>
+        <span class="editor-section-count" id="edu-count"><%= education.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addEducation()">+ <%= t('cv.add') %></button>
     </div>
     <div id="education-list">
       <% if (education.length > 0) { %>
         <% education.forEach((edu, i) => { %>
-          <div class="edu-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry edu-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.degree') %></label>
                 <input type="text" class="edu-degree" value="<%= edu.degree %>">
@@ -156,33 +207,57 @@
             </div>
             <div class="form-group">
               <label><%= t('cv.dates') %></label>
-              <input type="text" class="edu-dates" value="<%= edu.dates %>">
+              <input type="text" class="edu-dates" value="<%= edu.dates %>" placeholder="Sep 2018 - Jun 2022">
             </div>
           </div>
         <% }) %>
       <% } %>
     </div>
+    <% if (education.length === 0) { %>
+    <div class="empty-section" id="edu-empty" style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">
+      No education added yet. Click "+ Add" to get started.
+    </div>
+    <% } %>
   </div>
 
+  <!-- Skills -->
   <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-bottom:16px;"><%= t('cv.skills') %></h2>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#9889;</div>
+        <h2><%= t('cv.skills') %></h2>
+      </div>
+    </div>
     <div class="form-group">
       <label for="cv-skills"><%= t('cv.skillsLabel') %></label>
-      <input type="text" id="cv-skills" value="<%= skills.join(', ') %>">
+      <input type="text" id="cv-skills" value="<%= skills.join(', ') %>" placeholder="JavaScript, Python, Project Management, ...">
+      <span class="form-hint">Separate skills with commas</span>
     </div>
+    <% if (skills.length > 0) { %>
+    <div id="skills-preview" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+      <% skills.forEach(function(s) { %>
+        <span class="badge badge-primary"><%= s %></span>
+      <% }) %>
+    </div>
+    <% } %>
   </div>
 
+  <!-- Languages -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.languages') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addLanguage()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#127760;</div>
+        <h2><%= t('cv.languages') %></h2>
+        <span class="editor-section-count" id="lang-count"><%= languages.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addLanguage()">+ <%= t('cv.add') %></button>
     </div>
     <div id="language-list">
       <% if (languages.length > 0) { %>
         <% languages.forEach((lang, i) => { %>
-          <div class="lang-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry lang-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.languageName') %></label>
                 <input type="text" class="lang-name" value="<%= lang.name %>">
@@ -207,17 +282,22 @@
     </div>
   </div>
 
+  <!-- Certifications -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.certifications') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addCertification()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#127942;</div>
+        <h2><%= t('cv.certifications') %></h2>
+        <span class="editor-section-count" id="cert-count"><%= certifications.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addCertification()">+ <%= t('cv.add') %></button>
     </div>
     <div id="certification-list">
       <% if (certifications.length > 0) { %>
         <% certifications.forEach((cert, i) => { %>
-          <div class="cert-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry cert-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.certName') %></label>
                 <input type="text" class="cert-name" value="<%= cert.name %>">
@@ -229,7 +309,7 @@
             </div>
             <div class="form-group">
               <label><%= t('cv.certDate') %></label>
-              <input type="text" class="cert-date" value="<%= cert.date %>">
+              <input type="text" class="cert-date" value="<%= cert.date %>" placeholder="March 2024">
             </div>
           </div>
         <% }) %>
@@ -237,17 +317,22 @@
     </div>
   </div>
 
+  <!-- Projects -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.projects') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addProject()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#128187;</div>
+        <h2><%= t('cv.projects') %></h2>
+        <span class="editor-section-count" id="proj-count"><%= projects.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addProject()">+ <%= t('cv.add') %></button>
     </div>
     <div id="project-list">
       <% if (projects.length > 0) { %>
         <% projects.forEach((proj, i) => { %>
-          <div class="proj-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry proj-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.projectName') %></label>
                 <input type="text" class="proj-name" value="<%= proj.name %>">
@@ -271,17 +356,22 @@
     </div>
   </div>
 
+  <!-- Volunteer -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.volunteer') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addVolunteer()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#129309;</div>
+        <h2><%= t('cv.volunteer') %></h2>
+        <span class="editor-section-count" id="vol-count"><%= volunteer.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addVolunteer()">+ <%= t('cv.add') %></button>
     </div>
     <div id="volunteer-list">
       <% if (volunteer.length > 0) { %>
         <% volunteer.forEach((vol, i) => { %>
-          <div class="vol-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry vol-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.volunteerRole') %></label>
                 <input type="text" class="vol-role" value="<%= vol.role %>">
@@ -305,17 +395,22 @@
     </div>
   </div>
 
+  <!-- References -->
   <div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h2><%= t('cv.references') %></h2>
-      <button type="button" class="btn btn-outline btn-sm" onclick="addReference()"><%= t('cv.add') %></button>
+    <div class="editor-section-header">
+      <div class="editor-section-title">
+        <div class="editor-section-icon">&#128101;</div>
+        <h2><%= t('cv.references') %></h2>
+        <span class="editor-section-count" id="ref-count"><%= references.length %></span>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addReference()">+ <%= t('cv.add') %></button>
     </div>
     <div id="reference-list">
       <% if (references.length > 0) { %>
         <% references.forEach((ref, i) => { %>
-          <div class="ref-entry" style="border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;">
-            <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="editor-entry ref-entry">
+            <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.refName') %></label>
                 <input type="text" class="ref-name" value="<%= ref.name %>">
@@ -325,7 +420,7 @@
                 <input type="text" class="ref-position" value="<%= ref.position %>">
               </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
               <div class="form-group">
                 <label><%= t('cv.refCompany') %></label>
                 <input type="text" class="ref-company" value="<%= ref.company %>">
@@ -341,15 +436,30 @@
     </div>
   </div>
 
-  <div style="display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap;">
+  <!-- Action bar -->
+  <div class="card" style="position:sticky; bottom:16px; z-index:50; display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap; align-items:center; padding:16px 24px;">
     <a href="/cv" class="btn btn-outline"><%= t('cv.cancel') %></a>
     <% if (cv && cv.id) { %>
-      <a href="/cv/preview/<%= cv.id %>" class="btn btn-outline" target="_blank"><%= t('cv.preview') %></a>
-      <a href="/cv/export/<%= cv.id %>" class="btn btn-outline"><%= t('cv.exportJson') %></a>
+      <a href="/cv/export/<%= cv.id %>" class="btn btn-outline btn-sm"><%= t('cv.exportJson') %></a>
     <% } %>
-    <button type="submit" class="btn btn-primary"><%= t('cv.save') %></button>
+    <button type="submit" class="btn btn-primary btn-lg" id="save-btn">&#128190; <%= t('cv.save') %></button>
   </div>
 </form>
+
+<!-- PDF Preview modal (for existing CVs) -->
+<% if (cv && cv.id) { %>
+<div id="pdf-preview-container" style="display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);">
+  <div style="position:absolute; inset:16px; background:var(--surface); border-radius:var(--radius-lg, 12px); display:flex; flex-direction:column; overflow:hidden;">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-bottom:1px solid var(--border);">
+      <h3>PDF Preview</h3>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="closePdfPreview()">&#10005; Close</button>
+    </div>
+    <iframe id="pdf-preview-frame" style="flex:1; border:none; background:#fff;"></iframe>
+  </div>
+</div>
+<% } %>
+
+<div class="toast-container" id="toast-container"></div>
 
 <script>
 function escAttr(s) {
@@ -358,13 +468,137 @@ function escAttr(s) {
   return d.innerHTML.replace(/"/g, '&quot;');
 }
 
-function createExpEntry(data = {}) {
+// Animated entry removal
+function removeEntry(btn) {
+  var entry = btn.closest('.editor-entry');
+  entry.classList.add('removing');
+  setTimeout(function() {
+    entry.remove();
+    updateCounts();
+    updateProgress();
+    markUnsaved();
+  }, 250);
+}
+
+// Toast helper
+function showToast(msg, type) {
+  var container = document.getElementById('toast-container');
+  var toast = document.createElement('div');
+  toast.className = 'toast toast-' + (type || 'info');
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.classList.add('toast-out');
+    setTimeout(function() { toast.remove(); }, 300);
+  }, 3000);
+}
+
+// Mark form as having unsaved changes
+var hasUnsaved = false;
+function markUnsaved() {
+  hasUnsaved = true;
+  var ind = document.getElementById('save-indicator');
+  ind.className = 'autosave-indicator';
+  ind.querySelector('.autosave-text').textContent = 'Unsaved changes';
+}
+function markSaved() {
+  hasUnsaved = false;
+  var ind = document.getElementById('save-indicator');
+  ind.className = 'autosave-indicator saved';
+  ind.querySelector('.autosave-text').textContent = 'All changes saved';
+}
+
+// Warn on page leave with unsaved changes
+window.addEventListener('beforeunload', function(e) {
+  if (hasUnsaved) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+// Listen to all form changes
+document.getElementById('cv-form').addEventListener('input', function() {
+  markUnsaved();
+  updateProgress();
+});
+
+// Update section counts
+function updateCounts() {
+  var counts = {
+    'exp-count': document.querySelectorAll('.exp-entry').length,
+    'edu-count': document.querySelectorAll('.edu-entry').length,
+    'lang-count': document.querySelectorAll('.lang-entry').length,
+    'cert-count': document.querySelectorAll('.cert-entry').length,
+    'proj-count': document.querySelectorAll('.proj-entry').length,
+    'vol-count': document.querySelectorAll('.vol-entry').length,
+    'ref-count': document.querySelectorAll('.ref-entry').length,
+  };
+  for (var id in counts) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = counts[id];
+  }
+  // Hide/show empty states
+  var expEmpty = document.getElementById('exp-empty');
+  if (expEmpty) expEmpty.style.display = counts['exp-count'] > 0 ? 'none' : 'block';
+  var eduEmpty = document.getElementById('edu-empty');
+  if (eduEmpty) eduEmpty.style.display = counts['edu-count'] > 0 ? 'none' : 'block';
+}
+
+// Update progress bar
+function updateProgress() {
+  var fields = 0;
+  var filled = 0;
+  // Core personal fields
+  ['cv-name', 'cv-email', 'cv-phone', 'cv-location', 'cv-summary'].forEach(function(id) {
+    fields++;
+    if (document.getElementById(id) && document.getElementById(id).value.trim()) filled++;
+  });
+  // Sections
+  if (document.querySelectorAll('.exp-entry').length > 0) filled++;
+  fields++;
+  if (document.querySelectorAll('.edu-entry').length > 0) filled++;
+  fields++;
+  if (document.getElementById('cv-skills') && document.getElementById('cv-skills').value.trim()) filled++;
+  fields++;
+
+  var pct = Math.round((filled / fields) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+}
+
+// Summary character counter
+var summaryEl = document.getElementById('cv-summary');
+if (summaryEl) {
+  summaryEl.addEventListener('input', function() {
+    document.getElementById('summary-count').textContent = this.value.length + '/500 characters';
+  });
+}
+
+// Skills live preview
+var skillsInput = document.getElementById('cv-skills');
+if (skillsInput) {
+  skillsInput.addEventListener('input', function() {
+    var container = document.getElementById('skills-preview');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'skills-preview';
+      container.style.cssText = 'display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;';
+      this.parentElement.appendChild(container);
+    }
+    var skills = this.value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+    container.innerHTML = skills.map(function(s) {
+      return '<span class="badge badge-primary">' + escAttr(s) + '</span>';
+    }).join('');
+  });
+}
+
+function createExpEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'exp-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry exp-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.jobTitle') %></label>
         <input type="text" class="exp-title" value="${escAttr(data.title)}">
@@ -376,7 +610,7 @@ function createExpEntry(data = {}) {
     </div>
     <div class="form-group">
       <label><%= t('cv.dates') %></label>
-      <input type="text" class="exp-dates" value="${escAttr(data.dates)}">
+      <input type="text" class="exp-dates" value="${escAttr(data.dates)}" placeholder="Jan 2023 - Present">
     </div>
     <div class="form-group">
       <label><%= t('cv.description') %></label>
@@ -386,13 +620,13 @@ function createExpEntry(data = {}) {
   return div;
 }
 
-function createEduEntry(data = {}) {
+function createEduEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'edu-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry edu-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.degree') %></label>
         <input type="text" class="edu-degree" value="${escAttr(data.degree)}">
@@ -404,19 +638,19 @@ function createEduEntry(data = {}) {
     </div>
     <div class="form-group">
       <label><%= t('cv.dates') %></label>
-      <input type="text" class="edu-dates" value="${escAttr(data.dates)}">
+      <input type="text" class="edu-dates" value="${escAttr(data.dates)}" placeholder="Sep 2018 - Jun 2022">
     </div>
   `;
   return div;
 }
 
-function createLangEntry(data = {}) {
+function createLangEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'lang-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry lang-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.languageName') %></label>
         <input type="text" class="lang-name" value="${escAttr(data.name)}">
@@ -439,13 +673,13 @@ function createLangEntry(data = {}) {
   return div;
 }
 
-function createCertEntry(data = {}) {
+function createCertEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'cert-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry cert-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.certName') %></label>
         <input type="text" class="cert-name" value="${escAttr(data.name)}">
@@ -457,19 +691,19 @@ function createCertEntry(data = {}) {
     </div>
     <div class="form-group">
       <label><%= t('cv.certDate') %></label>
-      <input type="text" class="cert-date" value="${escAttr(data.date)}">
+      <input type="text" class="cert-date" value="${escAttr(data.date)}" placeholder="March 2024">
     </div>
   `;
   return div;
 }
 
-function createProjEntry(data = {}) {
+function createProjEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'proj-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry proj-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.projectName') %></label>
         <input type="text" class="proj-name" value="${escAttr(data.name)}">
@@ -491,13 +725,13 @@ function createProjEntry(data = {}) {
   return div;
 }
 
-function createVolEntry(data = {}) {
+function createVolEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'vol-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry vol-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.volunteerRole') %></label>
         <input type="text" class="vol-role" value="${escAttr(data.role)}">
@@ -519,13 +753,13 @@ function createVolEntry(data = {}) {
   return div;
 }
 
-function createRefEntry(data = {}) {
+function createRefEntry(data) {
+  data = data || {};
   const div = document.createElement('div');
-  div.className = 'ref-entry';
-  div.style.cssText = 'border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; position:relative;';
+  div.className = 'editor-entry ref-entry';
   div.innerHTML = `
-    <button type="button" class="btn btn-danger btn-sm" style="position:absolute; top:8px; right:8px;" onclick="this.parentElement.remove()">X</button>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <button type="button" class="btn btn-ghost btn-sm btn-remove" onclick="removeEntry(this)" title="Remove">&#10005;</button>
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.refName') %></label>
         <input type="text" class="ref-name" value="${escAttr(data.name)}">
@@ -535,7 +769,7 @@ function createRefEntry(data = {}) {
         <input type="text" class="ref-position" value="${escAttr(data.position)}">
       </div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div class="editor-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="form-group">
         <label><%= t('cv.refCompany') %></label>
         <input type="text" class="ref-company" value="${escAttr(data.company)}">
@@ -549,13 +783,55 @@ function createRefEntry(data = {}) {
   return div;
 }
 
-function addExperience() { document.getElementById('experience-list').appendChild(createExpEntry()); }
-function addEducation() { document.getElementById('education-list').appendChild(createEduEntry()); }
-function addLanguage() { document.getElementById('language-list').appendChild(createLangEntry()); }
-function addCertification() { document.getElementById('certification-list').appendChild(createCertEntry()); }
-function addProject() { document.getElementById('project-list').appendChild(createProjEntry()); }
-function addVolunteer() { document.getElementById('volunteer-list').appendChild(createVolEntry()); }
-function addReference() { document.getElementById('reference-list').appendChild(createRefEntry()); }
+function addExperience() {
+  var list = document.getElementById('experience-list');
+  list.appendChild(createExpEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
+function addEducation() {
+  var list = document.getElementById('education-list');
+  list.appendChild(createEduEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
+function addLanguage() {
+  var list = document.getElementById('language-list');
+  list.appendChild(createLangEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
+function addCertification() {
+  var list = document.getElementById('certification-list');
+  list.appendChild(createCertEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
+function addProject() {
+  var list = document.getElementById('project-list');
+  list.appendChild(createProjEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
+function addVolunteer() {
+  var list = document.getElementById('volunteer-list');
+  list.appendChild(createVolEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
+function addReference() {
+  var list = document.getElementById('reference-list');
+  list.appendChild(createRefEntry());
+  list.lastElementChild.querySelector('input').focus();
+  updateCounts();
+  markUnsaved();
+}
 
 function collectFormData() {
   const experience = [];
@@ -644,14 +920,46 @@ function collectFormData() {
 
 document.getElementById('cv-form').addEventListener('submit', function(e) {
   e.preventDefault();
+  var saveBtn = document.getElementById('save-btn');
+  saveBtn.classList.add('btn-loading');
+
   try {
     const data = collectFormData();
+
+    // Basic validation
+    var title = document.getElementById('cv-title').value.trim();
+    if (!title) {
+      showToast('Please enter a CV title', 'error');
+      saveBtn.classList.remove('btn-loading');
+      document.getElementById('cv-title').focus();
+      return;
+    }
+
     document.getElementById('cv-data-field').value = JSON.stringify(data);
+    hasUnsaved = false; // Prevent beforeunload warning
+    this.submit();
   } catch (err) {
     console.error('Failed to collect form data:', err);
+    showToast('Failed to save. Please try again.', 'error');
+    saveBtn.classList.remove('btn-loading');
   }
-  this.submit();
 });
+
+// Keyboard shortcut: Ctrl+S to save
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    document.getElementById('save-btn').click();
+  }
+});
+
+// Initialize progress on page load
+updateProgress();
+
+// Mark as saved on fresh load (no changes yet)
+<% if (cv && cv.id) { %>
+  markSaved();
+<% } %>
 </script>
 
 <%- include('../partials/footer') %>

@@ -58,6 +58,22 @@
       }
     });
   });
+
+  // Escape key closes dropdowns and mobile menu
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.dropdown.open').forEach(function(d) {
+        d.classList.remove('open');
+        var t = d.querySelector('.dropdown-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+      if (hamburger && menu && menu.classList.contains('open')) {
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.classList.remove('open');
+        menu.classList.remove('open');
+      }
+    }
+  });
 })();
 </script>
 </body></html>

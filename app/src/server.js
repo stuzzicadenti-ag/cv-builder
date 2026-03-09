@@ -71,6 +71,24 @@ app.setErrorHandler((error, request, reply) => {
   const message = process.env.NODE_ENV === 'production'
     ? 'An unexpected error occurred.'
     : error.message;
+
+  // Return HTML error page for browser requests
+  const acceptsHtml = request.headers.accept && request.headers.accept.includes('text/html');
+  if (acceptsHtml) {
+    const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Error ${statusCode} | CV Builder</title>
+<link rel="stylesheet" href="/public/style.css">
+</head><body style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
+<div style="text-align:center;padding:40px 20px;">
+<div style="font-size:3rem;margin-bottom:16px;opacity:0.4;">&#9888;&#65039;</div>
+<h1 style="margin-bottom:8px;">Error ${statusCode}</h1>
+<p style="color:var(--text-muted);margin-bottom:24px;max-width:400px;">${message}</p>
+<a href="/" class="btn btn-primary">Go Home</a>
+</div></body></html>`;
+    return reply.code(statusCode).header('Content-Type', 'text/html').send(html);
+  }
+
   reply.code(statusCode).send({ error: message });
 });
 
