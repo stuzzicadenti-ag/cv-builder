@@ -94,7 +94,7 @@ export default async function adminRoutes(app) {
 
   // Users list
   app.get('/users', async (req, reply) => {
-    const search = req.query.search || '';
+    const search = (req.query.search || '').slice(0, 200);
     let query = 'SELECT id, email, name, role, banned, banned_reason, created_at FROM users';
     const params = [];
 

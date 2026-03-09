@@ -131,8 +131,14 @@ app.get('/lang/:code', async (req, reply) => {
   if (SUPPORTED_LANGS.includes(code)) {
     reply.setCookie('lang', code, { path: '/', httpOnly: false, maxAge: 365 * 24 * 60 * 60, sameSite: 'lax' });
   }
+  // Only allow relative redirects — reject absolute URLs to prevent open redirect
   const referer = req.headers.referer || '/';
-  return reply.redirect(referer);
+  let redirectTo = '/';
+  try {
+    const url = new URL(referer, 'http://localhost');
+    redirectTo = url.pathname + url.search + url.hash;
+  } catch { /* fall back to '/' */ }
+  return reply.redirect(redirectTo);
 });
 
 // Home page

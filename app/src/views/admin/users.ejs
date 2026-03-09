@@ -20,7 +20,7 @@
 
     <form class="admin-search" method="GET" action="/admin/users">
       <input type="text" name="search" placeholder="Search by email or name..." value="<%= search %>">
-      <button type="submit">Search</button>
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
       <% if (search) { %>
         <a href="/admin/users" class="btn btn-outline btn-sm" style="display:flex;align-items:center;">Clear</a>
       <% } %>

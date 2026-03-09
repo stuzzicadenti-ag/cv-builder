@@ -127,7 +127,7 @@ export default async function cvRoutes(app) {
 #let hasArr(key) = key in data and type(data.at(key)) == array and data.at(key).len() > 0
 `;
     // Strip any existing #let data = json(...) from the template to avoid duplicates
-    const cleanTemplate = template.typstTemplate.replace(/^\s*#let data\s*=\s*json\([^)]+\)\s*\n?/m, '');
+    const cleanTemplate = template.typstTemplate.replace(/^\s*#let data\s*=\s*json\([^)]+\)\s*\n?/gm, '');
     const typstSource = helpers + cleanTemplate;
 
     await fs.mkdir(PDF_DIR, { recursive: true });
