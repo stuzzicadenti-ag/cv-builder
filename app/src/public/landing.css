@@ -3,7 +3,7 @@
    Landing page styles, scoped under .landing
    ======================================== */
 
-/* Reset & Base — scoped to .landing */
+/* Reset & Base - scoped to .landing */
 .landing *, .landing *::before, .landing *::after {
   margin: 0;
   padding: 0;

@@ -9,12 +9,12 @@ const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
 const IS_PROD = process.env.NODE_ENV === 'production';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Warn if using default JWT secret — critical security risk in production
+// Warn if using default JWT secret - critical security risk in production
 if (!process.env.JWT_SECRET) {
   if (IS_PROD) {
     console.error('[SECURITY] FATAL: JWT_SECRET env var is not set in production! Tokens are signed with the default secret. Set JWT_SECRET before deploying.');
   } else {
-    console.warn('[SECURITY] WARNING: JWT_SECRET env var not set — using insecure default. Do not use in production.');
+    console.warn('[SECURITY] WARNING: JWT_SECRET env var not set - using insecure default. Do not use in production.');
   }
 }
 
@@ -41,7 +41,7 @@ export default async function authRoutes(app) {
       return reply.view('auth/banned.ejs', { user: null, title: 'Account Suspended', reason: user.bannedReason || null, t: req.t, lang: req.lang });
     }
     const token = jwt.sign({ userId: user.id, email: user.email, name: user.name, role: user.role || 'user' }, JWT_SECRET, { expiresIn: '7d' });
-    // secure: false is intentional — app runs behind Caddy reverse proxy over HTTP on Tailscale,
+    // secure: false is intentional - app runs behind Caddy reverse proxy over HTTP on Tailscale,
     // so the browser-to-Caddy hop uses HTTPS (Caddy handles TLS) but Caddy-to-app is plain HTTP.
     // sameSite: 'lax' prevents CSRF from cross-origin form submissions.
     reply.setCookie('token', token, { path: '/', httpOnly: true, secure: false, maxAge: COOKIE_MAX_AGE, sameSite: 'lax' });

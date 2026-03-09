@@ -123,7 +123,7 @@ function buildPreviewHtml(cv, template) {
   if (d.languages && d.languages.length) {
     let html = '<div style="margin-bottom:20px;"><h2 style="font-size:1.1rem; border-bottom:2px solid #333; padding-bottom:4px; margin-bottom:8px;">Languages</h2>';
     for (const lang of d.languages) {
-      html += `<div style="margin-bottom:4px;">${e(lang.name)}${lang.level ? ` — ${e(lang.level)}` : ''}</div>`;
+      html += `<div style="margin-bottom:4px;">${e(lang.name)}${lang.level ? ` - ${e(lang.level)}` : ''}</div>`;
     }
     html += '</div>';
     sections.push(html);
@@ -133,7 +133,7 @@ function buildPreviewHtml(cv, template) {
   if (d.certifications && d.certifications.length) {
     let html = '<div style="margin-bottom:20px;"><h2 style="font-size:1.1rem; border-bottom:2px solid #333; padding-bottom:4px; margin-bottom:8px;">Certifications</h2>';
     for (const cert of d.certifications) {
-      html += `<div style="margin-bottom:4px;"><strong>${e(cert.name)}</strong>${cert.issuer ? ` — ${e(cert.issuer)}` : ''}${cert.date ? ` (${e(cert.date)})` : ''}</div>`;
+      html += `<div style="margin-bottom:4px;"><strong>${e(cert.name)}</strong>${cert.issuer ? `, ${e(cert.issuer)}` : ''}${cert.date ? ` (${e(cert.date)})` : ''}</div>`;
     }
     html += '</div>';
     sections.push(html);
@@ -167,7 +167,7 @@ function buildPreviewHtml(cv, template) {
   if (d.references && d.references.length) {
     let html = '<div style="margin-bottom:20px;"><h2 style="font-size:1.1rem; border-bottom:2px solid #333; padding-bottom:4px; margin-bottom:8px;">References</h2>';
     for (const ref of d.references) {
-      html += `<div style="margin-bottom:4px;"><strong>${e(ref.name)}</strong>${ref.position ? ` — ${e(ref.position)}` : ''}${ref.company ? `, ${e(ref.company)}` : ''}${ref.contact ? ` (${e(ref.contact)})` : ''}</div>`;
+      html += `<div style="margin-bottom:4px;"><strong>${e(ref.name)}</strong>${ref.position ? `, ${e(ref.position)}` : ''}${ref.company ? `, ${e(ref.company)}` : ''}${ref.contact ? ` (${e(ref.contact)})` : ''}</div>`;
     }
     html += '</div>';
     sections.push(html);
@@ -180,7 +180,7 @@ function buildPreviewHtml(cv, template) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${e(cv.title)} — Preview</title>
+  <title>${e(cv.title)} | Preview</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f3f4f6; padding: 32px 16px; }
@@ -392,7 +392,7 @@ export default async function cvRoutes(app) {
         .set({ isPublic: false, shareToken: null, updatedAt: new Date() })
         .where(eq(cvs.id, shareId));
     } else {
-      // Enable sharing — generate unique token
+      // Enable sharing - generate unique token
       const token = crypto.randomBytes(32).toString('hex');
       await db.update(cvs)
         .set({ isPublic: true, shareToken: token, updatedAt: new Date() })
@@ -415,7 +415,7 @@ export default async function cvRoutes(app) {
     const [template] = await db.select().from(templates).where(eq(templates.id, cv.templateId)).limit(1);
     if (!template) return reply.code(400).send('No template selected');
 
-    // Build Typst source with data — always inject null-safe helpers
+    // Build Typst source with data - always inject null-safe helpers
     const helpers = `#let data = json("data.json")
 #let get(key, default: "") = if key in data { str(data.at(key)) } else { default }
 #let getArr(key) = if key in data and type(data.at(key)) == array { data.at(key) } else { () }

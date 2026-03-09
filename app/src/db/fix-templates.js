@@ -32,7 +32,7 @@ const EXPERIENCE_BLOCK = (accent, label = "EXPERIENCE") => `
   #v(4pt)
   #for job in getArr("experience") [
     #grid(columns: (1fr, auto),
-      [*#str(job.at("title", default: ""))* — _#str(job.at("company", default: ""))_],
+      [*#str(job.at("title", default: ""))* | _#str(job.at("company", default: ""))_],
       [#text(fill: gray)[#str(job.at("dates", default: ""))]]
     )
     #v(2pt)
@@ -49,7 +49,7 @@ const EDUCATION_BLOCK = (accent, label = "EDUCATION") => `
   #v(4pt)
   #for edu in getArr("education") [
     #grid(columns: (1fr, auto),
-      [*#str(edu.at("degree", default: ""))* — _#str(edu.at("school", default: ""))_],
+      [*#str(edu.at("degree", default: ""))* | _#str(edu.at("school", default: ""))_],
       [#text(fill: gray)[#str(edu.at("dates", default: ""))]]
     )
     #v(4pt)
@@ -82,7 +82,7 @@ const LANGUAGES_BLOCK = (accent, label = "LANGUAGES") => `
   #text(size: 10pt, weight: "bold", fill: ${accent})[${label}]
   #v(4pt)
   #for lang in getArr("languages") [
-    *#str(lang.at("name", default: ""))* — #str(lang.at("level", default: ""))
+    *#str(lang.at("name", default: ""))* - #str(lang.at("level", default: ""))
     #h(16pt)
   ]
 ]`;
@@ -94,7 +94,7 @@ const CERTS_BLOCK = (accent, label = "CERTIFICATIONS") => `
   #line(length: 100%, stroke: 0.5pt + ${accent})
   #v(4pt)
   #for cert in getArr("certifications") [
-    *#str(cert.at("name", default: ""))* — _#str(cert.at("issuer", default: ""))_ #h(1fr) #str(cert.at("date", default: ""))
+    *#str(cert.at("name", default: ""))*, _#str(cert.at("issuer", default: ""))_ #h(1fr) #str(cert.at("date", default: ""))
     #v(4pt)
   ]
 ]`;
@@ -107,7 +107,7 @@ const PROJECTS_BLOCK = (accent, label = "PROJECTS") => `
   #v(4pt)
   #for proj in getArr("projects") [
     *#str(proj.at("name", default: ""))*
-    #if str(proj.at("tech", default: "")).len() > 0 [ — #text(fill: gray, size: 8pt)[#str(proj.at("tech", default: ""))]]
+    #if str(proj.at("tech", default: "")).len() > 0 [ | #text(fill: gray, size: 8pt)[#str(proj.at("tech", default: ""))]]
     #if str(proj.at("url", default: "")).len() > 0 [ | #text(fill: gray, size: 7pt)[#str(proj.at("url", default: ""))]]
     #v(2pt)
     #str(proj.at("description", default: ""))
@@ -122,7 +122,7 @@ const VOLUNTEER_BLOCK = (accent, label = "VOLUNTEER") => `
   #line(length: 100%, stroke: 0.5pt + ${accent})
   #v(4pt)
   #for vol in getArr("volunteer") [
-    *#str(vol.at("role", default: ""))* — _#str(vol.at("organization", default: ""))_ #h(1fr) #text(fill: gray)[#str(vol.at("dates", default: ""))]
+    *#str(vol.at("role", default: ""))* | _#str(vol.at("organization", default: ""))_ #h(1fr) #text(fill: gray)[#str(vol.at("dates", default: ""))]
     #v(2pt)
     #str(vol.at("description", default: ""))
     #v(6pt)
@@ -136,7 +136,7 @@ const REFERENCES_BLOCK = (accent, label = "REFERENCES") => `
   #line(length: 100%, stroke: 0.5pt + ${accent})
   #v(4pt)
   #for ref in getArr("references") [
-    *#str(ref.at("name", default: ""))* — #str(ref.at("position", default: "")), _#str(ref.at("company", default: ""))_
+    *#str(ref.at("name", default: ""))*, #str(ref.at("position", default: "")), _#str(ref.at("company", default: ""))_
     #if str(ref.at("contact", default: "")).len() > 0 [ | #str(ref.at("contact", default: ""))]
     #v(4pt)
   ]
@@ -224,7 +224,7 @@ const creative = HELPERS + `
   #v(4pt)
   #for edu in getArr("education") [
     #box(fill: light, width: 100%, inset: 10pt, radius: 4pt)[
-      *#str(edu.at("degree", default: ""))* — _#str(edu.at("school", default: ""))_ #h(1fr) #text(fill: gray)[#str(edu.at("dates", default: ""))]
+      *#str(edu.at("degree", default: ""))* | _#str(edu.at("school", default: ""))_ #h(1fr) #text(fill: gray)[#str(edu.at("dates", default: ""))]
     ]
     #v(4pt)
   ]

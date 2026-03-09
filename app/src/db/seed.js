@@ -79,7 +79,7 @@ const TEMPLATES = [
 #if hasArr("languages") [
   == Languages
   #for lang in getArr("languages") [
-    *#str(lang.at("name", default: ""))* — #str(lang.at("level", default: ""))
+    *#str(lang.at("name", default: ""))* - #str(lang.at("level", default: ""))
     #h(16pt)
   ]
 ]
@@ -88,7 +88,7 @@ const TEMPLATES = [
   #v(4pt)
   == Certifications
   #for cert in getArr("certifications") [
-    *#str(cert.at("name", default: ""))* — _#str(cert.at("issuer", default: ""))_ #h(1fr) #str(cert.at("date", default: ""))
+    *#str(cert.at("name", default: ""))*, _#str(cert.at("issuer", default: ""))_ #h(1fr) #str(cert.at("date", default: ""))
     #v(4pt)
   ]
 ]
@@ -117,7 +117,7 @@ const TEMPLATES = [
 #if hasArr("references") [
   == References
   #for ref in getArr("references") [
-    *#str(ref.at("name", default: ""))* — #str(ref.at("position", default: "")), #str(ref.at("company", default: ""))
+    *#str(ref.at("name", default: ""))*, #str(ref.at("position", default: "")), #str(ref.at("company", default: ""))
     #if str(ref.at("contact", default: "")).len() > 0 [ | #str(ref.at("contact", default: ""))]
     #v(4pt)
   ]
@@ -218,7 +218,7 @@ const TEMPLATES = [
       #v(4pt)
       #for proj in getArr("projects") [
         *#str(proj.at("name", default: ""))*
-        #if str(proj.at("tech", default: "")).len() > 0 [ — #text(fill: gray, size: 8pt)[#str(proj.at("tech", default: ""))]]
+        #if str(proj.at("tech", default: "")).len() > 0 [ | #text(fill: gray, size: 8pt)[#str(proj.at("tech", default: ""))]]
         #v(2pt)
         #str(proj.at("description", default: ""))
         #if str(proj.at("url", default: "")).len() > 0 [#v(1pt) #text(fill: gray, size: 7pt)[#str(proj.at("url", default: ""))]]
@@ -245,7 +245,7 @@ const TEMPLATES = [
       #line(length: 100%, stroke: accent)
       #v(4pt)
       #for ref in getArr("references") [
-        *#str(ref.at("name", default: ""))* — #str(ref.at("position", default: "")), _#str(ref.at("company", default: ""))_
+        *#str(ref.at("name", default: ""))*, #str(ref.at("position", default: "")), _#str(ref.at("company", default: ""))_
         #if str(ref.at("contact", default: "")).len() > 0 [ | #text(size: 8pt)[#str(ref.at("contact", default: ""))]]
         #v(4pt)
       ]
@@ -342,7 +342,7 @@ const TEMPLATES = [
   #v(4pt)
   #for proj in getArr("projects") [
     *#str(proj.at("name", default: ""))*
-    #if str(proj.at("tech", default: "")).len() > 0 [ — #text(fill: gray, size: 9pt)[#str(proj.at("tech", default: ""))]]
+    #if str(proj.at("tech", default: "")).len() > 0 [ | #text(fill: gray, size: 9pt)[#str(proj.at("tech", default: ""))]]
     #v(2pt)
     #str(proj.at("description", default: ""))
     #v(6pt)
@@ -369,8 +369,8 @@ const TEMPLATES = [
   *References*
   #v(4pt)
   #for ref in getArr("references") [
-    *#str(ref.at("name", default: ""))* — #str(ref.at("position", default: "")), #str(ref.at("company", default: ""))
-    #if str(ref.at("contact", default: "")).len() > 0 [ — #str(ref.at("contact", default: ""))]
+    *#str(ref.at("name", default: ""))*, #str(ref.at("position", default: "")), #str(ref.at("company", default: ""))
+    #if str(ref.at("contact", default: "")).len() > 0 [ | #str(ref.at("contact", default: ""))]
     #v(4pt)
   ]
 ]

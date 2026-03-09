@@ -64,7 +64,7 @@ app.decorate('checkAuthRateLimit', (request, reply) => {
   return true;
 });
 
-// Global error handler — don't leak internals in production
+// Global error handler - don't leak internals in production
 app.setErrorHandler((error, request, reply) => {
   app.log.error(error);
   const statusCode = error.statusCode || 500;
@@ -88,7 +88,7 @@ await app.register(fstatic, {
   maxAge: process.env.NODE_ENV === 'production' ? 86400000 : 0,
 });
 
-// i18n — load locale files once at startup
+// i18n - load locale files once at startup
 const SUPPORTED_LANGS = ['en', 'it', 'de', 'fr'];
 const locales = {};
 for (const lang of SUPPORTED_LANGS) {
@@ -96,7 +96,7 @@ for (const lang of SUPPORTED_LANGS) {
   locales[lang] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
-// i18n preHandler — reads lang cookie, provides t() helper
+// i18n preHandler - reads lang cookie, provides t() helper
 app.decorateRequest('lang', 'en');
 app.decorateRequest('t', null);
 app.addHook('preHandler', async (req) => {
@@ -108,7 +108,7 @@ app.addHook('preHandler', async (req) => {
   req.t = (key) => strings[key] || fallback[key] || key;
 });
 
-// Auth decorator — decode JWT on every request (non-blocking)
+// Auth decorator - decode JWT on every request (non-blocking)
 app.decorateRequest('user', null);
 app.addHook('preHandler', async (req) => {
   const token = req.cookies?.token;
@@ -131,7 +131,7 @@ app.get('/lang/:code', async (req, reply) => {
   if (SUPPORTED_LANGS.includes(code)) {
     reply.setCookie('lang', code, { path: '/', httpOnly: false, maxAge: 365 * 24 * 60 * 60, sameSite: 'lax' });
   }
-  // Only allow relative redirects — reject absolute URLs to prevent open redirect
+  // Only allow relative redirects - reject absolute URLs to prevent open redirect
   const referer = req.headers.referer || '/';
   let redirectTo = '/';
   try {

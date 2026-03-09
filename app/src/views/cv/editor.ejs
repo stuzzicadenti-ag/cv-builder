@@ -190,14 +190,14 @@
               <div class="form-group">
                 <label><%= t('cv.languageLevel') %></label>
                 <select class="lang-level">
-                  <option value="" <%= !lang.level ? 'selected' : '' %>>—</option>
+                  <option value="" <%= !lang.level ? 'selected' : '' %>>-</option>
                   <option value="Native" <%= lang.level === 'Native' ? 'selected' : '' %>><%= t('cv.langNative') %></option>
-                  <option value="C2" <%= lang.level === 'C2' ? 'selected' : '' %>>C2 — <%= t('cv.langC2') %></option>
-                  <option value="C1" <%= lang.level === 'C1' ? 'selected' : '' %>>C1 — <%= t('cv.langC1') %></option>
-                  <option value="B2" <%= lang.level === 'B2' ? 'selected' : '' %>>B2 — <%= t('cv.langB2') %></option>
-                  <option value="B1" <%= lang.level === 'B1' ? 'selected' : '' %>>B1 — <%= t('cv.langB1') %></option>
-                  <option value="A2" <%= lang.level === 'A2' ? 'selected' : '' %>>A2 — <%= t('cv.langA2') %></option>
-                  <option value="A1" <%= lang.level === 'A1' ? 'selected' : '' %>>A1 — <%= t('cv.langA1') %></option>
+                  <option value="C2" <%= lang.level === 'C2' ? 'selected' : '' %>>C2 - <%= t('cv.langC2') %></option>
+                  <option value="C1" <%= lang.level === 'C1' ? 'selected' : '' %>>C1 - <%= t('cv.langC1') %></option>
+                  <option value="B2" <%= lang.level === 'B2' ? 'selected' : '' %>>B2 - <%= t('cv.langB2') %></option>
+                  <option value="B1" <%= lang.level === 'B1' ? 'selected' : '' %>>B1 - <%= t('cv.langB1') %></option>
+                  <option value="A2" <%= lang.level === 'A2' ? 'selected' : '' %>>A2 - <%= t('cv.langA2') %></option>
+                  <option value="A1" <%= lang.level === 'A1' ? 'selected' : '' %>>A1 - <%= t('cv.langA1') %></option>
                 </select>
               </div>
             </div>
@@ -424,14 +424,14 @@ function createLangEntry(data = {}) {
       <div class="form-group">
         <label><%= t('cv.languageLevel') %></label>
         <select class="lang-level">
-          <option value="">—</option>
+          <option value="">-</option>
           <option value="Native" ${data.level === 'Native' ? 'selected' : ''}><%= t('cv.langNative') %></option>
-          <option value="C2" ${data.level === 'C2' ? 'selected' : ''}>C2 — <%= t('cv.langC2') %></option>
-          <option value="C1" ${data.level === 'C1' ? 'selected' : ''}>C1 — <%= t('cv.langC1') %></option>
-          <option value="B2" ${data.level === 'B2' ? 'selected' : ''}>B2 — <%= t('cv.langB2') %></option>
-          <option value="B1" ${data.level === 'B1' ? 'selected' : ''}>B1 — <%= t('cv.langB1') %></option>
-          <option value="A2" ${data.level === 'A2' ? 'selected' : ''}>A2 — <%= t('cv.langA2') %></option>
-          <option value="A1" ${data.level === 'A1' ? 'selected' : ''}>A1 — <%= t('cv.langA1') %></option>
+          <option value="C2" ${data.level === 'C2' ? 'selected' : ''}>C2 - <%= t('cv.langC2') %></option>
+          <option value="C1" ${data.level === 'C1' ? 'selected' : ''}>C1 - <%= t('cv.langC1') %></option>
+          <option value="B2" ${data.level === 'B2' ? 'selected' : ''}>B2 - <%= t('cv.langB2') %></option>
+          <option value="B1" ${data.level === 'B1' ? 'selected' : ''}>B1 - <%= t('cv.langB1') %></option>
+          <option value="A2" ${data.level === 'A2' ? 'selected' : ''}>A2 - <%= t('cv.langA2') %></option>
+          <option value="A1" ${data.level === 'A1' ? 'selected' : ''}>A1 - <%= t('cv.langA1') %></option>
         </select>
       </div>
     </div>
