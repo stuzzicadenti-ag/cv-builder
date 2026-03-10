@@ -53,6 +53,15 @@ See [DOCS.md](DOCS.md) for full technical documentation, architecture, database 
 - **CSS**: External stylesheets (style.css + landing.css)
 - **i18n**: Flat JSON locale files (en, it, de, fr)
 
+## Security & Performance
+
+- **JWT secret consolidated**: Single JWT_SECRET env var (removed redundant signing keys)
+- **Cookie secure flag**: Dynamic based on NODE_ENV (secure in production, relaxed in dev)
+- **Logout via POST**: Changed logout from GET to POST to prevent CSRF log-out attacks
+- **Admin ILIKE escaping**: User search input escaped to prevent pattern injection
+- **DB startup check**: Connection verified on boot with clear error on failure
+- **Docker port binding**: Bound to 127.0.0.1 to prevent external access in development
+
 ## License
 
 Proprietary -- Stuzzicadenti AG
